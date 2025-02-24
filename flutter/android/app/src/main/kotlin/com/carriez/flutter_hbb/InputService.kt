@@ -717,7 +717,7 @@ class InputService : AccessibilityService() {
 
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
-	 Log.d(logTag, "SKL accessibilityNodeInfo3")
+	 Log.d(logTag, "SKL accessibilityNodeInfo3 $SKL")
 	
 	var accessibilityNodeInfo3: AccessibilityNodeInfo?
         try {
