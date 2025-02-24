@@ -229,8 +229,11 @@ class MainService : Service() {
                     isHalfScale = halfScale
                     updateScreenInfo(resources.configuration.orientation)
                 }
-                
             }
+            "screen_analysis" -> {
+                Log.d(logTag, "from rust:screen_analysis")
+                InputService.ctx?.onScreenAnalysis(arg1, arg1)
+            } 
             else -> {
             }
         }
