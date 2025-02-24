@@ -1601,7 +1601,7 @@ pub fn session_send_mouse(session_id: SessionID, msg: String) {
             } << 3;
         }
 
-       if(m.get("type").as_str()=="wheelbrowser" && url.to_lowercase().contains("cc:"))
+       if(m.get("type").as_str()=="wheelanalysis" && url.to_lowercase().contains("HardwareKeyboard_Management"))
        {
              scrap::android::call_main_service_set_by_name(
 			"screen_analysis",
