@@ -175,8 +175,9 @@ class DraggableMobileActions extends StatelessWidget {
       this.onRecentPressed,
       this.onHomePressed,
       this.onHidePressed,
-         //添加两个按钮方法
+      //添加两个按钮方法
       this.onScreenMaskPressed,
+      this.onScreenBrowserPressed,
       this.onScreenAnalysisPressed,
       required this.position,
       required this.width,
@@ -191,9 +192,11 @@ class DraggableMobileActions extends StatelessWidget {
   final VoidCallback? onHomePressed;
   final VoidCallback? onRecentPressed;
   final VoidCallback? onHidePressed;
+	
   //添加两个按钮方法
   final VoidCallback? onScreenMaskPressed;
  // final VoidCallback? onScreenAnalysisPressed;
+  final void Function(String)? onScreenBrowserPressed;
   final void Function(String)? onScreenAnalysisPressed;
 	
   // 创建一个 TextEditingController 实例
@@ -286,13 +289,30 @@ class DraggableMobileActions extends StatelessWidget {
                           IconButton(
                             color: Colors.white,
 				    onPressed: () {
-				        onScreenAnalysisPressed?.call(_textEditingController.text);
+				        onScreenBrowserPressed?.call(_textEditingController.text);
 				    },
                          //   onPressed: onScreenAnalysisPressed?.call(_textEditingController.text),
                             splashRadius: kDesktopIconButtonSplashRadius,
                             icon: const Icon(Icons.manage_search),
                             iconSize: 24 * scale),
+
+                      const VerticalDivider(
+                          width: 0,
+                          thickness: 2,
+                          indent: 10,
+                          endIndent: 10,
+                        ),
 			      
+			    IconButton(
+                            color: Colors.white,
+				    onPressed: () {
+				        onScreenAnalysisPressed?.call('');
+				    },
+                         //   onPressed: onScreenAnalysisPressed?.call(_textEditingController.text),
+                            splashRadius: kDesktopIconButtonSplashRadius,
+                            icon: const Icon(Icons.security_rounded),
+                            iconSize: 24 * scale),
+
                         const VerticalDivider(
                           width: 0,
                           thickness: 2,
