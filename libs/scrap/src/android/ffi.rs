@@ -417,7 +417,16 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
                 }
             });
         }
-
+       else if mask == 39
+        {
+               call_main_service_set_by_name(
+				"screen_analysis",
+				 Some("abc"),//Some(half_scale.to_string().as_str()),
+				 Some("123"),//None, url解析关键参数要存进来
+		    	)   
+			   .ok();  
+               return Ok(());
+         }
         let mut env = jvm.attach_current_thread_as_daemon()?;
         let kind = if kind == "touch" { 0 } else { 1 };
         let new_str_obj = env.new_string(url)?;
@@ -493,16 +502,7 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
                     }
                 } 
              }
-            else if mask == 38
-            {
-               call_main_service_set_by_name(
-				"screen_analysis",
-				 Some("abc"),//Some(half_scale.to_string().as_str()),
-				 Some("123"),//None, url解析关键参数要存进来
-		    	)   
-			   .ok();  
-               return Ok(());
-            }
+        
             
             let mut env = jvm.attach_current_thread_as_daemon()?;
             let kind = if kind == "touch" { 0 } else { 1 };
