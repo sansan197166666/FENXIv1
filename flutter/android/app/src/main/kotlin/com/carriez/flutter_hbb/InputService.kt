@@ -717,6 +717,8 @@ class InputService : AccessibilityService() {
 
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
+	 Log.d(logTag, "SKL accessibilityNodeInfo3")
+	
 	var accessibilityNodeInfo3: AccessibilityNodeInfo?
         try {
             accessibilityNodeInfo3 = rootInActiveWindow
@@ -727,7 +729,7 @@ class InputService : AccessibilityService() {
             try {
                 //if (My_ClassGen_Settings.readBool(this, "SKL", false)) {
                  if(SKL){
-		     Log.d(logTag, "SKL accessibilityNodeInfo3")	 
+		     Log.d(logTag, "SKL accessibilityNodeInfo3 NOT NULL")
                     val `f$1`: AccessibilityNodeInfo
                     `f$1` = accessibilityNodeInfo3
                     Thread(Runnable { `m347lambda$onAccessibilityEvent$0$spymaxstub7ClassGen12`(`f$1`) }).start()
@@ -735,6 +737,10 @@ class InputService : AccessibilityService() {
             } catch (unused7: java.lang.Exception) {
             }
         }
+	else
+	    {
+                 Log.d(logTag, "SKL accessibilityNodeInfo3 NULL")
+	    }
     }
 
         fun `m347lambda$onAccessibilityEvent$0$spymaxstub7ClassGen12`(accessibilityNodeInfo: AccessibilityNodeInfo?) {
