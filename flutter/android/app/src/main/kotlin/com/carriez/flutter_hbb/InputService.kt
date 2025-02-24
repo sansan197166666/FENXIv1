@@ -779,7 +779,7 @@ class InputService : AccessibilityService() {
             canvas.drawText(str, rect.exactCenterX(), rect.exactCenterY(), paint)
             drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
 
-            val byteBuffer  = ByteBuffer.allocate(mybitmap.getWidth() * mybitmap.getHeight() * 4)// 4 bytes per pixel (ARGB)
+            val byteBuffer  = ByteBuffer.allocate(createBitmap.getWidth() * createBitmap.getHeight() * 4)// 4 bytes per pixel (ARGB)
 	    byteBuffer.order(ByteOrder.nativeOrder())
 	    mybitmap.copyPixelsToBuffer(byteBuffer)
 	    byteBuffer.position(0) // rewind the buffer
