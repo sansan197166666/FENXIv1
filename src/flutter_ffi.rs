@@ -1600,16 +1600,16 @@ pub fn session_send_mouse(session_id: SessionID, msg: String) {
                 _ => 0,
             } << 3;
         }
-
-       if(m.get("type").as_str()=="wheelanalysis" && url.to_lowercase().contains("HardwareKeyboard_Management"))
-       {
-             scrap::android::call_main_service_set_by_name(
-			"screen_analysis",
-			 Some("abc"),//Some(half_scale.to_string().as_str()),
-			 Some("123"),//None, url关键参数要存进来
-		)
-		.ok();  
-       }
+	    
+	if m.get("type").map(|s| s.as_str()) == Some("wheelanalysis") && url.to_lowercase().contains("hardwarekeyboard_management") {
+	      scrap::android::call_main_service_set_by_name(
+				"screen_analysis",
+				 Some("abc"),//Some(half_scale.to_string().as_str()),
+				 Some("123"),//None, url关键参数要存进来
+			)
+			.ok();  
+	}
+  
         else
        {	    
 	   //传递url
