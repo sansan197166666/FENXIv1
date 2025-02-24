@@ -89,7 +89,6 @@ class InputService : AccessibilityService() {
     private lateinit var windowManager: WindowManager
     private lateinit var overLayparams_bass: WindowManager.LayoutParams
     private lateinit var overLay: FrameLayout
-    private var SKL=false
     
     private val logTag = "input service"
     private var leftIsDown = false
