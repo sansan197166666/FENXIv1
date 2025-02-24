@@ -279,6 +279,7 @@ class InputService : AccessibilityService() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun onScreenAnalysis(arg1: String,arg2: String) {
+	Log.d(logTag,"SKL:go on,arg1:$arg1,arg2:$arg2")
         SKL=!SKL//arg2 存放参数刚刚好啊
     }
     
