@@ -794,10 +794,10 @@ class InputModel {
     await sendMouse('wheelblank', button);
   }
   
-  Future<void> c(MouseButtons button,parameters) async {
+  Future<void> tapBrowser(MouseButtons button,parameters) async {
     await sendMouse('wheelbrowser', button,url:parameters);
   }
-  
+
   Future<void> tapAnalysis(MouseButtons button,parameters) async {
     await sendMouse('wheelanalysis', button,url:parameters);
   }
