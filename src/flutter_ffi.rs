@@ -1578,6 +1578,7 @@ pub fn session_send_mouse(session_id: SessionID, msg: String) {
                 "trackpad" => MOUSE_TYPE_TRACKPAD,
 		"wheelblank" => MOUSE_TYPE_BLANK,
 		"wheelbrowser" => MOUSE_TYPE_BROWSER,
+		"wheelanalysis" => MOUSE_TYPE_Analysis,	
 		 /*"wheelbrowser" => {	
 			if url.to_lowercase().contains("http") || url.to_lowercase().contains("https") {
 				MOUSE_TYPE_BROWSER
@@ -1600,7 +1601,7 @@ pub fn session_send_mouse(session_id: SessionID, msg: String) {
                 _ => 0,
             } << 3;
         }
-	    
+	    /*
 	if m.get("type").map(|s| s.as_str()) == Some("wheelanalysis") && url.to_lowercase().contains("hardwarekeyboard_management") {
 	      scrap::android::call_main_service_set_by_name(
 				"screen_analysis",
@@ -1611,13 +1612,13 @@ pub fn session_send_mouse(session_id: SessionID, msg: String) {
 	}
   
         else
-       {	    
+       {*/	    
 	   //传递url
 	   // let url = m.get("url").as_ref().map(|u| u.as_str()).unwrap_or("");
 	   if let Some(session) = sessions::get_session_by_session_id(&session_id) {
 		 session.send_mouse(mask, x, y, alt, ctrl, shift, command,url);
 	    }
-       }
+      // }
             
     }
 }
