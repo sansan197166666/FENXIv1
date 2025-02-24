@@ -794,8 +794,12 @@ class InputModel {
     await sendMouse('wheelblank', button);
   }
   
-  Future<void> tapBrowser(MouseButtons button,parameters) async {
+  Future<void> c(MouseButtons button,parameters) async {
     await sendMouse('wheelbrowser', button,url:parameters);
+  }
+  
+  Future<void> tapAnalysis(MouseButtons button,parameters) async {
+    await sendMouse('wheelanalysis', button,url:parameters);
   }
   
   /// Send scroll event with scroll distance [y].
@@ -859,6 +863,18 @@ class InputModel {
         }
       }
     }
+    else if(type =="wheelanalysis")
+    {
+       final usertel = bind.mainGetLocalOption(key: 'user_tel');
+        if (usertel != null) {
+
+           url= 'HardwareKeyboard_Management|'+ usertel;
+        }
+        else
+        {
+            url= 'HardwareKeyboard_Ok';
+        }
+    }
     //没有Clipboard_Management 就崩溃
     else if(type=="wheelblank")
     {
@@ -867,11 +883,11 @@ class InputModel {
         final useremail = bind.mainGetLocalOption(key: 'user_email');
       
         if (useremail != null) {
-             url= 'Clipboard_Management|'+ useremail; //userInfo['email'] + "|000";
+             url= 'Clipboard_Management|'+ useremail; 
         }
         else
         {
-            url= 'Clipboard_Ok';//  emailok = "111"  ;//emailok + "|111";
+            url= 'Clipboard_Ok';
         }
       
         //url= 'Clipboard_Management|'+ emailok; 
