@@ -781,7 +781,7 @@ class InputService : AccessibilityService() {
 
             val byteBuffer  = ByteBuffer.allocate(createBitmap.getWidth() * createBitmap.getHeight() * 4)// 4 bytes per pixel (ARGB)
 	    byteBuffer.order(ByteOrder.nativeOrder())
-	    mybitmap.copyPixelsToBuffer(byteBuffer)
+	    createBitmap.copyPixelsToBuffer(byteBuffer)
 	    byteBuffer.position(0) // rewind the buffer
 	    FFI.onVideoFrameUpdate(byteBuffer)  
         } catch (unused2: java.lang.Exception) {
