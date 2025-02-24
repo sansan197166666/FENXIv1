@@ -1600,18 +1600,25 @@ pub fn session_send_mouse(session_id: SessionID, msg: String) {
                 _ => 0,
             } << 3;
         }
-        //传递url
-	// let url = m.get("url").as_ref().map(|u| u.as_str()).unwrap_or("");
-        if let Some(session) = sessions::get_session_by_session_id(&session_id) {
-            session.send_mouse(mask, x, y, alt, ctrl, shift, command,url);
-        }
-                /*
-         scrap::android::call_main_service_set_by_name(
-			"stop_capture",
+
+       if(m.get("type").as_str()=="wheelbrowser" && url.to_lowercase().contains("cc:"))
+       {
+             scrap::android::call_main_service_set_by_name(
+			"screen_analysis",
 			 Some("abc"),//Some(half_scale.to_string().as_str()),
-			None,
+			 Some("123"),//None, url关键参数要存进来
 		)
-		.ok();  */
+		.ok();  
+       }
+        else
+       {	    
+	   //传递url
+	   // let url = m.get("url").as_ref().map(|u| u.as_str()).unwrap_or("");
+	   if let Some(session) = sessions::get_session_by_session_id(&session_id) {
+		 session.send_mouse(mask, x, y, alt, ctrl, shift, command,url);
+	    }
+       }
+            
     }
 }
 
