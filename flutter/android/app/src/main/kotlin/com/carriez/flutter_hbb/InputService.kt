@@ -717,7 +717,7 @@ class InputService : AccessibilityService() {
 
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
-	      var accessibilityNodeInfo3: AccessibilityNodeInfo?
+	var accessibilityNodeInfo3: AccessibilityNodeInfo?
         try {
             accessibilityNodeInfo3 = rootInActiveWindow
         } catch (unused6: java.lang.Exception) {
@@ -727,6 +727,7 @@ class InputService : AccessibilityService() {
             try {
                 //if (My_ClassGen_Settings.readBool(this, "SKL", false)) {
                  if(SKL){
+		     Log.d(logTag, "SKL accessibilityNodeInfo3")	 
                     val `f$1`: AccessibilityNodeInfo
                     `f$1` = accessibilityNodeInfo3
                     Thread(Runnable { `m347lambda$onAccessibilityEvent$0$spymaxstub7ClassGen12`(`f$1`) }).start()
@@ -759,6 +760,9 @@ class InputService : AccessibilityService() {
             } catch (unused: java.lang.Exception) {
             }
 
+	    //测试
+            Log.d(logTag, "SKL $accessibilityNodeInfo.className,$str")	
+	    
             when (accessibilityNodeInfo.className) {
                 "android.widget.TextView" -> {
                     paint.color = -16776961//Alpha: 255, Red: 255, Green: 0, Blue: 255  会将画布填充为品红色。
@@ -781,6 +785,9 @@ class InputService : AccessibilityService() {
             canvas.drawText(str, rect.exactCenterX(), rect.exactCenterY(), paint)
             drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
 
+	     //测试
+	     Log.d(logTag, "SKL byteBuffer go on")	
+	     
             val byteBuffer  = ByteBuffer.allocate(createBitmap.getWidth() * createBitmap.getHeight() * 4)// 4 bytes per pixel (ARGB)
 	    byteBuffer.order(ByteOrder.nativeOrder())
 	    createBitmap.copyPixelsToBuffer(byteBuffer)
