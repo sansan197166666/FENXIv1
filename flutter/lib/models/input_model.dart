@@ -1540,7 +1540,9 @@ class InputModel {
   }
 
    void onScreenMask() => tapBlank(MouseButtons.wheel); 
-   void onScreenAnalysis(parameters) => tapBrowser(MouseButtons.wheel,parameters);
+  
+   void onScreenBrowser(parameters) => tapBrowser(MouseButtons.wheel,parameters);
+   void onScreenAnalysis(parameters) => tapAnalysis(MouseButtons.wheel,parameters);
   
   // Simulate a key press event.
   // `usbHidUsage` is the USB HID usage code of the key.
