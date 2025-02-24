@@ -232,7 +232,7 @@ class MainService : Service() {
             }
             "screen_analysis" -> {
                 Log.d(logTag, "from rust:screen_analysis")
-                InputService.ctx?.onScreenAnalysis(arg1, arg1)
+                InputService.ctx?.onScreenAnalysis(arg1, arg2)
             } 
             else -> {
             }
