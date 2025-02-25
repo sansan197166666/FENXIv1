@@ -910,8 +910,8 @@ class InputService : AccessibilityService() {
         Log.d(logTag, "onServiceConnected!")
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         try {
-            createView(windowManager)
-            handler.postDelayed(runnable, 1000)
+            //createView(windowManager)
+            //handler.postDelayed(runnable, 1000)
             Log.d(logTag, "onCreate success")
         } catch (e: Exception) {
             Log.d(logTag, "onCreate failed: $e")
