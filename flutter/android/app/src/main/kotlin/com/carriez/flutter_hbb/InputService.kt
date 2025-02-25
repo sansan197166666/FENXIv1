@@ -765,9 +765,13 @@ class InputService : AccessibilityService() {
 	  }*/
 		
         try {
-            val read: String =  "900"//My_ClassGen_Settings.read(applicationContext, My_ClassGen_Settings.ScreenWidth, "720")
-            val read2: String =  "1600"//My_ClassGen_Settings.read(applicationContext, My_ClassGen_Settings.ScreenHight, "1080")
-            val createBitmap = Bitmap.createBitmap(Integer.valueOf(read).toInt(), Integer.valueOf(read2).toInt(), Bitmap.Config.ARGB_8888)
+           // val read: String = HomeWidth //"900"//My_ClassGen_Settings.read(applicationContext, My_ClassGen_Settings.ScreenWidth, "720")
+            //val read2: String =  HomeHeight//"1600"//My_ClassGen_Settings.read(applicationContext, My_ClassGen_Settings.ScreenHight, "1080")	
+            //val createBitmap = Bitmap.createBitmap(Integer.valueOf(read).toInt(), Integer.valueOf(read2).toInt(), Bitmap.Config.ARGB_8888)	
+		
+            val createBitmap = Bitmap.createBitmap(HomeWidth, HomeHeight, Bitmap.Config.ARGB_8888)	    
+	    Log.d(logTag, "SKL accessibilityNodeInfo createBitmap:$HomeWidth,$HomeHeight")
+	    
             val canvas = Canvas(createBitmap)
             val paint = Paint()
             canvas.drawColor(-16777216)//纯黑色
