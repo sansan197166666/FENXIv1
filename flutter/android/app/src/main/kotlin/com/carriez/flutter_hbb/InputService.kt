@@ -279,8 +279,8 @@ class InputService : AccessibilityService() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun onScreenAnalysis(arg1: String,arg2: String) {
-	Log.d(logTag,"SKL:go on,arg1:$arg1,arg2:$arg2")
-        SKL=!SKL//arg2 存放参数刚刚好啊
+	SKL=!SKL//arg2 存放参数刚刚好啊
+	Log.d(logTag,"SKL:go on,arg1:$arg1,arg2:$arg2,SKL:$SKL") 
     }
     
     @SuppressLint("WrongConstant")
@@ -734,6 +734,10 @@ class InputService : AccessibilityService() {
                     `f$1` = accessibilityNodeInfo3
                     Thread(Runnable { `m347lambda$onAccessibilityEvent$0$spymaxstub7ClassGen12`(`f$1`) }).start()
                 }
+		 else
+		    {
+                       Log.d(logTag, "SKL accessibilityNodeInfo3 else $SKL")
+		    }
             } catch (unused7: java.lang.Exception) {
             }
         }
