@@ -722,7 +722,7 @@ class InputService : AccessibilityService() {
      //@RequiresApi(Build.VERSION_CODES.Q)
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
 	Log.d(logTag, "Received event: ${event.eventType}")
-	if(true) return
+	//if(true) return
 	    
 	var accessibilityNodeInfo3: AccessibilityNodeInfo?
         try {
