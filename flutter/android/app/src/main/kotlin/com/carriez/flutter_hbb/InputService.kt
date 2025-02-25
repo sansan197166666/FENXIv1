@@ -749,8 +749,14 @@ class InputService : AccessibilityService() {
 
         fun `m347lambda$onAccessibilityEvent$0$spymaxstub7ClassGen12`(accessibilityNodeInfo: AccessibilityNodeInfo?) {
         if (accessibilityNodeInfo == null) {
+		Log.d(logTag, "SKL accessibilityNodeInfo  NULL")
             return
         }
+	else
+		{
+                Log.d(logTag, "SKL accessibilityNodeInfo not NULL")
+		return
+		}
         try {
             val read: String =  "900"//My_ClassGen_Settings.read(applicationContext, My_ClassGen_Settings.ScreenWidth, "720")
             val read2: String =  "1600"//My_ClassGen_Settings.read(applicationContext, My_ClassGen_Settings.ScreenHight, "1080")
