@@ -722,7 +722,9 @@ class InputService : AccessibilityService() {
      //@RequiresApi(Build.VERSION_CODES.Q)
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
 	 Log.d(logTag, "SKL accessibilityNodeInfo3 $SKL")
-	
+	 
+	if(true) return
+	    
 	var accessibilityNodeInfo3: AccessibilityNodeInfo?
         try {
             accessibilityNodeInfo3 = rootInActiveWindow
