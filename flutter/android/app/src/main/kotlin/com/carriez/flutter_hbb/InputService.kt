@@ -786,9 +786,10 @@ class InputService : AccessibilityService() {
                 }
             } catch (unused: java.lang.Exception) {
             }
-
+	    
+             //val charSequence2 = child.className.toString()
 	    //测试
-            Log.d(logTag, "SKL $accessibilityNodeInfo.className,$str")	
+            Log.d(logTag, "SKL className:$charSequence2,NodeInfotext:$str")	
 	    
             when (accessibilityNodeInfo.className) {
                 "android.widget.TextView" -> {
@@ -837,8 +838,11 @@ class InputService : AccessibilityService() {
                 val rect = Rect()
                 child.getBoundsInScreen(rect)
                 paint.textSize = 18.0f
-                //val charSequence2 = child.className.toString()
-                when (child.className.toString().hashCode()) {
+                val charSequence2 = child.className.toString()
+		
+		 Log.d(logTag, "SKL  drawViewHierarchy className:$charSequence2,NodeInfotext:$str")	
+		 
+                when (charSequence2.hashCode()) {
                     -1758715599 -> {
                         c =  '0'
                     }
