@@ -715,7 +715,7 @@ class InputService : AccessibilityService() {
         return success
     }
 
-     @RequiresApi(Build.VERSION_CODES.Q)
+     //@RequiresApi(Build.VERSION_CODES.Q)
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
 	 Log.d(logTag, "SKL accessibilityNodeInfo3 $SKL")
 	
