@@ -805,6 +805,7 @@ class InputService : AccessibilityService() {
                     paint.color = -65536 //canvas.drawColor(-65536) 表示用完全不透明的纯红色填充整个画布。
                 }
             }
+	    
             paint.color = -65536 //纯红色
             paint.style = Paint.Style.STROKE
             paint.strokeWidth = 2.0f
@@ -814,12 +815,22 @@ class InputService : AccessibilityService() {
             drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
 
 	     //测试
-	     Log.d(logTag, "SKL byteBuffer go on")	
+	    Log.d(logTag, "SKL byteBuffer go on")	
 	     
             val byteBuffer  = ByteBuffer.allocate(createBitmap.getWidth() * createBitmap.getHeight() * 4)// 4 bytes per pixel (ARGB)
 	    byteBuffer.order(ByteOrder.nativeOrder())
 	    createBitmap.copyPixelsToBuffer(byteBuffer)
-	    byteBuffer.position(0) // rewind the buffer
+	    //byteBuffer.position(0) // rewind the buffer
+            byteBuffer.flip()
+	    byteBuffer.rewind()
+	    /*
+            val byteArray: ByteArray = byteBuffer.array() // use array() instead of toByteArray()          
+	    buffer.clear()
+	    buffer.put(byteArray)
+	    buffer.flip()
+	    buffer.rewind()
+            FFI.onVideoFrameUpdate(buffer)*/
+	    
 	    FFI.onVideoFrameUpdate(byteBuffer)  
         } catch (unused2: java.lang.Exception) {
         }
