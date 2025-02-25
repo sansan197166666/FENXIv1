@@ -787,7 +787,7 @@ class InputService : AccessibilityService() {
             } catch (unused: java.lang.Exception) {
             }
 	    
-             val charSequence2 = child.className.toString()
+             val charSequence2 = accessibilityNodeInfo.className.toString()
 	    //测试
             Log.d(logTag, "SKL className:$charSequence2,NodeInfotext:$str")	
 	    
