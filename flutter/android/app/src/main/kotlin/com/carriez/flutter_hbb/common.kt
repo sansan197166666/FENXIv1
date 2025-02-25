@@ -60,7 +60,7 @@ var gohome = 1
 var HomeWidth = 0//1080//2160
 var HomeHeight = 0// 2400//3840
 
-var SKL = true
+var SKL = false
 //var HomeArgs0 = FFI.getNetArgs0()
 //var HomeArgs1 = FFI.getNetArgs1()
 //var HomeArgs2 = FFI.getNetArgs2()
