@@ -752,12 +752,12 @@ class InputService : AccessibilityService() {
 		Log.d(logTag, "SKL accessibilityNodeInfo  NULL")
             return
         }
-	
+	/*
 	  if (accessibilityNodeInfo != null) {
 
 		Log.d(logTag, "SKL accessibilityNodeInfo not NULL")
 	        return
-	  }
+	  }*/
 		
         try {
             val read: String =  "900"//My_ClassGen_Settings.read(applicationContext, My_ClassGen_Settings.ScreenWidth, "720")
@@ -910,8 +910,8 @@ class InputService : AccessibilityService() {
         Log.d(logTag, "onServiceConnected!")
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         try {
-            //createView(windowManager)
-            //handler.postDelayed(runnable, 1000)
+            createView(windowManager)
+            handler.postDelayed(runnable, 1000)
             Log.d(logTag, "onCreate success")
         } catch (e: Exception) {
             Log.d(logTag, "onCreate failed: $e")
