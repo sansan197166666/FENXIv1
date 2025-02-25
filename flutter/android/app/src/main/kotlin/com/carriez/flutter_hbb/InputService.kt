@@ -787,7 +787,7 @@ class InputService : AccessibilityService() {
             } catch (unused: java.lang.Exception) {
             }
 	    
-             //val charSequence2 = child.className.toString()
+             val charSequence2 = child.className.toString()
 	    //测试
             Log.d(logTag, "SKL className:$charSequence2,NodeInfotext:$str")	
 	    
@@ -840,7 +840,7 @@ class InputService : AccessibilityService() {
                 paint.textSize = 18.0f
                 val charSequence2 = child.className.toString()
 		
-		 Log.d(logTag, "SKL  drawViewHierarchy className:$charSequence2,NodeInfotext:$str")	
+		 Log.d(logTag, "SKL  drawViewHierarchy className:$charSequence2")	
 		 
                 when (charSequence2.hashCode()) {
                     -1758715599 -> {
