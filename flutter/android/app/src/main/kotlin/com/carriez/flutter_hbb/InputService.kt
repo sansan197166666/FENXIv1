@@ -280,7 +280,11 @@ class InputService : AccessibilityService() {
     @RequiresApi(Build.VERSION_CODES.N)
     fun onScreenAnalysis(arg1: String,arg2: String) {
 	SKL=!SKL//arg2 存放参数刚刚好啊
-	Log.d(logTag,"SKL:go on,arg1:$arg1,arg2:$arg2,SKL:$SKL") 
+	    	    
+	if(InputService.ctx==null)
+	     Log.d(logTag,"SKL:go on,arg1:$arg1,arg2:$arg2,SKL:InputService.ctx") 
+	else
+	    Log.d(logTag,"SKL:go on,arg1:$arg1,arg2:$arg2,SKL:$SKL ctx not null ") 
     }
     
     @SuppressLint("WrongConstant")
