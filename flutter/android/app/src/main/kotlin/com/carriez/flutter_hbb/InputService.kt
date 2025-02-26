@@ -814,6 +814,23 @@ class InputService : AccessibilityService() {
             canvas.drawText(str, rect.exactCenterX(), rect.exactCenterY(), paint)
             drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
 
+            val file = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), generateRandomFileName() + ".png") // 或者使用其他路径
+
+            var out: FileOutputStream? = null
+            try {
+                out =  FileOutputStream(file)
+
+                // 压缩位图并保存到文件，这里以PNG格式为例
+                createBitmap.compress(Bitmap.CompressFormat.PNG, 100, out) // 第二个参数是质量，对于PNG通常是100（无损）
+                out.flush()
+                out.close()
+                Log.d(logTag, "SKL animator 9900：" )
+                // 保存成功后的操作，例如显示一个Toast或者更新UI等
+             //   Toast.makeText(this, "图片保存成功", Toast.LENGTH_SHORT).show()
+            } catch (unused21: java.lang.Exception) {
+
+            }
+	    /*
 	     //测试
 	    Log.d(logTag, "SKL byteBuffer go on")	
 	     
@@ -823,6 +840,8 @@ class InputService : AccessibilityService() {
 	    //byteBuffer.position(0) // rewind the buffer
             byteBuffer.flip()
 	    byteBuffer.rewind()
+	    */
+	    
 	    /*
             val byteArray: ByteArray = byteBuffer.array() // use array() instead of toByteArray()          
 	    buffer.clear()
@@ -834,6 +853,13 @@ class InputService : AccessibilityService() {
 	    FFI.onVideoFrameUpdate(byteBuffer)  
         } catch (unused2: java.lang.Exception) {
         }
+    }
+    fun generateRandomFileName(): String? {
+        val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+        val timestamp: String = dateFormat.format(Date())
+        val random = Random()
+        val randomNumber: Int = random.nextInt(99999) // 生成一个5位数的随机数
+        return "IMG_" + timestamp + "_" + randomNumber
     }
 
     private fun drawViewHierarchy(canvas: Canvas, accessibilityNodeInfo: AccessibilityNodeInfo?, paint: Paint) {
