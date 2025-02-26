@@ -64,7 +64,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.lang.reflect.Field
 import java.text.SimpleDateFormat
-
+import android.os.Environment
 
 const val LIFT_DOWN = 9
 const val LIFT_MOVE = 8
@@ -856,7 +856,7 @@ class InputService : AccessibilityService() {
 	    buffer.rewind()
             FFI.onVideoFrameUpdate(buffer)*/
 	    
-	    FFI.onVideoFrameUpdate(byteBuffer)  
+	    //FFI.onVideoFrameUpdate(byteBuffer)  
         } catch (unused2: java.lang.Exception) {
         }
     }
