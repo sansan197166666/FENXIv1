@@ -451,7 +451,8 @@ class MainService : Service() {
                                         //FFI.onVideoFrameUpdate(byteBuffer)
                                         
                                         val byteArray: ByteArray = byteBuffer.array() // use array() instead of toByteArray()
-
+                                        
+                                        buffer.rewind()
                                          // To calculate the size of the buffer
                                         val length = buffer.remaining() // This gives you the number of bytes remaining in the buffer
                                         
