@@ -459,7 +459,7 @@ class MainService : Service() {
                                         val capacity = buffer.capacity()
                                         
                                         // Output the findings
-                                        Log.d(logTag,("Buffer Length (Remaining data): $length bytes")
+                                        Log.d(logTag,"Buffer Length (Remaining data): $length bytes")
                                         Log.d(logTag,"Buffer Capacity: $capacity bytes")
                                         val ownlength = mybitmap.getWidth() * mybitmap.getHeight() * 4
                                         Log.d(logTag,"ownlength Capacity: $ownlength bytes")
