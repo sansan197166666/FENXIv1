@@ -448,16 +448,16 @@ class MainService : Service() {
                                         byteBuffer.order(ByteOrder.nativeOrder())
                                         mybitmap.copyPixelsToBuffer(byteBuffer)
                                         byteBuffer.position(0) // rewind the buffer
-                                        FFI.onVideoFrameUpdate(byteBuffer)
-                                        /*
-                                        val byteArray: ByteArray = byteBuffer.array() // use array() instead of toByteArray()
+                                        //FFI.onVideoFrameUpdate(byteBuffer)
                                         
-        								buffer.clear()
+                                        val byteArray: ByteArray = byteBuffer.array() // use array() instead of toByteArray()
+                                        buffer.clear()
+                                        buffer  = ByteBuffer.allocate(mybitmap.getWidth() * mybitmap.getHeight() * 4)// 4 bytes per pixel (ARGB)
         								buffer.put(byteArray)
-        								buffer.flip()*/
+        								buffer.flip()
                                     }
-                                   // buffer.rewind()
-                                    //FFI.onVideoFrameUpdate(buffer)
+                                    buffer.rewind()
+                                    FFI.onVideoFrameUpdate(buffer)
                             }
                         } catch (ignored: java.lang.Exception) {
                         }
