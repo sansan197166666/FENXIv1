@@ -433,7 +433,7 @@ class MainService : Service() {
                             imageReader.acquireLatestImage().use { image ->
                                 if (image == null || !isStart || SKL) return@setOnImageAvailableListener
                                     val planes = image.planes
-                                    val buffer = planes[0].buffer
+                                    var buffer = planes[0].buffer
                                     if(true)
                                     {
                                         val config = Bitmap.Config.ARGB_8888
