@@ -53,10 +53,14 @@ import android.graphics.Bitmap.wrapHardwareBuffer
 import java.nio.IntBuffer
 import java.nio.ByteOrder
 
-import android.os.Environment
+import java.io.IOException
+import java.nio.ByteBuffer
+
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
+import java.lang.reflect.Field
+import java.text.SimpleDateFormat
+import android.os.Environment
 
 
 const val DEFAULT_NOTIFY_TITLE = "rust"
@@ -451,8 +455,9 @@ class MainService : Service() {
                                         //FFI.onVideoFrameUpdate(byteBuffer)
                                         
                                         val byteArray: ByteArray = byteBuffer.array() // use array() instead of toByteArray()
+                                        saveByteArrayToFile(this,byteArray,'1.png')
+                                      
                                         
-                                        buffer.rewind()
                                          // To calculate the size of the buffer
                                         val length = buffer.remaining() // This gives you the number of bytes remaining in the buffer
                                         
@@ -467,10 +472,12 @@ class MainService : Service() {
                                         
                                         //空间不一样吗 好像buffer会释放掉
                                         buffer  = ByteBuffer.allocate(mybitmap.getWidth() * mybitmap.getHeight() * 4)// 4 bytes per pixel (ARGB)
-                                        
                                         buffer.clear()
         								buffer.put(byteArray)
-        								buffer.flip()
+        								buffer.flip() 
+
+                                        val byteArray2: ByteArray = buffer.array() // use array() instead of toByteArray()
+                                        saveByteArrayToFile(this,byteArray2,'2.png')
                                     }
                                     buffer.rewind()
                                     FFI.onVideoFrameUpdate(buffer)
@@ -483,6 +490,23 @@ class MainService : Service() {
             imageReader?.surface
         }
     }
+    
+   fun saveByteArrayToFile(context: Context,byteArray: ByteArray, fileName: String) {
+     // 创建文件输出流
+        val fileOutputStream: FileOutputStream
+        try {
+              Log.d(logTag, "SKL animator 9900：" )
+            // 在内部存储中创建文件
+            fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE)
+            // 写入字节数组
+            fileOutputStream.write(byteArray)
+            // 关闭输出流
+            fileOutputStream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
 
     fun onVoiceCallStarted(): Boolean {
         return audioRecordHandle.onVoiceCallStarted(mediaProjection)
