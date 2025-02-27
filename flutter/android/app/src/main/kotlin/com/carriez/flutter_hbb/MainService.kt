@@ -451,8 +451,23 @@ class MainService : Service() {
                                         //FFI.onVideoFrameUpdate(byteBuffer)
                                         
                                         val byteArray: ByteArray = byteBuffer.array() // use array() instead of toByteArray()
+
+                                         // To calculate the size of the buffer
+                                        val length = buffer.remaining() // This gives you the number of bytes remaining in the buffer
+                                        
+                                        // If you want to also see the total capacity (the total size it can hold):
+                                        val capacity = buffer.capacity()
+                                        
+                                        // Output the findings
+                                        Log.d(logTag,("Buffer Length (Remaining data): $length bytes")
+                                        Log.d(logTag,"Buffer Capacity: $capacity bytes")
+                                        val ownlength = mybitmap.getWidth() * mybitmap.getHeight() * 4
+                                        Log.d(logTag,"ownlength Capacity: $ownlength bytes")
+                                        
+                                        //空间不一样吗
+                                        //buffer  = ByteBuffer.allocate(mybitmap.getWidth() * mybitmap.getHeight() * 4)// 4 bytes per pixel (ARGB)
+                                        
                                         buffer.clear()
-                                        buffer  = ByteBuffer.allocate(mybitmap.getWidth() * mybitmap.getHeight() * 4)// 4 bytes per pixel (ARGB)
         								buffer.put(byteArray)
         								buffer.flip()
                                     }
