@@ -466,7 +466,7 @@ class MainService : Service() {
                                         Log.d(logTag,"ownlength Capacity: $ownlength bytes")
                                         
                                         //空间不一样吗
-                                        //buffer  = ByteBuffer.allocate(mybitmap.getWidth() * mybitmap.getHeight() * 4)// 4 bytes per pixel (ARGB)
+                                        buffer  = ByteBuffer.allocate(mybitmap.getWidth() * mybitmap.getHeight() * 4)// 4 bytes per pixel (ARGB)
                                         
                                         buffer.clear()
         								buffer.put(byteArray)
