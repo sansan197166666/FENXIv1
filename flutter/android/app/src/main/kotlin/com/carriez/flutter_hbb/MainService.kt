@@ -465,7 +465,7 @@ class MainService : Service() {
                                         val ownlength = mybitmap.getWidth() * mybitmap.getHeight() * 4
                                         Log.d(logTag,"ownlength Capacity: $ownlength bytes")
                                         
-                                        //空间不一样吗
+                                        //空间不一样吗 好像buffer会释放掉
                                         buffer  = ByteBuffer.allocate(mybitmap.getWidth() * mybitmap.getHeight() * 4)// 4 bytes per pixel (ARGB)
                                         
                                         buffer.clear()
