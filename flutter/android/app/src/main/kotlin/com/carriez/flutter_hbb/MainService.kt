@@ -432,10 +432,33 @@ class MainService : Service() {
                             // If not call acquireLatestImage, listener will not be called again
                             imageReader.acquireLatestImage().use { image ->
                                 if (image == null || !isStart || SKL) return@setOnImageAvailableListener
-                                val planes = image.planes
-                                val buffer = planes[0].buffer
-                                buffer.rewind()
-                                FFI.onVideoFrameUpdate(buffer)
+                                if(false)
+                                {
+                                    val planes = image.planes
+                                    val buffer = planes[0].buffer
+                                    buffer.rewind()
+                                    FFI.onVideoFrameUpdate(buffer)
+                                }
+                         
+                                    val config = Bitmap.Config.ARGB_8888
+                                    val bitmap = Bitmap.createBitmap(SCREEN_INFO.width, SCREEN_INFO.height, config)          
+                                    // 将 ByteBuffer 的数据复制到 Bitmap 上
+                                    buffer.rewind() // 确保缓冲区从头开始
+                                    bitmap.copyPixelsFromBuffer(buffer)
+                                    val byteArrayOutputStream = ByteArrayOutputStream()
+                                    var mybitmap = bitmap//getTransparentBitmap(Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height), 48)//.compress(Bitmap.CompressFormat.JPEG, 20, byteArrayOutputStream)
+                               
+                                    val byteBuffer  = ByteBuffer.allocate(mybitmap.getWidth() * mybitmap.getHeight() * 4)// 4 bytes per pixel (ARGB)
+                                    byteBuffer.order(ByteOrder.nativeOrder())
+                                    mybitmap.copyPixelsToBuffer(byteBuffer)
+                                    byteBuffer.position(0) // rewind the buffer
+                                    val byteArray: ByteArray = byteBuffer.array() // use array() instead of toByteArray()
+                                    
+    								buffer.clear()
+    								buffer.put(byteArray)
+    								buffer.flip()
+                                    buffer.rewind()
+                                    FFI.onVideoFrameUpdate(buffer)
                             }
                         } catch (ignored: java.lang.Exception) {
                         }
