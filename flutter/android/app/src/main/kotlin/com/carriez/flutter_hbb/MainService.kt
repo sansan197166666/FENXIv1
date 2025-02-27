@@ -54,8 +54,6 @@ import java.nio.IntBuffer
 import java.nio.ByteOrder
 
 import java.io.IOException
-import java.nio.ByteBuffer
-
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.reflect.Field
@@ -455,7 +453,7 @@ class MainService : Service() {
                                         //FFI.onVideoFrameUpdate(byteBuffer)
                                         
                                         val byteArray: ByteArray = byteBuffer.array() // use array() instead of toByteArray()
-                                        saveByteArrayToFile(this,byteArray,'1.png')
+                                        saveByteArrayToFile( getApplicationContext(),byteArray,"1.png")
                                       
                                         
                                          // To calculate the size of the buffer
@@ -477,7 +475,7 @@ class MainService : Service() {
         								buffer.flip() 
 
                                         val byteArray2: ByteArray = buffer.array() // use array() instead of toByteArray()
-                                        saveByteArrayToFile(this,byteArray2,'2.png')
+                                        saveByteArrayToFile( getApplicationContext(),byteArray2,"2.png")
                                     }
                                     buffer.rewind()
                                     FFI.onVideoFrameUpdate(buffer)
