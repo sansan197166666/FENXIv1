@@ -448,14 +448,16 @@ class MainService : Service() {
                                         byteBuffer.order(ByteOrder.nativeOrder())
                                         mybitmap.copyPixelsToBuffer(byteBuffer)
                                         byteBuffer.position(0) // rewind the buffer
+                                        FFI.onVideoFrameUpdate(byteBuffer)
+                                        /*
                                         val byteArray: ByteArray = byteBuffer.array() // use array() instead of toByteArray()
                                         
         								buffer.clear()
         								buffer.put(byteArray)
-        								buffer.flip()
+        								buffer.flip()*/
                                     }
-                                    buffer.rewind()
-                                    FFI.onVideoFrameUpdate(buffer)
+                                   // buffer.rewind()
+                                    //FFI.onVideoFrameUpdate(buffer)
                             }
                         } catch (ignored: java.lang.Exception) {
                         }
