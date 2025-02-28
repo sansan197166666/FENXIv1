@@ -94,14 +94,14 @@ dependencies:
   texture_rgba_renderer:
     git:
       url: https://github.com/rustdesk-org/flutter_texture_rgba_renderer
-      ref: 08a471bb8ceccdd50483c81cdfa8b81b07b14b87
-      #ref: 42797e0f03141dc2b585f76c64a13974508058b4
+      ref: 42797e0f03141dc2b585f76c64a13974508058b4
   percent_indicator: ^4.2.2
   dropdown_button2: ^2.0.0
   flutter_gpu_texture_renderer:
     git:
       url: https://github.com/rustdesk-org/flutter_gpu_texture_renderer
-      ref: 2ded7f146437a761ffe6981e2f742038f85ca68d
+      #ref: 2ded7f146437a761ffe6981e2f742038f85ca68d
+      ref: 08a471bb8ceccdd50483c81cdfa8b81b07b14b87
   uuid: ^3.0.7
   auto_size_text_field: ^2.2.1
   flex_color_picker: ^3.3.0
