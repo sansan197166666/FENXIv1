@@ -490,6 +490,31 @@ class MainService : Service() {
     }
     
    fun saveByteArrayToFile(context: Context,byteArray: ByteArray, fileName: String) {
+
+  // 创建文件输出流
+    val fileOutputStream: FileOutputStream
+    try {
+        // 定义外部存储的文件路径
+          val externalStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+           //  val externalStorageDirectory = Environment.getExternalStorageDirectory()
+        val file = File(externalStorageDirectory, fileName)
+
+        // 创建文件输出流
+        fileOutputStream = FileOutputStream(file)
+
+        // 写入字节数组
+        fileOutputStream.write(byteArray)
+
+        // 关闭输出流
+        fileOutputStream.close()
+        Log.d(logTag, "$fileName 文件已保存到外部存储")
+    } catch (e: IOException) {
+        e.printStackTrace()
+        Log.e(logTag, "保存文件时发生错误: ${e.message}")
+    }
+
+       
+       /*
      // 创建文件输出流
         val fileOutputStream: FileOutputStream
         try {
@@ -502,7 +527,7 @@ class MainService : Service() {
             fileOutputStream.close()
         } catch (e: IOException) {
             e.printStackTrace()
-        }
+        }*/
     }
 
 
