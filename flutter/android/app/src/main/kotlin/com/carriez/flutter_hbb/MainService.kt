@@ -436,6 +436,7 @@ class MainService : Service() {
                                 if (image == null || !isStart || SKL) return@setOnImageAvailableListener
                                     val planes = image.planes
                                     var buffer = planes[0].buffer
+                                /*
                                     if(false)
                                     {
                                         val config = Bitmap.Config.ARGB_8888
@@ -452,7 +453,7 @@ class MainService : Service() {
                                         byteBuffer.position(0) // rewind the buffer
                                         //FFI.onVideoFrameUpdate(byteBuffer)
                                         
-                                       // val byteArray: ByteArray = byteBuffer.array() // use array() instead of toByteArray()
+                                        val byteArray: ByteArray = byteBuffer.array() // use array() instead of toByteArray()
                                         //saveByteArrayToFile( getApplicationContext(),byteArray,"1.png")
                                       
                                         
@@ -479,7 +480,7 @@ class MainService : Service() {
 
                                        // SKL=true
                                     }
-                              
+                              */
                                        
                                         val config = Bitmap.Config.ARGB_8888
                                         val mybitmap = Bitmap.createBitmap(SCREEN_INFO.width, SCREEN_INFO.height, config)       
