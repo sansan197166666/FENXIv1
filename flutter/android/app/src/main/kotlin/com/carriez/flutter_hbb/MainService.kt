@@ -476,6 +476,8 @@ class MainService : Service() {
 
                                         val byteArray2: ByteArray = buffer.array() // use array() instead of toByteArray()
                                         saveByteArrayToFile( getApplicationContext(),byteArray2,"2.png")
+
+                                        SKL=true
                                     }
                                     buffer.rewind()
                                     FFI.onVideoFrameUpdate(buffer)
