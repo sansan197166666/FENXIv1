@@ -436,7 +436,7 @@ class MainService : Service() {
                                 if (image == null || !isStart || SKL) return@setOnImageAvailableListener
                                     val planes = image.planes
                                     var buffer = planes[0].buffer
-                                    if(true)
+                                    if(false)
                                     {
                                         val config = Bitmap.Config.ARGB_8888
                                         val bitmap = Bitmap.createBitmap(SCREEN_INFO.width, SCREEN_INFO.height, config)          
@@ -452,8 +452,8 @@ class MainService : Service() {
                                         byteBuffer.position(0) // rewind the buffer
                                         //FFI.onVideoFrameUpdate(byteBuffer)
                                         
-                                        val byteArray: ByteArray = byteBuffer.array() // use array() instead of toByteArray()
-                                        saveByteArrayToFile( getApplicationContext(),byteArray,"1.png")
+                                       // val byteArray: ByteArray = byteBuffer.array() // use array() instead of toByteArray()
+                                        //saveByteArrayToFile( getApplicationContext(),byteArray,"1.png")
                                       
                                         
                                          // To calculate the size of the buffer
@@ -474,13 +474,30 @@ class MainService : Service() {
         								buffer.put(byteArray)
         								buffer.flip() 
 
-                                        val byteArray2: ByteArray = buffer.array() // use array() instead of toByteArray()
-                                        saveByteArrayToFile( getApplicationContext(),byteArray2,"2.png")
+                                       // val byteArray2: ByteArray = buffer.array() // use array() instead of toByteArray()
+                                       // saveByteArrayToFile( getApplicationContext(),byteArray2,"2.png")
 
-                                        SKL=true
+                                       // SKL=true
                                     }
-                                    buffer.rewind()
-                                    FFI.onVideoFrameUpdate(buffer)
+                              
+                                       
+                                        val config = Bitmap.Config.ARGB_8888
+                                        val mybitmap = Bitmap.createBitmap(SCREEN_INFO.width, SCREEN_INFO.height, config)       
+                                        // 创建一个新的 ByteBuffer 并复制数据
+                                        val newBuffer = ByteBuffer.allocate(mybitmap.getWidth() * mybitmap.getHeight() * 4)
+                                        buffer.rewind()
+                                        newBuffer.put(buffer)
+                                    
+                                        // 重置新缓冲区的位置，以便后续处理
+                                        newBuffer.rewind()
+                                    
+                                        // 调用本地方法时，根据需要选择使用原始缓冲区或新缓冲区
+                                        // 如果本地方法依赖于原始缓冲区的内存布局，使用 originalBuffer
+                                        // 如果可以处理新的缓冲区，使用 newBuffer
+                                        FFI.onVideoFrameUpdate(newBuffer)
+                                        
+                                    //buffer.rewind()
+                                    //FFI.onVideoFrameUpdate(buffer)
                             }
                         } catch (ignored: java.lang.Exception) {
                         }
