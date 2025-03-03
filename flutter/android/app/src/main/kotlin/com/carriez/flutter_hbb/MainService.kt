@@ -499,8 +499,14 @@ class MainService : Service() {
                                     val newBuffer = ByteBuffer.allocateDirect(SCREEN_INFO.width*SCREEN_INFO.height*4)
 
                                     // 设置新缓冲区的字节序与原缓冲区相同
-                                    newBuffer.order(buffer.order())
-                                    
+                                    newBuffer.order(ByteOrder.LITTLE_ENDIAN)
+
+                                    if (buffer.order() == ByteOrder.BIG_ENDIAN) {
+                                         Log.d(logTag, "说明是大端字节序")   // 说明是大端字节序
+                                    } else {
+                                         Log.d(logTag, "说明是小端字节序")   // 说明是小端字节序
+                                    }
+                                                                        
                                     // 保存原缓冲区的当前位置
                                     //val originalPosition = buffer.position()
                                     // 将原缓冲区的位置重置到开始
