@@ -535,7 +535,7 @@ class MainService : Service() {
                                     newBuffer.rewind()
                                     
                                     // 调用 FFI 方法更新视频帧
-                                    FFI.onVideoFrameUpdate(newBuffer)
+                                    FFI.onVideoFrameUpdate2(newBuffer)
                                     
                                     //buffer.rewind()
                                     //FFI.onVideoFrameUpdate(buffer)
