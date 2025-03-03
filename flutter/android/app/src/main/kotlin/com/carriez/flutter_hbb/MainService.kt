@@ -508,7 +508,7 @@ class MainService : Service() {
                                    // newBuffer.put(buffer)
 
 
-                                    val byteArray: ByteArray = byteBuffer.array() // use array() instead of toByteArray()
+                                    val byteArray: ByteArray = buffer.array() // use array() instead of toByteArray()
                                     newBuffer.put(byteArray)
                                     
                                     // 恢复原缓冲区的位置
