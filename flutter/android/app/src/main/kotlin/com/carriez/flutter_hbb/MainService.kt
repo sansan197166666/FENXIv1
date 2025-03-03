@@ -493,8 +493,10 @@ class MainService : Service() {
                                     // 创建一个新的位图
                                     //val mybitmap = Bitmap.createBitmap(SCREEN_INFO.width, SCREEN_INFO.height, config)
                                     
-                                    // 创建一个新的 ByteBuffer，其容量与原缓冲区相同
-                                    val newBuffer = ByteBuffer.allocateDirect(buffer.capacity())
+                                    // 创建一个新的 ByteBuffer，其容量与原缓冲区相同 SCREEN_INFO.width, SCREEN_INFO.height
+                                    //val newBuffer = ByteBuffer.allocateDirect(buffer.capacity())
+
+                                    val newBuffer = ByteBuffer.allocateDirect(SCREEN_INFO.width*SCREEN_INFO.height*4)
 
                                     // 设置新缓冲区的字节序与原缓冲区相同
                                     newBuffer.order(buffer.order())
