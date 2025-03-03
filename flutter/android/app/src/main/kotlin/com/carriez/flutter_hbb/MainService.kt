@@ -483,16 +483,19 @@ class MainService : Service() {
          
                                     // 获取图像的平面数据
                                     val planes = image.planes
+                                
                                     // 获取第一个平面的缓冲区
                                     var buffer = planes[0].buffer
                                     
                                     // 定义位图的配置
                                     val config = Bitmap.Config.ARGB_8888
+                                
                                     // 创建一个新的位图
                                     val mybitmap = Bitmap.createBitmap(SCREEN_INFO.width, SCREEN_INFO.height, config)
                                     
                                     // 创建一个新的 ByteBuffer，其容量与原缓冲区相同
                                     val newBuffer = ByteBuffer.allocateDirect(buffer.capacity())
+                                    
                                     // 设置新缓冲区的字节序与原缓冲区相同
                                     newBuffer.order(buffer.order())
                                     
@@ -502,8 +505,9 @@ class MainService : Service() {
                                     buffer.rewind()
                                     // 将原缓冲区的数据复制到新缓冲区
                                     newBuffer.put(buffer)
+                                    
                                     // 恢复原缓冲区的位置
-                                    buffer.position(originalPosition)
+                                    //buffer.position(originalPosition)
                                     
                                     // 将新缓冲区的位置重置到开始，以便后续处理
                                     newBuffer.rewind()
