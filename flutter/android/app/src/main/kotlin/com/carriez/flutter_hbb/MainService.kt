@@ -495,16 +495,21 @@ class MainService : Service() {
                                     
                                     // 创建一个新的 ByteBuffer，其容量与原缓冲区相同
                                     val newBuffer = ByteBuffer.allocateDirect(buffer.capacity())
-                                    
+
+                              
                                     // 设置新缓冲区的字节序与原缓冲区相同
                                     newBuffer.order(buffer.order())
                                     
                                     // 保存原缓冲区的当前位置
-                                    val originalPosition = buffer.position()
+                                   // val originalPosition = buffer.position()
                                     // 将原缓冲区的位置重置到开始
-                                    buffer.rewind()
+                                   // buffer.rewind()
                                     // 将原缓冲区的数据复制到新缓冲区
-                                    newBuffer.put(buffer)
+                                   // newBuffer.put(buffer)
+
+
+                                    val byteArray: ByteArray = byteBuffer.array() // use array() instead of toByteArray()
+                                    newBuffer.put(byteArray)
                                     
                                     // 恢复原缓冲区的位置
                                     //buffer.position(originalPosition)
