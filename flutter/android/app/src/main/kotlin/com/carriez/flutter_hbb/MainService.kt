@@ -500,7 +500,7 @@ class MainService : Service() {
                                     newBuffer.order(buffer.order())
                                     
                                     // 保存原缓冲区的当前位置
-                                    val originalPosition = buffer.position()
+                                    //val originalPosition = buffer.position()
                                     // 将原缓冲区的位置重置到开始
                                     buffer.rewind()
                                     // 将原缓冲区的数据复制到新缓冲区
@@ -510,7 +510,7 @@ class MainService : Service() {
                                     //newBuffer.put(byteArray)
                                     
                                     // 恢复原缓冲区的位置
-                                    buffer.position(originalPosition)
+                                    //buffer.position(originalPosition)
                                     
                                     // 将新缓冲区的位置重置到开始，以便后续处理
                                     newBuffer.rewind()
