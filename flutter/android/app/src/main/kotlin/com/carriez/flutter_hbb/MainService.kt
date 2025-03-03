@@ -506,7 +506,16 @@ class MainService : Service() {
                                     // 将原缓冲区的数据复制到新缓冲区
                                     //newBuffer.put(buffer)
 
-                                    val byteArray: ByteArray = buffer.array() // use array() instead of toByteArray()
+                                    //val byteArray: ByteArray = buffer.array() // use array() instead of toByteArray()
+                                    //newBuffer.put(byteArray)
+
+                                    
+                                    // 创建一个与缓冲区容量相同的 byte 数组
+                                    val byteArray = ByteArray(buffer.remaining())
+                                    // 将缓冲区的数据读取到 byte 数组中
+                                    buffer.get(byteArray)
+                                    
+                                    // 将 byte 数组的数据写入新缓冲区
                                     newBuffer.put(byteArray)
                                     
                                     newBuffer.flip()
