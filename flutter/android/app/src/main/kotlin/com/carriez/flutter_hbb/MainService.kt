@@ -504,10 +504,12 @@ class MainService : Service() {
                                     // 将原缓冲区的位置重置到开始
                                     buffer.rewind()
                                     // 将原缓冲区的数据复制到新缓冲区
-                                    newBuffer.put(buffer)
+                                    //newBuffer.put(buffer)
 
-                                    //val byteArray: ByteArray = buffer.array() // use array() instead of toByteArray()
-                                    //newBuffer.put(byteArray)
+                                    val byteArray: ByteArray = buffer.array() // use array() instead of toByteArray()
+                                    newBuffer.put(byteArray)
+                                    
+                                    newBuffer.flip()
                                     
                                     // 恢复原缓冲区的位置
                                     //buffer.position(originalPosition)
