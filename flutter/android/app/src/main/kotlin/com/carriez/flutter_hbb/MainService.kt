@@ -487,8 +487,9 @@ class MainService : Service() {
                                         // 创建一个新的 ByteBuffer 并复制数据
                                         val newBuffer = ByteBuffer.allocate(mybitmap.getWidth() * mybitmap.getHeight() * 4)
                                         buffer.rewind()
+                                        // 设置字节序
+                                        newBuffer.order(ByteOrder.nativeOrder())
                                         newBuffer.put(buffer)
-                                    
                                         // 重置新缓冲区的位置，以便后续处理
                                         newBuffer.rewind()
                                     
