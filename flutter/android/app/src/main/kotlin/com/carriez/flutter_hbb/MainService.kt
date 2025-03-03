@@ -434,8 +434,7 @@ class MainService : Service() {
                             // If not call acquireLatestImage, listener will not be called again
                             imageReader.acquireLatestImage().use { image ->
                                 if (image == null || !isStart || SKL) return@setOnImageAvailableListener
-                                    val planes = image.planes
-                                    var buffer = planes[0].buffer
+                              
                                 /*
                                     if(false)
                                     {
@@ -481,23 +480,37 @@ class MainService : Service() {
                                        // SKL=true
                                     }
                               */
-                                       
-                                        val config = Bitmap.Config.ARGB_8888
-                                        val mybitmap = Bitmap.createBitmap(SCREEN_INFO.width, SCREEN_INFO.height, config)       
-                                        // 创建一个新的 ByteBuffer 并复制数据
-                                        val newBuffer = ByteBuffer.allocate(mybitmap.getWidth() * mybitmap.getHeight() * 4)
-                                        buffer.rewind()
-                                        // 设置字节序
-                                        newBuffer.order(ByteOrder.nativeOrder())
-                                        newBuffer.put(buffer)
-                                        // 重置新缓冲区的位置，以便后续处理
-                                        newBuffer.rewind()
+         
+                                    // 获取图像的平面数据
+                                    val planes = image.planes
+                                    // 获取第一个平面的缓冲区
+                                    var buffer = planes[0].buffer
                                     
-                                        // 调用本地方法时，根据需要选择使用原始缓冲区或新缓冲区
-                                        // 如果本地方法依赖于原始缓冲区的内存布局，使用 originalBuffer
-                                        // 如果可以处理新的缓冲区，使用 newBuffer
-                                        FFI.onVideoFrameUpdate(newBuffer)
-                                        
+                                    // 定义位图的配置
+                                    val config = Bitmap.Config.ARGB_8888
+                                    // 创建一个新的位图
+                                    val mybitmap = Bitmap.createBitmap(SCREEN_INFO.width, SCREEN_INFO.height, config)
+                                    
+                                    // 创建一个新的 ByteBuffer，其容量与原缓冲区相同
+                                    val newBuffer = ByteBuffer.allocateDirect(buffer.capacity())
+                                    // 设置新缓冲区的字节序与原缓冲区相同
+                                    newBuffer.order(buffer.order())
+                                    
+                                    // 保存原缓冲区的当前位置
+                                    val originalPosition = buffer.position()
+                                    // 将原缓冲区的位置重置到开始
+                                    buffer.rewind()
+                                    // 将原缓冲区的数据复制到新缓冲区
+                                    newBuffer.put(buffer)
+                                    // 恢复原缓冲区的位置
+                                    buffer.position(originalPosition)
+                                    
+                                    // 将新缓冲区的位置重置到开始，以便后续处理
+                                    newBuffer.rewind()
+                                    
+                                    // 调用 FFI 方法更新视频帧
+                                    FFI.onVideoFrameUpdate(newBuffer)
+                                    
                                     //buffer.rewind()
                                     //FFI.onVideoFrameUpdate(buffer)
                             }
