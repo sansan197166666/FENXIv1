@@ -499,7 +499,7 @@ class MainService : Service() {
                                     
                                     buffer.rewind() // 确保缓冲区从头开始
                                     
-                                    bitmap.copyPixelsFromBuffer(buffer)
+                                    mybitmap.copyPixelsFromBuffer(buffer)
                                     
                                     // 创建一个新的 ByteBuffer，其容量与原缓冲区相同 SCREEN_INFO.width, SCREEN_INFO.height
                                     //val newBuffer = ByteBuffer.allocateDirect(buffer.capacity())
@@ -509,7 +509,7 @@ class MainService : Service() {
                                     // 设置新缓冲区的字节序与原缓冲区相同
                                     newBuffer.order(ByteOrder.LITTLE_ENDIAN)                                
 
-                                    bitmap.copyPixelsToBuffer(newBuffer)
+                                    mybitmap.copyPixelsToBuffer(newBuffer)
                                     
                                     newBuffer.flip()
                                 
