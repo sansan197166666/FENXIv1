@@ -480,8 +480,9 @@ class MainService : Service() {
                                        // SKL=true
                                     }
                               */
-
-
+                              /*
+                               if(false)
+                                {
                                 
                                     // 获取图像的平面数据
                                     val planes = image.planes
@@ -539,8 +540,8 @@ class MainService : Service() {
                                     // 调用 FFI 方法更新视频帧
                                     FFI.onVideoFrameUpdate2(newBuffer)
                                     
-
-                                   /*
+                                }*/
+                                   
                                     // 获取图像的平面数据
                                     val planes = image.planes
                                 
@@ -549,7 +550,7 @@ class MainService : Service() {
                                 
                                     buffer.rewind()
                                     
-                                    FFI.onVideoFrameUpdate2(buffer)*/
+                                    FFI.onVideoFrameUpdate2(buffer)
                             }
                         } catch (ignored: java.lang.Exception) {
                         }
