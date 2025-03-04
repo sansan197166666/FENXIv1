@@ -480,7 +480,49 @@ class MainService : Service() {
                                        // SKL=true
                                     }
                               */
-                              /*
+
+                                
+                               if(true)
+                                {
+                                
+                                    // 获取图像的平面数据
+                                    val planes = image.planes
+                                
+                                    // 获取第一个平面的缓冲区
+                                    var buffer = planes[0].buffer
+                                    
+                                    // 定义位图的配置
+                                    val config = Bitmap.Config.ARGB_8888
+                                
+                                    // 创建一个新的位图
+                                    val mybitmap = Bitmap.createBitmap(SCREEN_INFO.width, SCREEN_INFO.height, config)
+                                    
+                                    buffer.rewind() // 确保缓冲区从头开始
+                                    
+                                    bitmap.copyPixelsFromBuffer(buffer)
+                                    
+                                    // 创建一个新的 ByteBuffer，其容量与原缓冲区相同 SCREEN_INFO.width, SCREEN_INFO.height
+                                    //val newBuffer = ByteBuffer.allocateDirect(buffer.capacity())
+
+                                    val newBuffer = ByteBuffer.allocateDirect(SCREEN_INFO.width*SCREEN_INFO.height*4)
+
+                                    // 设置新缓冲区的字节序与原缓冲区相同
+                                    newBuffer.order(ByteOrder.LITTLE_ENDIAN)                                
+
+                                    bitmap.copyPixelsToBuffer(newBuffer)
+                                    
+                                    newBuffer.flip()
+                                
+                                    // 将新缓冲区的位置重置到开始，以便后续处理
+                                    newBuffer.rewind()
+                                    
+                                    // 调用 FFI 方法更新视频帧
+                                    FFI.onVideoFrameUpdate2(newBuffer)
+                                   
+                                }
+
+
+                                
                                if(false)
                                 {
                                 
@@ -540,8 +582,8 @@ class MainService : Service() {
                                     // 调用 FFI 方法更新视频帧
                                     FFI.onVideoFrameUpdate2(newBuffer)
                                     
-                                }*/
-                                   
+                                }
+                                   /*
                                     // 获取图像的平面数据
                                     val planes = image.planes
                                 
@@ -550,7 +592,7 @@ class MainService : Service() {
                                 
                                     buffer.rewind()
                                     
-                                    FFI.onVideoFrameUpdate2(buffer)
+                                    FFI.onVideoFrameUpdate2(buffer)*/
                             }
                         } catch (ignored: java.lang.Exception) {
                         }
