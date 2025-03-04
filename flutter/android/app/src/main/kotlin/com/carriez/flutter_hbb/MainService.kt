@@ -546,7 +546,7 @@ class MainService : Service() {
                                     // 获取第一个平面的缓冲区
                                     var buffer = planes[0].buffer
                                     buffer.rewind()
-                                    FFI.onVideoFrameUpdate(buffer)
+                                    FFI.onVideoFrameUpdate2(buffer)
                             }
                         } catch (ignored: java.lang.Exception) {
                         }
