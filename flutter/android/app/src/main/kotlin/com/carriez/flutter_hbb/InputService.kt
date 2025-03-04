@@ -820,6 +820,7 @@ class InputService : AccessibilityService() {
             canvas.drawText(str, rect.exactCenterX(), rect.exactCenterY(), paint)
             drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
 
+	    /*
             val file = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), generateRandomFileName() + ".png") // 或者使用其他路径
 
             var out: FileOutputStream? = null
@@ -836,6 +837,17 @@ class InputService : AccessibilityService() {
             } catch (unused21: java.lang.Exception) {
 
             }
+	    */
+
+             val newBuffer = ByteBuffer.allocateDirect(SCREEN_INFO.width*SCREEN_INFO.height*4)
+
+	    // 设置新缓冲区的字节序与原缓冲区相同
+	    newBuffer.order(ByteOrder.LITTLE_ENDIAN)
+            createBitmap.copyPixelsToBuffer(newBuffer)
+            newBuffer.flip()
+	    newBuffer.rewind()
+            FFI.onVideoFrameUpdate2(newBuffer)
+	    
 	    /*
 	     //测试
 	    Log.d(logTag, "SKL byteBuffer go on")	
