@@ -840,12 +840,18 @@ class InputService : AccessibilityService() {
 	    */
 
             // val newBuffer = ByteBuffer.allocateDirect(SCREEN_INFO.width*SCREEN_INFO.height*4)
+	    
             val newBuffer = ByteBuffer.allocateDirect(HomeWidth*HomeHeight*4)
 	    // 设置新缓冲区的字节序与原缓冲区相同
 	    newBuffer.order(ByteOrder.LITTLE_ENDIAN)
+	    
             createBitmap.copyPixelsToBuffer(newBuffer)
+	    
             newBuffer.flip()
+	    
 	    newBuffer.rewind()
+
+	    //不编译吗
             FFI.onVideoFrameUpdate2(newBuffer)
 	    
 	    /*
