@@ -843,7 +843,7 @@ class InputService : AccessibilityService() {
             }
 	    */
 
-            ByteBuffer  newBuffer = ByteBuffer//.allocate(createBitmap.getWidth() * createBitmap.getHeight() * 4)
+            var  newBuffer = ByteBuffer//.allocate(createBitmap.getWidth() * createBitmap.getHeight() * 4)
 		                 .allocateDirect(createBitmap.getWidth() * createBitmap.getHeight() * 4)
 	    // 设置新缓冲区的字节序与原缓冲区相同
 	    newBuffer.order(ByteOrder.LITTLE_ENDIAN)
