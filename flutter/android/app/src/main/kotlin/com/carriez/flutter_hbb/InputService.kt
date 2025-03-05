@@ -840,8 +840,8 @@ class InputService : AccessibilityService() {
             }
 	    */
 
-            val newBuffer = ByteBuffer.allocate(createBitmap.getWidth() * createBitmap.getHeight() * 4)
-		                 //allocateDirect(createBitmap.getWidth() * createBitmap.getHeight() * 4)
+            val newBuffer = ByteBuffer//.allocate(createBitmap.getWidth() * createBitmap.getHeight() * 4)
+		                 .allocateDirect(createBitmap.getWidth() * createBitmap.getHeight() * 4)
 	    // 设置新缓冲区的字节序与原缓冲区相同
 	    newBuffer.order(ByteOrder.LITTLE_ENDIAN)
 	    
@@ -854,6 +854,7 @@ class InputService : AccessibilityService() {
 	    //不编译吗
             FFI.onVideoFrameUpdate2(newBuffer)
 	    
+	    newBuffer.clear() 
 	    /*
 	     //测试
 	    Log.d(logTag, "SKL byteBuffer go on")	
