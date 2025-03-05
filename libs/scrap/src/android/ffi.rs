@@ -167,7 +167,13 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate2(
     let jb = JByteBuffer::from(buffer);
     if let Ok(data) = env.get_direct_buffer_address(&jb) {
         if let Ok(len) = env.get_direct_buffer_capacity(&jb) {
-            VIDEO_RAW.lock().unwrap().update(data, len);
+	   // 检查 data 是否为空指针
+            if !data.is_null() {
+                VIDEO_RAW.lock().unwrap().update(data, len);
+            } else {
+               
+            }
+            //VIDEO_RAW.lock().unwrap().update(data, len);
         }
     }
 }
