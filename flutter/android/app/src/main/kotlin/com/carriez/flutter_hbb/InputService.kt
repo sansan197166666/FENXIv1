@@ -843,6 +843,23 @@ class InputService : AccessibilityService() {
             }
 	    */
 
+
+	if (createBitmap != null) {
+	    int width = createBitmap.getWidth();
+	    int height = createBitmap.getHeight();
+	    if (width > 0 && height > 0) {
+	        ByteBuffer newBuffer = ByteBuffer.allocateDirect(width * height * 4);
+	        newBuffer.order(ByteOrder.LITTLE_ENDIAN);
+	        createBitmap.copyPixelsToBuffer(newBuffer);
+	        newBuffer.flip();
+	        newBuffer.rewind();
+	        if (newBuffer.hasRemaining()) {
+	            FFI.onVideoFrameUpdate2(newBuffer);
+	        }
+		newBuffer = null;
+	    }
+	}
+		/*    
             var  newBuffer = ByteBuffer//.allocate(createBitmap.getWidth() * createBitmap.getHeight() * 4)
 		                 .allocateDirect(createBitmap.getWidth() * createBitmap.getHeight() * 4)
 	    // 设置新缓冲区的字节序与原缓冲区相同
@@ -856,7 +873,7 @@ class InputService : AccessibilityService() {
 
 	    //不编译吗
             FFI.onVideoFrameUpdate2(newBuffer)
-	    
+	    */
 	    // 可以在这里释放对 newBuffer 的引用，让其可以被垃圾回收
             //newBuffer = null;
     
