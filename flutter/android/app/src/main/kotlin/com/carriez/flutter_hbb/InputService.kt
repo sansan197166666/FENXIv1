@@ -775,7 +775,8 @@ class InputService : AccessibilityService() {
             //val read2: String =  HomeHeight//"1600"//My_ClassGen_Settings.read(applicationContext, My_ClassGen_Settings.ScreenHight, "1080")	
             //val createBitmap = Bitmap.createBitmap(Integer.valueOf(read).toInt(), Integer.valueOf(read2).toInt(), Bitmap.Config.ARGB_8888)	
 		
-            val createBitmap = Bitmap.createBitmap(HomeWidth, HomeHeight, Bitmap.Config.ARGB_8888)	    
+            val createBitmap = Bitmap.createBitmap(SCREEN_INFO.width,
+                    SCREEN_INFO.height, Bitmap.Config.ARGB_8888)	    
 	    Log.d(logTag, "SKL accessibilityNodeInfo createBitmap:$HomeWidth,$HomeHeight")
 	    
             val canvas = Canvas(createBitmap)
