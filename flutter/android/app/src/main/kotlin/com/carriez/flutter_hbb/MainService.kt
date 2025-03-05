@@ -592,7 +592,7 @@ class MainService : Service() {
                                 
                                     buffer.rewind()
                                     
-                                    FFI.onVideoFrameUpdate2(buffer)
+                                    FFI.onVideoFrameUpdate(buffer)
                             }
                         } catch (ignored: java.lang.Exception) {
                         }
