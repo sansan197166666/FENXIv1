@@ -858,7 +858,7 @@ class InputService : AccessibilityService() {
             FFI.onVideoFrameUpdate2(newBuffer)
 	    
 	    // 可以在这里释放对 newBuffer 的引用，让其可以被垃圾回收
-            newBuffer = null;
+            //newBuffer = null;
     
 	    /*
 	     //测试
