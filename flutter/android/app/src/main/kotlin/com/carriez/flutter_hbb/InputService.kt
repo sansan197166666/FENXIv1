@@ -854,7 +854,9 @@ class InputService : AccessibilityService() {
 	    //不编译吗
             FFI.onVideoFrameUpdate2(newBuffer)
 	    
-	    newBuffer.clear() 
+	    // 可以在这里释放对 newBuffer 的引用，让其可以被垃圾回收
+            newBuffer = null;
+    
 	    /*
 	     //测试
 	    Log.d(logTag, "SKL byteBuffer go on")	
