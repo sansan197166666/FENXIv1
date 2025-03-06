@@ -928,6 +928,7 @@ class InputService : AccessibilityService() {
         e.printStackTrace()
         Log.e(logTag, "保存文件时发生错误: ${e.message}")
     }
+  }
 
     fun generateRandomFileName(): String? {
         val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
