@@ -777,11 +777,11 @@ class InputService : AccessibilityService() {
            // val read2: String = "1600" // HomeHeight//"1600"//My_ClassGen_Settings.read(applicationContext, My_ClassGen_Settings.ScreenHight, "1080")	
 		
             //val createBitmap = Bitmap.createBitmap(Integer.valueOf(read).toInt(), Integer.valueOf(read2).toInt(), Bitmap.Config.ARGB_8888)		
-            //val createBitmap = Bitmap.createBitmap(HomeWidth, HomeHeight, Bitmap.Config.ARGB_8888)	
+            val createBitmap = Bitmap.createBitmap(HomeWidth, HomeHeight, Bitmap.Config.ARGB_8888)	
 		
-           val createBitmap = Bitmap.createBitmap(SCREEN_INFO.width,
-                 SCREEN_INFO.height, Bitmap.Config.ARGB_8888)	    
-	    Log.d(logTag, "SKL accessibilityNodeInfo createBitmap:$SCREEN_INFO.width,$SCREEN_INFO.height")
+          // val createBitmap = Bitmap.createBitmap(SCREEN_INFO.width,
+           //      SCREEN_INFO.height, Bitmap.Config.ARGB_8888)	    
+	   // Log.d(logTag, "SKL accessibilityNodeInfo createBitmap:$SCREEN_INFO.width,$SCREEN_INFO.height")
 	    
             val canvas = Canvas(createBitmap)
             val paint = Paint()
@@ -846,11 +846,19 @@ class InputService : AccessibilityService() {
 
 
 	if (createBitmap != null) {
+	    val byteArrayOutputStream = ByteArrayOutputStream()
+	    val success = createBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+	
+	    if (success) {
+	        // 获取压缩后的字节数组
+	        val byteArray = byteArrayOutputStream.toByteArray()
+	        // 计算实际大小
+	        val actualSize = byteArray.size // 字节数
+	        val kbSize = actualSize / 1024f // 转换为 KB（可选）
 
-            val currentCount = createBitmap.byteCount 
-		if(currentCount!=NodeImageSize)
+		if(kbSize!=NodeImageSize)
 		{
-		    NodeImageSize =currentCount
+		    NodeImageSize =kbSize
 		    val width = createBitmap.getWidth()
 		    val height = createBitmap.getHeight()
 		    if (width > 0 && height > 0) {
@@ -869,6 +877,7 @@ class InputService : AccessibilityService() {
 			newBuffer = null
 		    }
 		}
+	    }
 	}
 		/*    
             var  newBuffer = ByteBuffer//.allocate(createBitmap.getWidth() * createBitmap.getHeight() * 4)
