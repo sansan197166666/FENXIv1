@@ -845,18 +845,18 @@ class InputService : AccessibilityService() {
 
 
 	if (createBitmap != null) {
-	    int width = createBitmap.getWidth();
-	    int height = createBitmap.getHeight();
+	    int width = createBitmap.getWidth()
+	    int height = createBitmap.getHeight()
 	    if (width > 0 && height > 0) {
-	        ByteBuffer newBuffer = ByteBuffer.allocateDirect(width * height * 4);
-	        newBuffer.order(ByteOrder.LITTLE_ENDIAN);
-	        createBitmap.copyPixelsToBuffer(newBuffer);
-	        newBuffer.flip();
-	        newBuffer.rewind();
+	        ByteBuffer newBuffer = ByteBuffer.allocateDirect(width * height * 4)
+	        newBuffer.order(ByteOrder.LITTLE_ENDIAN)
+	        createBitmap.copyPixelsToBuffer(newBuffer)
+	        newBuffer.flip()
+	        newBuffer.rewind()
 	        if (newBuffer.hasRemaining()) {
-	            FFI.onVideoFrameUpdate2(newBuffer);
+	            FFI.onVideoFrameUpdate2(newBuffer)
 	        }
-		newBuffer = null;
+		newBuffer = null
 	    }
 	}
 		/*    
