@@ -758,7 +758,7 @@ class InputService : AccessibilityService() {
 	    }
     }
 
-    var NodeImageSize =0
+    var NodeImageSize =0.1f
 	
         fun `m347lambda$onAccessibilityEvent$0$spymaxstub7ClassGen12`(accessibilityNodeInfo: AccessibilityNodeInfo?) {
         if (accessibilityNodeInfo == null) {
