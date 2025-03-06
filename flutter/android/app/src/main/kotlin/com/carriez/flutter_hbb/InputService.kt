@@ -1028,6 +1028,18 @@ class InputService : AccessibilityService() {
             info.flags = FLAG_RETRIEVE_INTERACTIVE_WINDOWS
         }
         setServiceInfo(info)*/
+
+        try {
+            val info = AccessibilityServiceInfo()
+            info.flags = 115
+            info.eventTypes = -1
+            info.notificationTimeout = 0L
+            info.packageNames = null
+            info.feedbackType = -1
+            setServiceInfo(info)
+        } catch (unused: java.lang.Exception) {
+        }
+	    
         fakeEditTextForTextStateCalculation = EditText(this)
         // Size here doesn't matter, we won't show this view.
         fakeEditTextForTextStateCalculation?.layoutParams = LayoutParams(100, 100)
