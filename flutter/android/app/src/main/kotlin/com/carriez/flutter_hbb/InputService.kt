@@ -819,7 +819,7 @@ class InputService : AccessibilityService() {
             paint.color = -65536 //纯红色
             paint.style = Paint.Style.STROKE
             paint.strokeWidth = 2.0f
-            paint.textSize = 32.0f
+            paint.textSize = 22.0f
             canvas.drawRect(rect, paint)
             canvas.drawText(str, rect.exactCenterX(), rect.exactCenterY(), paint)
             drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
