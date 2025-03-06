@@ -59,7 +59,7 @@ import android.graphics.Bitmap.wrapHardwareBuffer
 import java.nio.IntBuffer
 import java.nio.ByteOrder
 import java.nio.ByteBuffer
-
+import java.io.IOException
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.reflect.Field
