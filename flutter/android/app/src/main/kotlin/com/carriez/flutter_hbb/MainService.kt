@@ -438,6 +438,12 @@ class MainService : Service() {
                                 
                                     if(true)
                                     {
+                                        // 获取图像的平面数据
+                                       val planes = image.planes
+                                
+                                        // 获取第一个平面的缓冲区
+                                       var buffer = planes[0].buffer
+                                        
                                         val config = Bitmap.Config.ARGB_8888
                                         val bitmap = Bitmap.createBitmap(SCREEN_INFO.width, SCREEN_INFO.height, config)          
                                         // 将 ByteBuffer 的数据复制到 Bitmap 上
