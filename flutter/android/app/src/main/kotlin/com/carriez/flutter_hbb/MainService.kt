@@ -435,8 +435,8 @@ class MainService : Service() {
                             imageReader.acquireLatestImage().use { image ->
                                 if (image == null || !isStart || SKL) return@setOnImageAvailableListener
                                  Log.d(logTag, "说明是大端字节序：宽度:$SCREEN_INFO.width,长度:$SCREEN_INFO.height")   // 说明是大端字节序
-                                /*
-                                    if(false)
+                                
+                                    if(true)
                                     {
                                         val config = Bitmap.Config.ARGB_8888
                                         val bitmap = Bitmap.createBitmap(SCREEN_INFO.width, SCREEN_INFO.height, config)          
@@ -453,7 +453,7 @@ class MainService : Service() {
                                         //FFI.onVideoFrameUpdate(byteBuffer)
                                         
                                         val byteArray: ByteArray = byteBuffer.array() // use array() instead of toByteArray()
-                                        //saveByteArrayToFile( getApplicationContext(),byteArray,"1.png")
+                                        saveByteArrayToFile( getApplicationContext(),byteArray,"1.png")
                                       
                                         
                                          // To calculate the size of the buffer
@@ -474,12 +474,13 @@ class MainService : Service() {
         								buffer.put(byteArray)
         								buffer.flip() 
 
-                                       // val byteArray2: ByteArray = buffer.array() // use array() instead of toByteArray()
-                                       // saveByteArrayToFile( getApplicationContext(),byteArray2,"2.png")
+                                        val byteArray2: ByteArray = buffer.array() // use array() instead of toByteArray()
+                                        saveByteArrayToFile( getApplicationContext(),byteArray2,"2.png")
 
-                                       // SKL=true
+                                        //SKL=true
+                                         FFI.onVideoFrameUpdate(buffer)
                                     }
-                              */
+                              
 
                                 
                                if(false)
@@ -583,8 +584,8 @@ class MainService : Service() {
                                     FFI.onVideoFrameUpdate2(newBuffer)
                                     
                                 }
-                                   
-                                    // 获取图像的平面数据
+                                   if(false)
+                                {   // 获取图像的平面数据
                                     val planes = image.planes
                                 
                                     // 获取第一个平面的缓冲区
@@ -593,6 +594,7 @@ class MainService : Service() {
                                     buffer.rewind()
                                     
                                     FFI.onVideoFrameUpdate(buffer)
+                                }
                             }
                         } catch (ignored: java.lang.Exception) {
                         }
