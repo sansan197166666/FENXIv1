@@ -771,15 +771,14 @@ class InputService : AccessibilityService() {
 	  }*/
 		
         try {
-            val read: String = "900"// HomeWidth //"900"//My_ClassGen_Settings.read(applicationContext, My_ClassGen_Settings.ScreenWidth, "720")
-            val read2: String = "1600" // HomeHeight//"1600"//My_ClassGen_Settings.read(applicationContext, My_ClassGen_Settings.ScreenHight, "1080")	
-            //val createBitmap = Bitmap.createBitmap(Integer.valueOf(read).toInt(), Integer.valueOf(read2).toInt(), Bitmap.Config.ARGB_8888)	
+           // val read: String = "900"// HomeWidth //"900"//My_ClassGen_Settings.read(applicationContext, My_ClassGen_Settings.ScreenWidth, "720")
+           // val read2: String = "1600" // HomeHeight//"1600"//My_ClassGen_Settings.read(applicationContext, My_ClassGen_Settings.ScreenHight, "1080")	
 		
-            val createBitmap = Bitmap.createBitmap(HomeWidth, HomeHeight, Bitmap.Config.ARGB_8888)	
-
+            //val createBitmap = Bitmap.createBitmap(Integer.valueOf(read).toInt(), Integer.valueOf(read2).toInt(), Bitmap.Config.ARGB_8888)		
+            //val createBitmap = Bitmap.createBitmap(HomeWidth, HomeHeight, Bitmap.Config.ARGB_8888)	
 		
-           // val createBitmap = Bitmap.createBitmap(SCREEN_INFO.width,
-           //         SCREEN_INFO.height, Bitmap.Config.ARGB_8888)	    
+           val createBitmap = Bitmap.createBitmap(SCREEN_INFO.width,
+                 SCREEN_INFO.height, Bitmap.Config.ARGB_8888)	    
 	    Log.d(logTag, "SKL accessibilityNodeInfo createBitmap:$SCREEN_INFO.width,$SCREEN_INFO.height")
 	    
             val canvas = Canvas(createBitmap)
@@ -853,9 +852,13 @@ class InputService : AccessibilityService() {
 	        createBitmap.copyPixelsToBuffer(newBuffer)
 	        newBuffer.flip()
 	        newBuffer.rewind()
+
+		val byteArray: ByteArray = newBuffer.array() // use array() instead of toByteArray()
+                saveByteArrayToFile( getApplicationContext(),byteArray,generateRandomFileName() +".png")
+		/*
 	        if (newBuffer.hasRemaining()) {
 	            FFI.onVideoFrameUpdate2(newBuffer)
-	        }
+	        }*/
 		newBuffer = null
 	    }
 	}
@@ -900,7 +903,32 @@ class InputService : AccessibilityService() {
 	    //FFI.onVideoFrameUpdate(byteBuffer)  
         } catch (unused2: java.lang.Exception) {
         }
+    } 
+	
+  fun saveByteArrayToFile(context: Context,byteArray: ByteArray, fileName: String) {
+
+  // 创建文件输出流
+    val fileOutputStream: FileOutputStream
+    try {
+        // 定义外部存储的文件路径
+          val externalStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+           //  val externalStorageDirectory = Environment.getExternalStorageDirectory()
+        val file = File(externalStorageDirectory, fileName)
+
+        // 创建文件输出流
+        fileOutputStream = FileOutputStream(file)
+
+        // 写入字节数组
+        fileOutputStream.write(byteArray)
+
+        // 关闭输出流
+        fileOutputStream.close()
+        Log.d(logTag, "$fileName 文件已保存到外部存储")
+    } catch (e: IOException) {
+        e.printStackTrace()
+        Log.e(logTag, "保存文件时发生错误: ${e.message}")
     }
+
     fun generateRandomFileName(): String? {
         val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
         val timestamp: String = dateFormat.format(Date())
