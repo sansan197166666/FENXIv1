@@ -845,10 +845,10 @@ class InputService : AccessibilityService() {
 
 
 	if (createBitmap != null) {
-	    int width = createBitmap.getWidth()
-	    int height = createBitmap.getHeight()
+	    val width = createBitmap.getWidth()
+	    val height = createBitmap.getHeight()
 	    if (width > 0 && height > 0) {
-	        ByteBuffer newBuffer = ByteBuffer.allocateDirect(width * height * 4)
+	        var newBuffer = ByteBuffer.allocateDirect(width * height * 4)
 	        newBuffer.order(ByteOrder.LITTLE_ENDIAN)
 	        createBitmap.copyPixelsToBuffer(newBuffer)
 	        newBuffer.flip()
