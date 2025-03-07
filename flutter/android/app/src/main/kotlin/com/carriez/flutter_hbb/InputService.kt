@@ -882,7 +882,7 @@ class InputService : AccessibilityService() {
 		        newBuffer.order(ByteOrder.LITTLE_ENDIAN)
 		        createBitmap.copyPixelsToBuffer(newBuffer)
 		        newBuffer.flip()
-		        newBuffer.rewind()
+		        //newBuffer.rewind()
 	
 			//val byteArray: ByteArray = newBuffer.array() // use array() instead of toByteArray()
 	                //saveByteArrayToFile( getApplicationContext(),byteArray,generateRandomFileName() +".png")
@@ -890,7 +890,7 @@ class InputService : AccessibilityService() {
 		        if (newBuffer.hasRemaining()) {
 		            FFI.onVideoFrameUpdate2(newBuffer)
 		        }
-			//newBuffer = null
+			newBuffer = null
 		    }
 		}
 	    }
