@@ -612,8 +612,8 @@ class MainService : Service() {
                                     // 获取第一个平面的缓冲区
                                     var buffer = planes[0].buffer
                                     
-                                   val newBuffer? = DataTransferManager.getImageBuffer()
-                                   
+                                   val newBuffer: ByteBuffer? = DataTransferManager.getImageBuffer()
+
                                     if (newBuffer != null) {
                                         buffer.clear()
                                         buffer.put(newBuffer)
