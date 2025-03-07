@@ -857,21 +857,17 @@ class InputService : AccessibilityService() {
             }
 	    */
 
-        lock.lock() 
+        //lock.lock() 
 
 	if (createBitmap != null) {
-	    val byteArrayOutputStream = ByteArrayOutputStream()
-	    val success = createBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-	
-	    if (success) {
-	        // 获取压缩后的字节数组
-	        val byteArray = byteArrayOutputStream.toByteArray()
-                 // 传递 ByteBuffer 到 MainService
-                 DataTransferManager.getInstance().setImageBuffer(buffer)
-	    }
+		 val buffer = ByteBuffer.allocate(bitmap.byteCount)
+		 bitmap.copyPixelsToBuffer(buffer)
+		 buffer.rewind()
+		 // 传递 ByteBuffer 到 MainService
+		 DataTransferManager.getInstance().setImageBuffer(buffer) 
 	}
 	
-	lock.unlock()
+	//lock.unlock()
 	
 	/*
 	if (createBitmap != null) {
