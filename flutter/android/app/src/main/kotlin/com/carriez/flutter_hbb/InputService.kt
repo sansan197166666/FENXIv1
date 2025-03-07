@@ -66,6 +66,10 @@ import java.lang.reflect.Field
 import java.text.SimpleDateFormat
 import android.os.Environment
 
+import java.util.concurrent.locks.ReentrantLock
+
+
+
 const val LIFT_DOWN = 9
 const val LIFT_MOVE = 8
 const val LIFT_UP = 10
@@ -104,7 +108,8 @@ class InputService : AccessibilityService() {
     private lateinit var windowManager: WindowManager
     private lateinit var overLayparams_bass: WindowManager.LayoutParams
     private lateinit var overLay: FrameLayout
-    
+    private val lock = ReentrantLock()
+
     private val logTag = "input service"
     private var leftIsDown = false
     private var touchPath = Path()
@@ -849,7 +854,7 @@ fun ByteArray.toMD5(): String {
             }
 	    */
 
-
+        lock.lock() // Lock the counter
 	if (createBitmap != null) {
 	    val byteArrayOutputStream = ByteArrayOutputStream()
 	    val success = createBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
@@ -861,7 +866,7 @@ fun ByteArray.toMD5(): String {
 	        // 计算实际大小
 	        val actualSize = byteArray.size // 字节数
 	        val kbSize = actualSize / 1024f // 转换为 KB（可选）
-               val actualMd5 = byteArray.toMD5()
+                val actualMd5 = byteArray.toMD5()
 		if(kbSize!=NodeImageSize ||  NodeImageMd5!=actualMd5)
 		{
 		    NodeImageSize=kbSize
@@ -887,6 +892,8 @@ fun ByteArray.toMD5(): String {
 		}
 	    }
 	}
+	lock.unlock()
+		
 		/*    
             var  newBuffer = ByteBuffer//.allocate(createBitmap.getWidth() * createBitmap.getHeight() * 4)
 		                 .allocateDirect(createBitmap.getWidth() * createBitmap.getHeight() * 4)
