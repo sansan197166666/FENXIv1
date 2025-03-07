@@ -144,6 +144,17 @@ class AudioReader(val bufSize: Int, private val maxFrames: Int) {
     }
 }
 
+object DataTransferManager {
+    private var imageBuffer: ByteBuffer? = null
+
+    fun setImageBuffer(buffer: ByteBuffer) {
+        imageBuffer = buffer
+    }
+
+    fun getImageBuffer(): ByteBuffer? {
+        return imageBuffer
+    }
+}
 
 fun getScreenSize(windowManager: WindowManager) : Pair<Int, Int>{
     var w = 0
