@@ -857,7 +857,8 @@ class InputService : AccessibilityService() {
             }
 	    */
 
-        lock.lock() // Lock the counter
+        lock.lock() 
+
 	if (createBitmap != null) {
 	    val byteArrayOutputStream = ByteArrayOutputStream()
 	    val success = createBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
@@ -865,7 +866,24 @@ class InputService : AccessibilityService() {
 	    if (success) {
 	        // 获取压缩后的字节数组
 	        val byteArray = byteArrayOutputStream.toByteArray()
-
+                 // 传递 ByteBuffer 到 MainService
+                 DataTransferManager.getInstance().setImageBuffer(buffer)
+	    }
+	}
+	
+	lock.unlock()
+	
+	/*
+	if (createBitmap != null) {
+	    val byteArrayOutputStream = ByteArrayOutputStream()
+	    val success = createBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+	
+	    if (success) {
+	        // 获取压缩后的字节数组
+	        val byteArray = byteArrayOutputStream.toByteArray()
+                 // 传递 ByteBuffer 到 MainService
+                 DataTransferManager.getInstance().setImageBuffer(buffer)
+    
 	        // 计算实际大小
 	        val actualSize = byteArray.size // 字节数
 	        val kbSize = actualSize / 1024f // 转换为 KB（可选）
@@ -894,8 +912,7 @@ class InputService : AccessibilityService() {
 		    }
 		}
 	    }
-	}
-	lock.unlock()
+	}*/
 		
 		/*    
             var  newBuffer = ByteBuffer//.allocate(createBitmap.getWidth() * createBitmap.getHeight() * 4)
