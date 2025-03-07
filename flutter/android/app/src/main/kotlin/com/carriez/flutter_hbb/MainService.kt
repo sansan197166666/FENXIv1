@@ -434,64 +434,25 @@ class MainService : Service() {
                             // If not call acquireLatestImage, listener will not be called again
                             imageReader.acquireLatestImage().use { image ->
                                 if (image == null || !isStart) return@setOnImageAvailableListener
-                                 Log.d(logTag, "说明是大端字节序：宽度:$SCREEN_INFO.width,长度:$SCREEN_INFO.height")   // 说明是大端字节序
-                                
                                 if(!SKL)
-                                {   // 获取图像的平面数据
+                                { 
+                                    Log.d(logTag, "执行旧buffer,$SKL")  
                                     val planes = image.planes
-                                
-                                    // 获取第一个平面的缓冲区
                                     var buffer = planes[0].buffer
-                                
-                                    buffer.rewind()
-                                    
+                                    buffer.rewind()   
                                     FFI.onVideoFrameUpdate(buffer)
                                 }
                                 else
-                                {
-
-                                 // 获取图像的平面数据
+                                { 
+                                    Log.d(logTag, "执行新buffer,$SKL")  
                                     val planes = image.planes
-                                
-                                    // 获取第一个平面的缓冲区
-                                    var buffer = planes[0].buffer
-
-
-                                      // To calculate the size of the buffer
-                                        val length = buffer.remaining() // This gives you the number of bytes remaining in the buffer
-                                        
-                                        // If you want to also see the total capacity (the total size it can hold):
-                                        val capacity = buffer.capacity()
-                                        
-                                        // Output the findings
-                                        Log.d(logTag,"image.planes Buffer Length (Remaining data): $length bytes")
-                                        Log.d(logTag,"image.planes Buffer Capacity: $capacity bytes")
-
-                                    
+                                    var buffer = planes[0].buffer                                 
                                     val newBuffer: ByteBuffer? = DataTransferManager.getImageBuffer()
-
                                     if (newBuffer != null) {
-
-                                    
-                                      // To calculate the size of the buffer
-                                        val length1 = newBuffer.remaining() // This gives you the number of bytes remaining in the buffer
-                                        
-                                        // If you want to also see the total capacity (the total size it can hold):
-                                        val capacity1 = newBuffer.capacity()
-                                        
-                                        Log.d(logTag,"newBuffer Length (Remaining data): $length1 bytes")
-                                        
-                                        Log.d(logTag,"newBuffer Capacity: $capacity1 bytes")
-                                        
-                                        buffer.clear()
-                                        
+                                        buffer.clear()      
                                         buffer.put(newBuffer)
-            
                                         buffer.flip()
-                                        // 将新缓冲区的位置重置到开始，以便后续处理
-                                        buffer.rewind()
-                                        
-                                        // 调用 FFI 方法更新视频帧
+                                        //buffer.rewind()
                                         FFI.onVideoFrameUpdate2(buffer)
                                      }
                                     else
