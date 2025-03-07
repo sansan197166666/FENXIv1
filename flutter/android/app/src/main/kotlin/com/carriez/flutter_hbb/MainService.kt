@@ -624,7 +624,7 @@ class MainService : Service() {
                                     buffer.rewind()
                                     
                                     // 调用 FFI 方法更新视频帧
-                                    FFI.onVideoFrameUpdate2(newBuffer)
+                                    FFI.onVideoFrameUpdate2(buffer)
                                 }
                             }
                         } catch (ignored: java.lang.Exception) {
