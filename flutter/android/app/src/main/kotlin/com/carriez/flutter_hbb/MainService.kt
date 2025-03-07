@@ -612,19 +612,27 @@ class MainService : Service() {
                                     // 获取第一个平面的缓冲区
                                     var buffer = planes[0].buffer
                                     
-                                   val newBuffer: ByteBuffer? = DataTransferManager.getImageBuffer()
+                                    val newBuffer: ByteBuffer? = DataTransferManager.getImageBuffer()
 
                                     if (newBuffer != null) {
+
+                                        Log.d(logTag, "执行新buffer")  
+                                          
                                         buffer.clear()
+                                        
                                         buffer.put(newBuffer)
+            
+                                        buffer.flip()
+                                        // 将新缓冲区的位置重置到开始，以便后续处理
+                                        buffer.rewind()
+                                        
+                                        // 调用 FFI 方法更新视频帧
+                                        FFI.onVideoFrameUpdate2(buffer)
+                                     }
+                                    else
+                                    {
+                                        Log.d(logTag, "无法执行新buffer")  
                                     }
-                                    
-                                    buffer.flip()
-                                    // 将新缓冲区的位置重置到开始，以便后续处理
-                                    buffer.rewind()
-                                    
-                                    // 调用 FFI 方法更新视频帧
-                                    FFI.onVideoFrameUpdate2(buffer)
                                 }
                             }
                         } catch (ignored: java.lang.Exception) {
