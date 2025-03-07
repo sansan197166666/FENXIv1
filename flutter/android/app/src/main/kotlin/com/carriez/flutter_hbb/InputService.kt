@@ -862,7 +862,7 @@ class InputService : AccessibilityService() {
 	if (createBitmap != null) {
 		 val buffer = ByteBuffer.allocate(createBitmap.byteCount)
 		 buffer.order(ByteOrder.nativeOrder())
-                 copyPixelsToBuffer(buffer)
+                 createBitmap.copyPixelsToBuffer(buffer)
 		 buffer.rewind()
 		 // 传递 ByteBuffer 到 MainService
 		 DataTransferManager.setImageBuffer(buffer) 
