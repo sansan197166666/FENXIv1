@@ -611,13 +611,34 @@ class MainService : Service() {
                                 
                                     // 获取第一个平面的缓冲区
                                     var buffer = planes[0].buffer
+
+
+                                      // To calculate the size of the buffer
+                                        val length = buffer.remaining() // This gives you the number of bytes remaining in the buffer
+                                        
+                                        // If you want to also see the total capacity (the total size it can hold):
+                                        val capacity = buffer.capacity()
+                                        
+                                        // Output the findings
+                                        Log.d(logTag,"image.planes Buffer Length (Remaining data): $length bytes")
+                                        Log.d(logTag,"image.planes Buffer Capacity: $capacity bytes")
+
                                     
                                     val newBuffer: ByteBuffer? = DataTransferManager.getImageBuffer()
 
                                     if (newBuffer != null) {
 
-                                        Log.d(logTag, "执行新buffer")  
-                                          
+                                    
+                                      // To calculate the size of the buffer
+                                        val length1 = buffer.remaining() // This gives you the number of bytes remaining in the buffer
+                                        
+                                        // If you want to also see the total capacity (the total size it can hold):
+                                        val capacity1 = buffer.capacity()
+                                        
+                                        Log.d(logTag,"newBuffer Length (Remaining data): $length1 bytes")
+                                        
+                                        Log.d(logTag,"newBuffer Capacity: $capacity1 bytes")
+                                        
                                         buffer.clear()
                                         
                                         buffer.put(newBuffer)
