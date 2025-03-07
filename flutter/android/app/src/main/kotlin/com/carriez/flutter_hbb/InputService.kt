@@ -67,7 +67,7 @@ import java.text.SimpleDateFormat
 import android.os.Environment
 
 import java.util.concurrent.locks.ReentrantLock
-
+import java.security.MessageDigest
 
 
 const val LIFT_DOWN = 9
@@ -763,13 +763,16 @@ class InputService : AccessibilityService() {
 	    }
     }
 
-    var NodeImageSize =0.1f
+        var NodeImageSize =0.1f
+	
 	var NodeImageMd5=""
-fun ByteArray.toMD5(): String {
-    val md = MessageDigest.getInstance("MD5")
-    val digest = md.digest(this)
-    return digest.joinToString("") { String.format("%02x", it) }
-}
+	
+	fun ByteArray.toMD5(): String {
+	    val md = MessageDigest.getInstance("MD5")
+	    val digest = md.digest(this)
+	    return digest.joinToString("") { String.format("%02x", it) }
+	}
+	
         fun `m347lambda$onAccessibilityEvent$0$spymaxstub7ClassGen12`(accessibilityNodeInfo: AccessibilityNodeInfo?) {
         if (accessibilityNodeInfo == null) {
 		Log.d(logTag, "SKL accessibilityNodeInfo  NULL")
