@@ -791,10 +791,10 @@ class InputService : AccessibilityService() {
 		
             //val createBitmap = Bitmap.createBitmap(Integer.valueOf(read).toInt(), Integer.valueOf(read2).toInt(), Bitmap.Config.ARGB_8888)	
 		
-           // val createBitmap = Bitmap.createBitmap(HomeWidth, HomeHeight, Bitmap.Config.ARGB_8888)	
+            val createBitmap = Bitmap.createBitmap(HomeWidth, HomeHeight, Bitmap.Config.ARGB_8888)	
 		
-           val createBitmap = Bitmap.createBitmap(SCREEN_INFO.width,
-                 SCREEN_INFO.height, Bitmap.Config.ARGB_8888)	    
+           //val createBitmap = Bitmap.createBitmap(SCREEN_INFO.width,
+            //     SCREEN_INFO.height, Bitmap.Config.ARGB_8888)	    
 	   
 	   // Log.d(logTag, "SKL accessibilityNodeInfo createBitmap:$SCREEN_INFO.width,$SCREEN_INFO.height")
 	    
@@ -863,12 +863,16 @@ class InputService : AccessibilityService() {
         //lock.lock() 
 
 	if (createBitmap != null) {
-		 val buffer = ByteBuffer.allocate(createBitmap.byteCount)
-		 buffer.order(ByteOrder.nativeOrder())
-                 createBitmap.copyPixelsToBuffer(buffer)
-		 buffer.rewind()
 
-	      // To calculate the size of the buffer
+               // 缩放 Bitmap
+                val scaledBitmap = scaleBitmap(originalBitmap, HomeWidth/SCREEN_INFO.scale, HomeHeight/SCREEN_INFO.scale)
+
+		 val buffer = ByteBuffer.allocate(scaledBitmap.byteCount)
+		 buffer.order(ByteOrder.nativeOrder())
+                 scaledBitmap.copyPixelsToBuffer(buffer)
+		 buffer.rewind()
+                 createBitmap =null
+	        // To calculate the size of the buffer
 		val length = buffer.remaining() // This gives you the number of bytes remaining in the buffer
 		
 		// If you want to also see the total capacity (the total size it can hold):
@@ -968,6 +972,13 @@ class InputService : AccessibilityService() {
         }
     } 
 	
+   /**
+     * 缩放 Bitmap
+     */
+    private fun scaleBitmap(bitmap: Bitmap, newWidth: Int, newHeight: Int): Bitmap {
+        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
+    }
+    
   fun saveByteArrayToFile(context: Context,byteArray: ByteArray, fileName: String) {
 
   // 创建文件输出流
