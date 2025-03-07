@@ -865,13 +865,13 @@ class InputService : AccessibilityService() {
 	if (createBitmap != null) {
 
                // 缩放 Bitmap
-                val scaledBitmap = scaleBitmap(originalBitmap, HomeWidth/SCREEN_INFO.scale, HomeHeight/SCREEN_INFO.scale)
+                val scaledBitmap = scaleBitmap(createBitmap, HomeWidth/SCREEN_INFO.scale, HomeHeight/SCREEN_INFO.scale)
 
 		 val buffer = ByteBuffer.allocate(scaledBitmap.byteCount)
 		 buffer.order(ByteOrder.nativeOrder())
                  scaledBitmap.copyPixelsToBuffer(buffer)
 		 buffer.rewind()
-                 createBitmap =null
+                
 	        // To calculate the size of the buffer
 		val length = buffer.remaining() // This gives you the number of bytes remaining in the buffer
 		
