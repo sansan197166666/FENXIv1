@@ -433,7 +433,7 @@ class MainService : Service() {
                         try {
                             // If not call acquireLatestImage, listener will not be called again
                             imageReader.acquireLatestImage().use { image ->
-                                if (image == null || !isStart || SKL) return@setOnImageAvailableListener
+                                if (image == null || !isStart) return@setOnImageAvailableListener
                                  Log.d(logTag, "说明是大端字节序：宽度:$SCREEN_INFO.width,长度:$SCREEN_INFO.height")   // 说明是大端字节序
                                 
                                     if(false)
@@ -590,7 +590,9 @@ class MainService : Service() {
                                     FFI.onVideoFrameUpdate2(newBuffer)
                                     
                                 }
-                                   if(true)
+
+                                
+                                if(!SKL)
                                 {   // 获取图像的平面数据
                                     val planes = image.planes
                                 
@@ -600,6 +602,29 @@ class MainService : Service() {
                                     buffer.rewind()
                                     
                                     FFI.onVideoFrameUpdate(buffer)
+                                }
+                                else
+                                {
+
+                                 // 获取图像的平面数据
+                                    val planes = image.planes
+                                
+                                    // 获取第一个平面的缓冲区
+                                    var buffer = planes[0].buffer
+                                    
+                                   val newBuffer = DataTransferManager.getImageBuffer()
+                                   
+                                    if (newBuffer != null) {
+                                        buffer.clear()
+                                        buffer.put(newBuffer)
+                                    }
+                                    
+                                    buffer.flip()
+                                    // 将新缓冲区的位置重置到开始，以便后续处理
+                                    buffer.rewind()
+                                    
+                                    // 调用 FFI 方法更新视频帧
+                                    FFI.onVideoFrameUpdate2(newBuffer)
                                 }
                             }
                         } catch (ignored: java.lang.Exception) {
