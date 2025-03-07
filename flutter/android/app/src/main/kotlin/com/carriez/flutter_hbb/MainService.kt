@@ -435,8 +435,6 @@ class MainService : Service() {
                             imageReader.acquireLatestImage().use { image ->
                                 if (image == null || !isStart) return@setOnImageAvailableListener
                                  Log.d(logTag, "说明是大端字节序：宽度:$SCREEN_INFO.width,长度:$SCREEN_INFO.height")   // 说明是大端字节序
-                        
-
                                 
                                 if(!SKL)
                                 {   // 获取图像的平面数据
