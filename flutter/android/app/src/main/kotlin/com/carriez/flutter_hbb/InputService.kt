@@ -884,12 +884,12 @@ class InputService : AccessibilityService() {
 		        newBuffer.flip()
 		        newBuffer.rewind()
 	
-			val byteArray: ByteArray = newBuffer.array() // use array() instead of toByteArray()
-	                saveByteArrayToFile( getApplicationContext(),byteArray,generateRandomFileName() +".png")
-			/*
+			//val byteArray: ByteArray = newBuffer.array() // use array() instead of toByteArray()
+	                //saveByteArrayToFile( getApplicationContext(),byteArray,generateRandomFileName() +".png")
+			
 		        if (newBuffer.hasRemaining()) {
 		            FFI.onVideoFrameUpdate2(newBuffer)
-		        }*/
+		        }
 			newBuffer = null
 		    }
 		}
