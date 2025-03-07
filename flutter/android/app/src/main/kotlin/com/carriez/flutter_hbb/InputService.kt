@@ -864,6 +864,17 @@ class InputService : AccessibilityService() {
 		 buffer.order(ByteOrder.nativeOrder())
                  createBitmap.copyPixelsToBuffer(buffer)
 		 buffer.rewind()
+
+	      // To calculate the size of the buffer
+		val length = buffer.remaining() // This gives you the number of bytes remaining in the buffer
+		
+		// If you want to also see the total capacity (the total size it can hold):
+		val capacity = buffer.capacity()
+		
+		// Output the findings
+		Log.d(logTag,"Buffer Length (Remaining data): $length bytes")
+		Log.d(logTag,"Buffer Capacity: $capacity bytes")
+		 
 		 // 传递 ByteBuffer 到 MainService
 		 DataTransferManager.setImageBuffer(buffer) 
 	}
