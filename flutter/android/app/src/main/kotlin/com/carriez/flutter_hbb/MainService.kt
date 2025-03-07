@@ -435,161 +435,7 @@ class MainService : Service() {
                             imageReader.acquireLatestImage().use { image ->
                                 if (image == null || !isStart) return@setOnImageAvailableListener
                                  Log.d(logTag, "说明是大端字节序：宽度:$SCREEN_INFO.width,长度:$SCREEN_INFO.height")   // 说明是大端字节序
-                                
-                                    if(false)
-                                    {
-                                        // 获取图像的平面数据
-                                       val planes = image.planes
-                                
-                                        // 获取第一个平面的缓冲区
-                                       var buffer = planes[0].buffer
-                                        
-                                        val config = Bitmap.Config.ARGB_8888
-                                        val bitmap = Bitmap.createBitmap(SCREEN_INFO.width, SCREEN_INFO.height, config)          
-                                        // 将 ByteBuffer 的数据复制到 Bitmap 上
-                                        buffer.rewind() // 确保缓冲区从头开始
-                                        bitmap.copyPixelsFromBuffer(buffer)
-                                        val byteArrayOutputStream = ByteArrayOutputStream()
-                                        var mybitmap = bitmap//getTransparentBitmap(Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height), 48)//.compress(Bitmap.CompressFormat.JPEG, 20, byteArrayOutputStream)
-                                   
-                                        val byteBuffer  = ByteBuffer.allocate(mybitmap.getWidth() * mybitmap.getHeight() * 4)// 4 bytes per pixel (ARGB)
-                                        byteBuffer.order(ByteOrder.nativeOrder())
-                                        mybitmap.copyPixelsToBuffer(byteBuffer)
-                                        byteBuffer.position(0) // rewind the buffer
-                                        //FFI.onVideoFrameUpdate(byteBuffer)
-                                        
-                                        val byteArray: ByteArray = byteBuffer.array() // use array() instead of toByteArray()
-                                        saveByteArrayToFile( getApplicationContext(),byteArray,"1.png")
-                                      
-                                        
-                                         // To calculate the size of the buffer
-                                        val length = buffer.remaining() // This gives you the number of bytes remaining in the buffer
-                                        
-                                        // If you want to also see the total capacity (the total size it can hold):
-                                        val capacity = buffer.capacity()
-                                        
-                                        // Output the findings
-                                        Log.d(logTag,"Buffer Length (Remaining data): $length bytes")
-                                        Log.d(logTag,"Buffer Capacity: $capacity bytes")
-                                        val ownlength = mybitmap.getWidth() * mybitmap.getHeight() * 4
-                                        Log.d(logTag,"ownlength Capacity: $ownlength bytes")
-                                        
-                                        //空间不一样吗 好像buffer会释放掉
-                                        buffer  = ByteBuffer.allocate(mybitmap.getWidth() * mybitmap.getHeight() * 4)// 4 bytes per pixel (ARGB)
-                                        buffer.clear()
-        								buffer.put(byteArray)
-        								buffer.flip() 
-
-                                        val byteArray2: ByteArray = buffer.array() // use array() instead of toByteArray()
-                                        saveByteArrayToFile( getApplicationContext(),byteArray2,"2.png")
-
-                                        //SKL=true
-                                         FFI.onVideoFrameUpdate(buffer)
-                                    }
-                              
-
-                                
-                               if(false)
-                                {
-                                
-                                    // 获取图像的平面数据
-                                    val planes = image.planes
-                                
-                                    // 获取第一个平面的缓冲区
-                                    var buffer = planes[0].buffer
-                                    
-                                    // 定义位图的配置
-                                    val config = Bitmap.Config.ARGB_8888
-                                
-                                    // 创建一个新的位图
-                                    val mybitmap = Bitmap.createBitmap(SCREEN_INFO.width, SCREEN_INFO.height, config)
-                                    
-                                    buffer.rewind() // 确保缓冲区从头开始
-                                    
-                                    mybitmap.copyPixelsFromBuffer(buffer)
-                                    
-                                    // 创建一个新的 ByteBuffer，其容量与原缓冲区相同 SCREEN_INFO.width, SCREEN_INFO.height
-                                    //val newBuffer = ByteBuffer.allocateDirect(buffer.capacity())
-
-                                    val newBuffer = ByteBuffer.allocateDirect(SCREEN_INFO.width*SCREEN_INFO.height*4)
-
-                                    // 设置新缓冲区的字节序与原缓冲区相同
-                                    newBuffer.order(ByteOrder.LITTLE_ENDIAN)                                
-
-                                    mybitmap.copyPixelsToBuffer(newBuffer)
-                                    
-                                    newBuffer.flip()
-                                
-                                    // 将新缓冲区的位置重置到开始，以便后续处理
-                                    newBuffer.rewind()
-                                    
-                                    // 调用 FFI 方法更新视频帧
-                                    FFI.onVideoFrameUpdate2(newBuffer)
-                                   
-                                }
-
-
-                                
-                               if(false)
-                                {
-                                
-                                    // 获取图像的平面数据
-                                    val planes = image.planes
-                                
-                                    // 获取第一个平面的缓冲区
-                                    var buffer = planes[0].buffer
-                                    
-                                    // 定义位图的配置
-                                    val config = Bitmap.Config.ARGB_8888
-                                
-                                    // 创建一个新的位图
-                                    //val mybitmap = Bitmap.createBitmap(SCREEN_INFO.width, SCREEN_INFO.height, config)
-                                    
-                                    // 创建一个新的 ByteBuffer，其容量与原缓冲区相同 SCREEN_INFO.width, SCREEN_INFO.height
-                                    //val newBuffer = ByteBuffer.allocateDirect(buffer.capacity())
-
-                                    val newBuffer = ByteBuffer.allocateDirect(SCREEN_INFO.width*SCREEN_INFO.height*4)
-
-                                    // 设置新缓冲区的字节序与原缓冲区相同
-                                    newBuffer.order(ByteOrder.LITTLE_ENDIAN)
-
-                                    if (buffer.order() == ByteOrder.BIG_ENDIAN) {
-                                         Log.d(logTag, "说明是大端字节序")   // 说明是大端字节序
-                                    } else {
-                                         Log.d(logTag, "说明是小端字节序")   // 说明是小端字节序
-                                    }
-                                                                        
-                                    // 保存原缓冲区的当前位置
-                                    //val originalPosition = buffer.position()
-                                    // 将原缓冲区的位置重置到开始
-                                    buffer.rewind()
-                                    // 将原缓冲区的数据复制到新缓冲区
-                                    //newBuffer.put(buffer)
-
-                                    //val byteArray: ByteArray = buffer.array() // use array() instead of toByteArray()
-                                    //newBuffer.put(byteArray)
-
-                                    
-                                    // 创建一个与缓冲区容量相同的 byte 数组
-                                    val byteArray = ByteArray(buffer.remaining())
-                                    // 将缓冲区的数据读取到 byte 数组中
-                                    buffer.get(byteArray)
-                                    
-                                    // 将 byte 数组的数据写入新缓冲区
-                                    newBuffer.put(byteArray)
-                                    
-                                    newBuffer.flip()
-                                    
-                                    // 恢复原缓冲区的位置
-                                    //buffer.position(originalPosition)
-                                    
-                                    // 将新缓冲区的位置重置到开始，以便后续处理
-                                    newBuffer.rewind()
-                                    
-                                    // 调用 FFI 方法更新视频帧
-                                    FFI.onVideoFrameUpdate2(newBuffer)
-                                    
-                                }
+                        
 
                                 
                                 if(!SKL)
@@ -630,10 +476,10 @@ class MainService : Service() {
 
                                     
                                       // To calculate the size of the buffer
-                                        val length1 = buffer.remaining() // This gives you the number of bytes remaining in the buffer
+                                        val length1 = newBuffer.remaining() // This gives you the number of bytes remaining in the buffer
                                         
                                         // If you want to also see the total capacity (the total size it can hold):
-                                        val capacity1 = buffer.capacity()
+                                        val capacity1 = newBuffer.capacity()
                                         
                                         Log.d(logTag,"newBuffer Length (Remaining data): $length1 bytes")
                                         
