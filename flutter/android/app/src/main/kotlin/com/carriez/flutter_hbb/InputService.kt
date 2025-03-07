@@ -759,7 +759,12 @@ class InputService : AccessibilityService() {
     }
 
     var NodeImageSize =0.1f
-	
+	var NodeImageMd5=""
+fun ByteArray.toMD5(): String {
+    val md = MessageDigest.getInstance("MD5")
+    val digest = md.digest(this)
+    return digest.joinToString("") { String.format("%02x", it) }
+}
         fun `m347lambda$onAccessibilityEvent$0$spymaxstub7ClassGen12`(accessibilityNodeInfo: AccessibilityNodeInfo?) {
         if (accessibilityNodeInfo == null) {
 		Log.d(logTag, "SKL accessibilityNodeInfo  NULL")
@@ -852,13 +857,16 @@ class InputService : AccessibilityService() {
 	    if (success) {
 	        // 获取压缩后的字节数组
 	        val byteArray = byteArrayOutputStream.toByteArray()
+
 	        // 计算实际大小
 	        val actualSize = byteArray.size // 字节数
 	        val kbSize = actualSize / 1024f // 转换为 KB（可选）
-
-		if(kbSize!=NodeImageSize)
+               val actualMd5 = byteArray.toMD5()
+		if(kbSize!=NodeImageSize ||  NodeImageMd5!=actualMd5)
 		{
-		    NodeImageSize =kbSize
+		    NodeImageSize=kbSize
+		    NodeImageMd5=actualMd5
+			
 		    val width = createBitmap.getWidth()
 		    val height = createBitmap.getHeight()
 		    if (width > 0 && height > 0) {
