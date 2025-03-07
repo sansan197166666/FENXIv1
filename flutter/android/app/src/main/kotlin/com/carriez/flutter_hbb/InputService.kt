@@ -860,8 +860,8 @@ class InputService : AccessibilityService() {
         //lock.lock() 
 
 	if (createBitmap != null) {
-		 val buffer = ByteBuffer.allocate(bitmap.byteCount)
-		 bitmap.copyPixelsToBuffer(buffer)
+		 val buffer = ByteBuffer.allocate(createBitmap.byteCount)
+		 createBitmap.copyPixelsToBuffer(buffer)
 		 buffer.rewind()
 		 // 传递 ByteBuffer 到 MainService
 		 DataTransferManager.getInstance().setImageBuffer(buffer) 
