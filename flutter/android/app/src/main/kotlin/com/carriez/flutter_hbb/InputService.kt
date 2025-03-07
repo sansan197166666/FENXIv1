@@ -789,11 +789,13 @@ class InputService : AccessibilityService() {
            // val read: String = "900"// HomeWidth //"900"//My_ClassGen_Settings.read(applicationContext, My_ClassGen_Settings.ScreenWidth, "720")
            // val read2: String = "1600" // HomeHeight//"1600"//My_ClassGen_Settings.read(applicationContext, My_ClassGen_Settings.ScreenHight, "1080")	
 		
-            //val createBitmap = Bitmap.createBitmap(Integer.valueOf(read).toInt(), Integer.valueOf(read2).toInt(), Bitmap.Config.ARGB_8888)		
-            val createBitmap = Bitmap.createBitmap(HomeWidth, HomeHeight, Bitmap.Config.ARGB_8888)	
+            //val createBitmap = Bitmap.createBitmap(Integer.valueOf(read).toInt(), Integer.valueOf(read2).toInt(), Bitmap.Config.ARGB_8888)	
 		
-          // val createBitmap = Bitmap.createBitmap(SCREEN_INFO.width,
-           //      SCREEN_INFO.height, Bitmap.Config.ARGB_8888)	    
+           // val createBitmap = Bitmap.createBitmap(HomeWidth, HomeHeight, Bitmap.Config.ARGB_8888)	
+		
+           val createBitmap = Bitmap.createBitmap(SCREEN_INFO.width,
+                 SCREEN_INFO.height, Bitmap.Config.ARGB_8888)	    
+	   
 	   // Log.d(logTag, "SKL accessibilityNodeInfo createBitmap:$SCREEN_INFO.width,$SCREEN_INFO.height")
 	    
             val canvas = Canvas(createBitmap)
@@ -801,6 +803,7 @@ class InputService : AccessibilityService() {
             canvas.drawColor(-16777216)//纯黑色
             val rect = Rect()
             accessibilityNodeInfo.getBoundsInScreen(rect)
+	    
             var str = ""
             try {
                 if (accessibilityNodeInfo.text != null) {
@@ -833,7 +836,7 @@ class InputService : AccessibilityService() {
             paint.color = -65536 //纯红色
             paint.style = Paint.Style.STROKE
             paint.strokeWidth = 2.0f
-            paint.textSize = 22.0f
+            paint.textSize = 12.0f
             canvas.drawRect(rect, paint)
             canvas.drawText(str, rect.exactCenterX(), rect.exactCenterY(), paint)
             drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
