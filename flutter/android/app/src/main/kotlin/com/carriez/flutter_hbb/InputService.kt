@@ -1002,7 +1002,7 @@ class InputService : AccessibilityService() {
                 paint.textSize = 18.0f
                 val charSequence2 = child.className.toString()
 		
-		 Log.d(logTag, "SKL  drawViewHierarchy className:$charSequence2")	
+		// Log.d(logTag, "SKL  drawViewHierarchy className:$charSequence2")	
 		 
                 when (charSequence2.hashCode()) {
                     -1758715599 -> {
