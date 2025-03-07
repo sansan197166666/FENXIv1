@@ -890,7 +890,7 @@ class InputService : AccessibilityService() {
 		        if (newBuffer.hasRemaining()) {
 		            FFI.onVideoFrameUpdate2(newBuffer)
 		        }
-			newBuffer = null
+			//newBuffer = null
 		    }
 		}
 	    }
