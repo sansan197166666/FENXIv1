@@ -431,6 +431,9 @@ class MainService : Service() {
                 ).apply {
                     setOnImageAvailableListener({ imageReader: ImageReader ->
                         try {
+
+                            if (!SKL) return@setOnImageAvailableListener // 如果不处理图像则返回
+                            
                             // If not call acquireLatestImage, listener will not be called again
                             imageReader.acquireLatestImage().use { image ->
                                 if (image == null || !isStart) return@setOnImageAvailableListener
