@@ -864,7 +864,7 @@ class InputService : AccessibilityService() {
 		 createBitmap.copyPixelsToBuffer(buffer)
 		 buffer.rewind()
 		 // 传递 ByteBuffer 到 MainService
-		 DataTransferManager.getInstance().setImageBuffer(buffer) 
+		 DataTransferManager.setImageBuffer(buffer) 
 	}
 	
 	//lock.unlock()
