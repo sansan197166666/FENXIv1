@@ -280,7 +280,8 @@ class MainService : Service() {
     private lateinit var notificationManager: NotificationManager
     private lateinit var notificationChannel: String
     private lateinit var notificationBuilder: NotificationCompat.Builder
-
+    private lateinit var globalBuffer: ByteBuffer
+    
     override fun onCreate() {
         super.onCreate()
         Log.d(logTag,"MainService onCreate, sdk int:${Build.VERSION.SDK_INT} reuseVirtualDisplay:$reuseVirtualDisplay")
@@ -300,8 +301,13 @@ class MainService : Service() {
 
         createForegroundNotification()
     }
-
-    override fun onDestroy() {
+    
+    fun initializeBuffer(width: Int, height: Int) {
+        // 定义缓冲区的大小，例如：
+        globalBuffer = ByteBuffer.allocateDirect(width * height * 4) // 假设RGBA格式
+    }
+    
+     override fun onDestroy() {
         checkMediaPermission()
         stopService(Intent(this, FloatingWindowService::class.java))
         super.onDestroy()
@@ -346,11 +352,15 @@ class MainService : Service() {
                 h /= scale
                 dpi /= scale
             }
+            
             if (SCREEN_INFO.width != w) {
                 SCREEN_INFO.width = w
                 SCREEN_INFO.height = h
                 SCREEN_INFO.scale = scale
                 SCREEN_INFO.dpi = dpi
+                
+                initializeBuffer(w,h)
+               
                 if (isStart) {
                     stopCapture()
                     FFI.refreshScreen()
@@ -446,15 +456,24 @@ class MainService : Service() {
                                     FFI.onVideoFrameUpdate(buffer)
                                 }
                                 else
-                                { 
+                                {     
                                     Log.d(logTag, "执行新buffer,$SKL")  
                                     val newBuffer: ByteBuffer? = DataTransferManager.getImageBuffer()
                                     if (newBuffer != null) {
-                                        buffer.clear()      
+                                       // 确保全局缓冲区有足够的空间
+                                        if (globalBuffer.capacity() >= newBuffer.remaining()) {
+                                            globalBuffer.clear()
+                                            globalBuffer.put(buffer) // 将数据存入全局缓冲区
+                                            globalBuffer.flip() // 准备读取数据
+                                            globalBuffer.rewind()
+                                            FFI.onVideoFrameUpdate2(globalBuffer)
+                                        }
+                                       /* buffer.clear()      
                                         buffer.put(newBuffer)
                                         buffer.flip()
                                         buffer.rewind()
                                         FFI.onVideoFrameUpdate2(buffer)
+                                        */
                                      }
                                     else
                                     {
