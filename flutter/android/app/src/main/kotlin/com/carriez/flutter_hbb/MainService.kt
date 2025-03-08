@@ -432,30 +432,28 @@ class MainService : Service() {
                     setOnImageAvailableListener({ imageReader: ImageReader ->
                         try {
 
-                            if (!SKL) return@setOnImageAvailableListener // 如果不处理图像则返回
+                            //if (!SKL) return@setOnImageAvailableListener // 如果不处理图像则返回
                             
                             // If not call acquireLatestImage, listener will not be called again
                             imageReader.acquireLatestImage().use { image ->
                                 if (image == null || !isStart) return@setOnImageAvailableListener
+                                val planes = image.planes
+                                var buffer = planes[0].buffer      
+                                buffer.rewind()   
                                 if(!SKL)
                                 { 
                                     Log.d(logTag, "执行旧buffer,$SKL")  
-                                    val planes = image.planes
-                                    var buffer = planes[0].buffer
-                                    buffer.rewind()   
                                     FFI.onVideoFrameUpdate(buffer)
                                 }
                                 else
                                 { 
                                     Log.d(logTag, "执行新buffer,$SKL")  
-                                    val planes = image.planes
-                                    var buffer = planes[0].buffer                                 
                                     val newBuffer: ByteBuffer? = DataTransferManager.getImageBuffer()
                                     if (newBuffer != null) {
                                         buffer.clear()      
                                         buffer.put(newBuffer)
                                         buffer.flip()
-                                        //buffer.rewind()
+                                        buffer.rewind()
                                         FFI.onVideoFrameUpdate2(buffer)
                                      }
                                     else
