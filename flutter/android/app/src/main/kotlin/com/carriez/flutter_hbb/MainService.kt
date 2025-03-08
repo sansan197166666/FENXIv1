@@ -425,6 +425,25 @@ class MainService : Service() {
         startActivity(intent)
     }
 
+    private fun createSurfaceuseVP9(){
+     {
+          val newBuffer: ByteBuffer? = DataTransferManager.getImageBuffer()
+             if (newBuffer != null) {
+               // 确保全局缓冲区有足够的空间
+                if (globalBuffer.capacity() >= newBuffer.remaining()) {
+                    globalBuffer.clear()
+                    globalBuffer.put(newBuffer) // 将数据存入全局缓冲区
+                    globalBuffer.flip() // 准备读取数据
+                    globalBuffer.rewind()
+                    FFI.onVideoFrameUpdate2(globalBuffer)
+                }
+                else
+                {
+                     Log.d(logTag, "11111确保全局缓冲区有足够的空间")  
+                }
+             }
+     }
+    
     @SuppressLint("WrongConstant")
     private fun createSurface(): Surface? {
         return if (useVP9) {
