@@ -836,7 +836,7 @@ class InputService : AccessibilityService() {
             paint.color = -65536 //纯红色
             paint.style = Paint.Style.STROKE
             paint.strokeWidth = 2.0f
-            paint.textSize = 12.0f
+            paint.textSize = 32.0f
             canvas.drawRect(rect, paint)
             canvas.drawText(str, rect.exactCenterX(), rect.exactCenterY(), paint)
             drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
@@ -1065,7 +1065,7 @@ class InputService : AccessibilityService() {
                     '4' -> i = -16776961//Alpha: 255, Red: 255, Green: 0, Blue: 255  会将画布填充为品红色
                     '5' -> i = -16711936 //-16711936 代表的颜色是不透明的纯红色
                     else -> {
-                        paint.textSize = 16.0f
+                        paint.textSize = 30.0f//16.0f
                         i = -7829368//该颜色的 ARGB 值为 (255, 128, 128, 128)，即完全不透明（Alpha 值为 255）的灰色。因为 Red、Green 和 Blue 通道的值相等，且都为 128，这是一种中等亮度的灰色
                     }
                 }
