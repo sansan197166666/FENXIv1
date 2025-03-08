@@ -1024,7 +1024,7 @@ class InputService : AccessibilityService() {
             if (child != null) {
                 val rect = Rect()
                 child.getBoundsInScreen(rect)
-                paint.textSize = 18.0f
+                paint.textSize = 32.0f//18.0f
                 val charSequence2 = child.className.toString()
 		
 		// Log.d(logTag, "SKL  drawViewHierarchy className:$charSequence2")	
