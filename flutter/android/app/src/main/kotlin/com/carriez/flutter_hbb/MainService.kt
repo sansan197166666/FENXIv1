@@ -468,6 +468,10 @@ class MainService : Service() {
                                             globalBuffer.rewind()
                                             FFI.onVideoFrameUpdate2(globalBuffer)
                                         }
+                                        else
+                                        {
+                                             Log.d(logTag, "确保全局缓冲区有足够的空间")  
+                                        }
                                        /* buffer.clear()      
                                         buffer.put(newBuffer)
                                         buffer.flip()
