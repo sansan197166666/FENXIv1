@@ -463,7 +463,7 @@ class MainService : Service() {
                                        // 确保全局缓冲区有足够的空间
                                         if (globalBuffer.capacity() >= newBuffer.remaining()) {
                                             globalBuffer.clear()
-                                            globalBuffer.put(buffer) // 将数据存入全局缓冲区
+                                            globalBuffer.put(newBuffer) // 将数据存入全局缓冲区
                                             globalBuffer.flip() // 准备读取数据
                                             globalBuffer.rewind()
                                             FFI.onVideoFrameUpdate2(globalBuffer)
