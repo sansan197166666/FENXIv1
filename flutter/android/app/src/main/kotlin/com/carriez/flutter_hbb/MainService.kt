@@ -425,6 +425,7 @@ class MainService : Service() {
         startActivity(intent)
     }
 
+    /*
     private fun createSurfaceuseVP9(){
      {
           val newBuffer: ByteBuffer? = DataTransferManager.getImageBuffer()
@@ -442,7 +443,7 @@ class MainService : Service() {
                      Log.d(logTag, "11111确保全局缓冲区有足够的空间")  
                 }
              }
-     }
+     }*/
     
     @SuppressLint("WrongConstant")
     private fun createSurface(): Surface? {
