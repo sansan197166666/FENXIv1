@@ -35,6 +35,103 @@ class ServerPage extends StatefulWidget implements PageShape {
   State<StatefulWidget> createState() => _ServerPageState();
 }
 
+enum KeepScreenOn {
+  never,
+  duringControlled,
+  serviceOn,
+}
+
+String _keepScreenOnToOption(KeepScreenOn value) {
+  switch (value) {
+    case KeepScreenOn.never:
+      return 'never';
+    case KeepScreenOn.duringControlled:
+      return 'during-controlled';
+    case KeepScreenOn.serviceOn:
+      return 'service-on';
+  }
+}
+
+KeepScreenOn optionToKeepScreenOn(String value) {
+  switch (value) {
+    case 'never':
+      return KeepScreenOn.never;
+    case 'service-on':
+      return KeepScreenOn.serviceOn;
+    default:
+      return KeepScreenOn.duringControlled;
+  }
+}
+class _RadioEntry {
+  final String label;
+  final String value;
+  _RadioEntry(this.label, this.value);
+}
+
+typedef _RadioEntryGetter = String Function();
+typedef _RadioEntrySetter = Future<void> Function(String);
+
+SettingsTile _getPopupDialogRadioEntry({
+  required String title,
+  required List<_RadioEntry> list,
+  required _RadioEntryGetter getter,
+  required _RadioEntrySetter? asyncSetter,
+  Widget? tail,
+  RxBool? showTail,
+  String? notCloseValue,
+}) {
+  RxString groupValue = ''.obs;
+  RxString valueText = ''.obs;
+
+  init() {
+    groupValue.value = getter();
+    final e = list.firstWhereOrNull((e) => e.value == groupValue.value);
+    if (e != null) {
+      valueText.value = e.label;
+    }
+  }
+
+  init();
+
+  void showDialog() async {
+    gFFI.dialogManager.show((setState, close, context) {
+      final onChanged = asyncSetter == null
+          ? null
+          : (String? value) async {
+              if (value == null) return;
+              await asyncSetter(value);
+              init();
+              if (value != notCloseValue) {
+                close();
+              }
+            };
+
+      return CustomAlertDialog(
+          content: Obx(
+        () => Column(children: [
+          ...list
+              .map((e) => getRadio(Text(translate(e.label)), e.value,
+                  groupValue.value, onChanged))
+              .toList(),
+          Offstage(
+            offstage:
+                !(tail != null && showTail != null && showTail.value == true),
+            child: tail,
+          ),
+        ]),
+      ));
+    }, backDismiss: true, clickMaskDismiss: true);
+  }
+
+  return SettingsTile(
+    title: Text(translate(title)),
+    onPressed: asyncSetter == null ? null : (context) => showDialog(),
+    value: Padding(
+      padding: EdgeInsets.symmetric(vertical: 8),
+      child: Obx(() => Text(translate(valueText.value))),
+    ),
+  );
+}
 class _DropDownAction extends StatelessWidget {
   _DropDownAction();
 
