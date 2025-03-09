@@ -291,11 +291,14 @@ class _ServerPageState extends State<ServerPage> {
       ],
     );
   }
- Future<bool> canStartOnBoot() async {
+  Future<bool> canStartOnBoot() async {
+    // start on boot depends on ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS and SYSTEM_ALERT_WINDOW
+    if (_hasIgnoreBattery && !_ignoreBatteryOpt) {
+      return false;
+    }
     if (!await AndroidPermissionManager.check(kSystemAlertWindow)) {
       return false;
     }
-    // Additional checks can go here if needed.
     return true;
   }
 
