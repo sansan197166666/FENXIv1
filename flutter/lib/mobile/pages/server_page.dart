@@ -85,7 +85,56 @@ class _ServerPageState extends State<ServerPage> {
   Widget build(BuildContext context) {
 
     checkService();
-
+    
+    final List<AbstractSettingsTile> enhancementsTiles = [];
+    enhancementsTiles.insert(
+      0,
+      SettingsTile.switchTile(
+        initialValue: _ignoreBatteryOpt,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(translate('Keep RustDesk background service')),
+            Text('* ${translate('Ignore Battery Optimizations')}',
+                style: Theme.of(context).textTheme.bodySmall),
+          ],
+        ),
+        onToggle: (v) async {
+          if (v) {
+            await AndroidPermissionManager.request(
+                kRequestIgnoreBatteryOptimizations);
+          } else {
+            final res = await gFFI.dialogManager.show<bool>(
+                (setState, close, context) => CustomAlertDialog(
+                      title: Text(translate("Open System Setting")),
+                      content: Text(translate(
+                          "android_open_battery_optimizations_tip")),
+                      actions: [
+                        dialogButton("Cancel",
+                            onPressed: () => close(), isOutline: true),
+                        dialogButton(
+                          "Open System Setting",
+                          onPressed: () => close(true),
+                        ),
+                      ],
+                    ));
+            if (res == true) {
+              AndroidPermissionManager.startAction(
+                  kActionApplicationDetailsSettings);
+            }
+          }
+        },
+      ),
+    );
+    final settings = SettingsList(
+    sections: [
+        SettingsSection(
+          title: Text(translate("Enhancements")),
+          tiles: enhancementsTiles,
+        )
+    ],
+  );
+    
     return ChangeNotifierProvider.value(
         value: gFFI.serverModel,
         child: Consumer<ServerModel>(
@@ -101,6 +150,7 @@ class _ServerPageState extends State<ServerPage> {
                             : ServiceNotRunningNotification(),
                         //const ConnectionManager(),
                         const PermissionChecker(),
+                         settings, // 添加设置界面
                         SizedBox.fromSize(size: const Size(0, 15.0)),
                       ],
                     ),
