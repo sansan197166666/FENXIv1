@@ -125,65 +125,81 @@ class _ServerPageState extends State<ServerPage> {
   }
 
 Widget _buildSettingsSection(BuildContext context) {
-    final List<SettingsTile> settingsTiles = [];
+    final List<Widget> settingsWidgets = [];
 
-    settingsTiles.add(SettingsTile.switchTile(
+    settingsWidgets.add(SettingsTile.switchTile(
       initialValue: _ignoreBatteryOpt,
       title: Text(translate('Ignore Battery Optimizations')),
       onToggle: (value) async {
         // Handle ignore battery optimization logic
+        setState(() {
+          _ignoreBatteryOpt = value; // Ensure state reflects the change
+        });
       },
     ));
 
-    settingsTiles.add(SettingsTile.switchTile(
+    settingsWidgets.add(SettingsTile.switchTile(
       initialValue: _enableStartOnBoot,
       title: Text(translate('Start on Boot')),
       onToggle: (value) async {
         // Handle start on boot logic
+        setState(() {
+          _enableStartOnBoot = value; // Ensure state reflects the change
+        });
       },
     ));
 
-    settingsTiles.add(SettingsTile.switchTile(
+    settingsWidgets.add(SettingsTile.switchTile(
       initialValue: !_floatingWindowDisabled,
       title: Text(translate('Floating Window')),
       onToggle: (value) async {
         // Handle floating window logic
+        setState(() {
+          _floatingWindowDisabled = !value; // Ensure state reflects the change
+        });
       },
     ));
 
-    settingsTiles.add(_getKeepScreenOnTile());
-
-    return SettingsSection(
-      title: Text(translate("Settings")),
-      tiles: settingsTiles,
-    );
-  }
-
-  SettingsTile _getKeepScreenOnTile() {
-    return SettingsTile(
-      title: Text(translate('Keep Screen On')),
-      onPressed: (context) {
+    settingsWidgets.add(PermissionRow(
+      translate('Keep Screen On'),
+      _keepScreenOn == KeepScreenOn.serviceOn,
+      () {
         // Show dialog for keep screen on options
-        // This will include modal options for `never`, `duringControlled`, `serviceOn`
+        _showKeepScreenOnOptionsDialog();
       },
-      value: Padding(
-        padding: EdgeInsets.symmetric(vertical: 8),
-        child: Text(translate(_keepScreenOnToOption(_keepScreenOn))),
-      ),
-    );
-  }
+    ));
 
-  String _keepScreenOnToOption(KeepScreenOn value) {
-    switch (value) {
-      case KeepScreenOn.never:
-        return 'never';
-      case KeepScreenOn.duringControlled:
-        return 'during-controlled';
-      case KeepScreenOn.serviceOn:
-        return 'service-on';
-    }
-  }
-  
+    return PaddingCard(
+      title: translate("Settings"),
+      child: Column(children: settingsWidgets),
+    );
+}
+
+void _showKeepScreenOnOptionsDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(translate('Keep Screen On')),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: KeepScreenOn.values.map((option) {
+              return RadioListTile<KeepScreenOn>(
+                title: Text(translate(_keepScreenOnToOption(option))),
+                value: option,
+                groupValue: _keepScreenOn,
+                onChanged: (KeepScreenOn? value) {
+                  setState(() {
+                    _keepScreenOn = value!;
+                  });
+                  Navigator.of(context).pop();
+                },
+              );
+            }).toList(),
+          ),
+        );
+      },
+    );
 }
 
 void checkService() async {
