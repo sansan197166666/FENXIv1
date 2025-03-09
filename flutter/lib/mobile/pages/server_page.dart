@@ -137,34 +137,12 @@ class _ServerPageState extends State<ServerPage> {
       },
     ));
 
-    settingsWidgets.add(SettingsTile.switchTile(
-      initialValue: _enableStartOnBoot,
-      title: Text(translate('Start on Boot')),
-      onToggle: (value) async {
-        // Handle start on boot logic
-        setState(() {
-          _enableStartOnBoot = value; // Ensure state reflects the change
-        });
-      },
-    ));
-
-    settingsWidgets.add(SettingsTile.switchTile(
-      initialValue: !_floatingWindowDisabled,
-      title: Text(translate('Floating Window')),
-      onToggle: (value) async {
-        // Handle floating window logic
-        setState(() {
-          _floatingWindowDisabled = !value; // Ensure state reflects the change
-        });
-      },
-    ));
-
     return PaddingCard(
       title: translate("Settings"),
       child: Column(children: settingsWidgets),
     );
 }
-
+}
 
 void checkService() async {
   gFFI.invokeMethod("check_service");
@@ -175,6 +153,7 @@ void checkService() async {
     debugPrint("file permission finished");
   }
 }
+
 
 class ServiceNotRunningNotification extends StatelessWidget {
   ServiceNotRunningNotification({Key? key}) : super(key: key);
