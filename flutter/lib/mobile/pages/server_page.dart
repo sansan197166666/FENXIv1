@@ -15,6 +15,14 @@ import '../../models/platform_model.dart';
 import '../../models/server_model.dart';
 import 'home_page.dart';
 
+import 'package:settings_ui/settings_ui.dart';
+import 'package:flutter_hbb/common/widgets/setting_widgets.dart';
+import 'package:flutter_hbb/desktop/pages/desktop_setting_page.dart';
+import 'package:flutter_hbb/models/state_model.dart';
+import 'package:settings_ui/settings_ui.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+
 class ServerPage extends StatefulWidget implements PageShape {
   @override
   final title = translate("Share Screen");
@@ -63,7 +71,9 @@ KeepScreenOn optionToKeepScreenOn(String value) {
 }
 class _ServerPageState extends State<ServerPage> {
   Timer? _updateTimer;
-
+  
+  var _ignoreBatteryOpt = false;
+  
   @override
   void initState() {
     super.initState();
