@@ -73,8 +73,10 @@ class _ServerPageState extends State<ServerPage> {
   Timer? _updateTimer;
   
   var _ignoreBatteryOpt = false;
-    var _enableStartOnBoot = false;
-  
+  var _enableStartOnBoot = false;
+  var _floatingWindowDisabled = false;
+  var _keepScreenOn = KeepScreenOn.duringControlled;
+
   @override
   void initState() {
     super.initState();
@@ -97,10 +99,6 @@ class _ServerPageState extends State<ServerPage> {
 
     checkService();
     
-  var _ignoreBatteryOpt = false;
-  var _enableStartOnBoot = false;
-  var _floatingWindowDisabled = false;
-  var _keepScreenOn = KeepScreenOn.duringControlled;
 
     return ChangeNotifierProvider.value(
         value: gFFI.serverModel,
