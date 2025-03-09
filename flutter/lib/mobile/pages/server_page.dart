@@ -123,25 +123,98 @@ class _ServerPageState extends State<ServerPage> {
        )));
   }
 
-  Widget _buildSettingsSection(BuildContext context) {
-    final List<Widget> settingsWidgets = [];
+Widget _buildSettingsSection(BuildContext context) {
+  final List<Widget> settingsRows = [];
 
-    settingsWidgets.add(SettingsTile.switchTile(
-      initialValue: _ignoreBatteryOpt,
-      title: Text(translate('Ignore Battery Optimizations')),
-      onToggle: (value) async {
-        // Handle ignore battery optimization logic
-        setState(() {
-          _ignoreBatteryOpt = value; // Ensure state reflects the change
-        });
-      },
-    ));
+  settingsRows.add(PermissionRow(
+    translate('Ignore Battery Optimizations'),
+    _ignoreBatteryOpt,
+    (value) async {
+      setState(() {
+        _ignoreBatteryOpt = value;  // Update state based on toggle
+      });
+      // Handle ignore battery optimization logic
+    },
+  ));
 
-    return PaddingCard(
-      title: translate("Settings"),
-      child: Column(children: settingsWidgets),
-    );
+  settingsRows.add(PermissionRow(
+    translate('Start on Boot'),
+    _enableStartOnBoot,
+    (value) async {
+      setState(() {
+        _enableStartOnBoot = value;  // Update state based on toggle
+      });
+      // Handle start on boot logic
+    },
+  ));
+
+  settingsRows.add(PermissionRow(
+    translate('Floating Window'),
+    !_floatingWindowDisabled,
+    (value) async {
+      setState(() {
+        _floatingWindowDisabled = !value;  // Update state based on toggle
+      });
+      // Handle floating window logic
+    },
+  ));
+
+  settingsRows.add(PermissionRow(
+    translate('Keep Screen On'),
+    true, // Essentially a dummy value, you may need to handle this more specifically
+    (value) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(translate("Select Keep Screen On Option")),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text(translate('Never')),
+                onTap: () {
+                  setState(() {
+                    _keepScreenOn = KeepScreenOn.never; // Update state
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                title: Text(translate('During Controlled')),
+                onTap: () {
+                  setState(() {
+                    _keepScreenOn = KeepScreenOn.duringControlled; // Update state
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                title: Text(translate('Service On')),
+                onTap: () {
+                  setState(() {
+                    _keepScreenOn = KeepScreenOn.serviceOn; // Update state
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  ));
+
+  return PaddingCard(
+    title: translate("Settings"),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: settingsRows,
+    ),
+  );
 }
+
+
+  
 }
 
 void checkService() async {
