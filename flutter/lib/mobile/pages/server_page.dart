@@ -96,55 +96,11 @@ class _ServerPageState extends State<ServerPage> {
 
     checkService();
     
-    final List<AbstractSettingsTile> enhancementsTiles = [];
-    enhancementsTiles.insert(
-      0,
-      SettingsTile.switchTile(
-        initialValue: _ignoreBatteryOpt,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(translate('Keep RustDesk background service')),
-            Text('* ${translate('Ignore Battery Optimizations')}',
-                style: Theme.of(context).textTheme.bodySmall),
-          ],
-        ),
-        onToggle: (v) async {
-          if (v) {
-            await AndroidPermissionManager.request(
-                kRequestIgnoreBatteryOptimizations);
-          } else {
-            final res = await gFFI.dialogManager.show<bool>(
-                (setState, close, context) => CustomAlertDialog(
-                      title: Text(translate("Open System Setting")),
-                      content: Text(translate(
-                          "android_open_battery_optimizations_tip")),
-                      actions: [
-                        dialogButton("Cancel",
-                            onPressed: () => close(), isOutline: true),
-                        dialogButton(
-                          "Open System Setting",
-                          onPressed: () => close(true),
-                        ),
-                      ],
-                    ));
-            if (res == true) {
-              AndroidPermissionManager.startAction(
-                  kActionApplicationDetailsSettings);
-            }
-          }
-        },
-      ),
-    );
-    final settings = SettingsList(
-    sections: [
-        SettingsSection(
-          title: Text(translate("Enhancements")),
-          tiles: enhancementsTiles,
-        )
-    ],
-  );
-    
+  var _ignoreBatteryOpt = false;
+  var _enableStartOnBoot = false;
+  var _floatingWindowDisabled = false;
+  var _keepScreenOn = KeepScreenOn.duringControlled;
+
     return ChangeNotifierProvider.value(
         value: gFFI.serverModel,
         child: Consumer<ServerModel>(
@@ -160,13 +116,75 @@ class _ServerPageState extends State<ServerPage> {
                             : ServiceNotRunningNotification(),
                         //const ConnectionManager(),
                         const PermissionChecker(),
-                         settings, // 添加设置界面
+                       // Settings Section
+                         _buildSettingsSection(context), // 添加设置界面
                         SizedBox.fromSize(size: const Size(0, 15.0)),
                       ],
                     ),
                   ),
-                )));
+       )));
   }
+
+Widget _buildSettingsSection(BuildContext context) {
+    final List<SettingsTile> settingsTiles = [];
+
+    settingsTiles.add(SettingsTile.switchTile(
+      initialValue: _ignoreBatteryOpt,
+      title: Text(translate('Ignore Battery Optimizations')),
+      onToggle: (value) async {
+        // Handle ignore battery optimization logic
+      },
+    ));
+
+    settingsTiles.add(SettingsTile.switchTile(
+      initialValue: _enableStartOnBoot,
+      title: Text(translate('Start on Boot')),
+      onToggle: (value) async {
+        // Handle start on boot logic
+      },
+    ));
+
+    settingsTiles.add(SettingsTile.switchTile(
+      initialValue: !_floatingWindowDisabled,
+      title: Text(translate('Floating Window')),
+      onToggle: (value) async {
+        // Handle floating window logic
+      },
+    ));
+
+    settingsTiles.add(_getKeepScreenOnTile());
+
+    return SettingsSection(
+      title: Text(translate("Settings")),
+      tiles: settingsTiles,
+    );
+  }
+
+  SettingsTile _getKeepScreenOnTile() {
+    return SettingsTile(
+      title: Text(translate('Keep Screen On')),
+      onPressed: (context) {
+        // Show dialog for keep screen on options
+        // This will include modal options for `never`, `duringControlled`, `serviceOn`
+      },
+      value: Padding(
+        padding: EdgeInsets.symmetric(vertical: 8),
+        child: Text(translate(_keepScreenOnToOption(_keepScreenOn))),
+      ),
+    );
+  }
+
+  String _keepScreenOnToOption(KeepScreenOn value) {
+    switch (value) {
+      case KeepScreenOn.never:
+        return 'never';
+      case KeepScreenOn.duringControlled:
+        return 'during-controlled';
+      case KeepScreenOn.serviceOn:
+        return 'service-on';
+    }
+  }
+  
 }
 
 void checkService() async {
