@@ -73,6 +73,7 @@ class _ServerPageState extends State<ServerPage> {
   Timer? _updateTimer;
   
   var _ignoreBatteryOpt = false;
+    var _enableStartOnBoot = false;
   
   @override
   void initState() {
