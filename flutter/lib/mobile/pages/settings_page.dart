@@ -414,6 +414,7 @@ class _SettingsState extends State<SettingsPage> with WidgetsBindingObserver {
     }
     return true;
   }
+}
 
 void showAbout(OverlayDialogManager dialogManager) {
   dialogManager.show((setState, close, context) {
