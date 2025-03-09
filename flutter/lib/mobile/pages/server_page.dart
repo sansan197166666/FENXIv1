@@ -34,6 +34,33 @@ class ServerPage extends StatefulWidget implements PageShape {
   State<StatefulWidget> createState() => _ServerPageState();
 }
 
+enum KeepScreenOn {
+  never,
+  duringControlled,
+  serviceOn,
+}
+
+String _keepScreenOnToOption(KeepScreenOn value) {
+  switch (value) {
+    case KeepScreenOn.never:
+      return 'never';
+    case KeepScreenOn.duringControlled:
+      return 'during-controlled';
+    case KeepScreenOn.serviceOn:
+      return 'service-on';
+  }
+}
+
+KeepScreenOn optionToKeepScreenOn(String value) {
+  switch (value) {
+    case 'never':
+      return KeepScreenOn.never;
+    case 'service-on':
+      return KeepScreenOn.serviceOn;
+    default:
+      return KeepScreenOn.duringControlled;
+  }
+}
 class _ServerPageState extends State<ServerPage> {
   Timer? _updateTimer;
 
