@@ -98,7 +98,6 @@ class _ServerPageState extends State<ServerPage> {
   Widget build(BuildContext context) {
 
     checkService();
-    
 
     return ChangeNotifierProvider.value(
         value: gFFI.serverModel,
@@ -124,7 +123,7 @@ class _ServerPageState extends State<ServerPage> {
        )));
   }
 
-Widget _buildSettingsSection(BuildContext context) {
+  Widget _buildSettingsSection(BuildContext context) {
     final List<Widget> settingsWidgets = [];
 
     settingsWidgets.add(SettingsTile.switchTile(
@@ -160,47 +159,12 @@ Widget _buildSettingsSection(BuildContext context) {
       },
     ));
 
-    settingsWidgets.add(PermissionRow(
-      translate('Keep Screen On'),
-      _keepScreenOn == KeepScreenOn.serviceOn,
-      () {
-        // Show dialog for keep screen on options
-        _showKeepScreenOnOptionsDialog();
-      },
-    ));
-
     return PaddingCard(
       title: translate("Settings"),
       child: Column(children: settingsWidgets),
     );
 }
 
-void _showKeepScreenOnOptionsDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(translate('Keep Screen On')),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: KeepScreenOn.values.map((option) {
-              return RadioListTile<KeepScreenOn>(
-                title: Text(translate(_keepScreenOnToOption(option))),
-                value: option,
-                groupValue: _keepScreenOn,
-                onChanged: (KeepScreenOn? value) {
-                  setState(() {
-                    _keepScreenOn = value!;
-                  });
-                  Navigator.of(context).pop();
-                },
-              );
-            }).toList(),
-          ),
-        );
-      },
-    );
-}
 
 void checkService() async {
   gFFI.invokeMethod("check_service");
