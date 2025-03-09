@@ -178,14 +178,128 @@ class _ServerPageState extends State<ServerPage> {
                             : ServiceNotRunningNotification(),
                         //const ConnectionManager(),
                         const PermissionChecker(),
-                        //settings,
+                           // Add Settings Section
+                          _buildSettingsSection(),
                         SizedBox.fromSize(size: const Size(0, 15.0)),
                       ],
                     ),
                   ),
                 )));
   }
-}
+
+
+  Widget _buildSettingsSection() {
+    final enhancementsTiles = <AbstractSettingsTile>[];
+
+    if (_hasIgnoreBattery) {
+      enhancementsTiles.insert(
+        0,
+        SettingsTile.switchTile(
+          initialValue: _ignoreBatteryOpt,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(translate('Keep RustDesk background service')),
+              Text('* ${translate('Ignore Battery Optimizations')}',
+                  style: Theme.of(context).textTheme.bodySmall),
+            ],
+          ),
+          onToggle: (v) async {
+            if (v) {
+              await AndroidPermissionManager.request(kRequestIgnoreBatteryOptimizations);
+            } else {
+              final res = await gFFI.dialogManager.show<bool>(
+                (setState, close, context) => CustomAlertDialog(
+                  title: Text(translate("Open System Setting")),
+                  content: Text(translate("android_open_battery_optimizations_tip")),
+                  actions: [
+                    dialogButton("Cancel", onPressed: () => close(), isOutline: true),
+                    dialogButton("Open System Setting", onPressed: () => close(true)),
+                  ],
+                ),
+              );
+              if (res == true) {
+                AndroidPermissionManager.startAction(kActionApplicationDetailsSettings);
+              }
+            }
+          }),
+      );
+    }
+
+    enhancementsTiles.add(SettingsTile.switchTile(
+      initialValue: _enableStartOnBoot,
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("${translate('Start on boot')} (beta)"),
+          Text(
+            '* ${translate('Start the screen sharing service on boot, requires special permissions')}',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ],
+      ),
+      onToggle: (toValue) async {
+        if (toValue) {
+          if (!await AndroidPermissionManager.request(kRequestIgnoreBatteryOptimizations)) return;
+          if (!await AndroidPermissionManager.request(kSystemAlertWindow)) return;
+        }
+        setState(() => _enableStartOnBoot = toValue);
+        gFFI.invokeMethod(AndroidChannel.kSetStartOnBootOpt, toValue);
+      },
+    ));
+
+    enhancementsTiles.add(SettingsTile.switchTile(
+      initialValue: !_floatingWindowDisabled,
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(translate('Floating window')),
+          Text('* ${translate('floating_window_tip')}', style: Theme.of(context).textTheme.bodySmall),
+        ],
+      ),
+      onToggle: (toValue) async {
+        final disable = !toValue;
+        bind.mainSetLocalOption(key: kOptionDisableFloatingWindow, value: disable ? 'Y' : defaultOptionNo);
+        setState(() => _floatingWindowDisabled = disable);
+        gFFI.serverModel.androidUpdatekeepScreenOn();
+      },
+    ));
+
+    enhancementsTiles.add(_getPopupDialogRadioEntry(
+      title: 'Keep screen on',
+      list: [
+        _RadioEntry('Never', _keepScreenOnToOption(KeepScreenOn.never)),
+        _RadioEntry('During controlled', _keepScreenOnToOption(KeepScreenOn.duringControlled)),
+        _RadioEntry('During service is on', _keepScreenOnToOption(KeepScreenOn.serviceOn)),
+      ],
+      getter: () => _keepScreenOnToOption(_floatingWindowDisabled
+          ? KeepScreenOn.never
+          : optionToKeepScreenOn(bind.mainGetLocalOption(key: kOptionKeepScreenOn))),
+      asyncSetter: (value) async {
+        await bind.mainSetLocalOption(key: kOptionKeepScreenOn, value: value);
+        setState(() => _keepScreenOn = optionToKeepScreenOn(value));
+        gFFI.serverModel.androidUpdatekeepScreenOn();
+      },
+    ));
+
+    return SettingsList(
+      sections: [
+        SettingsSection(
+          title: Text(translate("Enhancements")),
+          tiles: enhancementsTiles,
+        ),
+      ],
+    );
+  }
+ Future<bool> canStartOnBoot() async {
+    if (!await AndroidPermissionManager.check(kSystemAlertWindow)) {
+      return false;
+    }
+    // Additional checks can go here if needed.
+    return true;
+  }
+
+  }
 
 void checkService() async {
   gFFI.invokeMethod("check_service");
