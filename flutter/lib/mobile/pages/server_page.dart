@@ -292,7 +292,21 @@ class _ServerPageState extends State<ServerPage> {
 
     //新增
     final List<AbstractSettingsTile> enhancementsTiles = [];
-
+ final customClientSection = CustomSettingsSection(
+        child: Column(
+      children: [
+        if (bind.isCustomClient())
+          Align(
+            alignment: Alignment.center,
+            child: loadPowered(context),
+          ),
+        Align(
+          alignment: Alignment.center,
+          child: loadLogo(),
+        )
+      ],
+    ));
+    
 if (_hasIgnoreBattery) {
       enhancementsTiles.insert(
           0,
