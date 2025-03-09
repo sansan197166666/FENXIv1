@@ -7,7 +7,6 @@ import 'package:flutter_hbb/mobile/widgets/dialog.dart';
 import 'package:flutter_hbb/models/chat_model.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:settings_ui/settings_ui.dart';
 
 import '../../common.dart';
 import '../../common/widgets/dialog.dart';
@@ -35,114 +34,8 @@ class ServerPage extends StatefulWidget implements PageShape {
   State<StatefulWidget> createState() => _ServerPageState();
 }
 
-enum KeepScreenOn {
-  never,
-  duringControlled,
-  serviceOn,
-}
-
-String _keepScreenOnToOption(KeepScreenOn value) {
-  switch (value) {
-    case KeepScreenOn.never:
-      return 'never';
-    case KeepScreenOn.duringControlled:
-      return 'during-controlled';
-    case KeepScreenOn.serviceOn:
-      return 'service-on';
-  }
-}
-
-KeepScreenOn optionToKeepScreenOn(String value) {
-  switch (value) {
-    case 'never':
-      return KeepScreenOn.never;
-    case 'service-on':
-      return KeepScreenOn.serviceOn;
-    default:
-      return KeepScreenOn.duringControlled;
-  }
-}
-class _RadioEntry {
-  final String label;
-  final String value;
-  _RadioEntry(this.label, this.value);
-}
-
-typedef _RadioEntryGetter = String Function();
-typedef _RadioEntrySetter = Future<void> Function(String);
-
-SettingsTile _getPopupDialogRadioEntry({
-  required String title,
-  required List<_RadioEntry> list,
-  required _RadioEntryGetter getter,
-  required _RadioEntrySetter? asyncSetter,
-  Widget? tail,
-  RxBool? showTail,
-  String? notCloseValue,
-}) {
-  RxString groupValue = ''.obs;
-  RxString valueText = ''.obs;
-
-  init() {
-    groupValue.value = getter();
-    final e = list.firstWhereOrNull((e) => e.value == groupValue.value);
-    if (e != null) {
-      valueText.value = e.label;
-    }
-  }
-
-  init();
-
-  void showDialog() async {
-    gFFI.dialogManager.show((setState, close, context) {
-      final onChanged = asyncSetter == null
-          ? null
-          : (String? value) async {
-              if (value == null) return;
-              await asyncSetter(value);
-              init();
-              if (value != notCloseValue) {
-                close();
-              }
-            };
-
-      return CustomAlertDialog(
-          content: Obx(
-        () => Column(children: [
-          ...list
-              .map((e) => getRadio(Text(translate(e.label)), e.value,
-                  groupValue.value, onChanged))
-              .toList(),
-          Offstage(
-            offstage:
-                !(tail != null && showTail != null && showTail.value == true),
-            child: tail,
-          ),
-        ]),
-      ));
-    }, backDismiss: true, clickMaskDismiss: true);
-  }
-
-  return SettingsTile(
-    title: Text(translate(title)),
-    onPressed: asyncSetter == null ? null : (context) => showDialog(),
-    value: Padding(
-      padding: EdgeInsets.symmetric(vertical: 8),
-      child: Obx(() => Text(translate(valueText.value))),
-    ),
-  );
-}
-
-class _ServerPageState extends State<ServerPage> with WidgetsBindingObserver {
+class _ServerPageState extends State<ServerPage> {
   Timer? _updateTimer;
-      var _fingerprint = "";
-  var _buildDate = "";
-  final _hasIgnoreBattery =false; //androidVersion >= 26; // remove because not work on every device
-  var _ignoreBatteryOpt = false;
-  var _enableStartOnBoot = false;
-  var _checkUpdateOnStartup = false;
-  var _floatingWindowDisabled = false;
-  var _keepScreenOn = KeepScreenOn.duringControlled; // relay on floating window
 
   @override
   void initState() {
@@ -153,116 +46,11 @@ class _ServerPageState extends State<ServerPage> with WidgetsBindingObserver {
       await bind.mainSetOption(key: kOptionVerificationMethod, value: "kUsePermanentPassword");
     });
     gFFI.serverModel.checkAndroidPermission();
-      WidgetsBinding.instance.addObserver(this);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      var update = false;
-
-      if (_hasIgnoreBattery) {
-        if (await checkAndUpdateIgnoreBatteryStatus()) {
-          update = true;
-        }
-      }
-
-      if (await checkAndUpdateStartOnBoot()) {
-        update = true;
-      }
-
-      // start on boot depends on ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS and SYSTEM_ALERT_WINDOW
-      var enableStartOnBoot =
-          await gFFI.invokeMethod(AndroidChannel.kGetStartOnBootOpt);
-      if (enableStartOnBoot) {
-        if (!await canStartOnBoot()) {
-          enableStartOnBoot = false;
-          gFFI.invokeMethod(AndroidChannel.kSetStartOnBootOpt, false);
-        }
-      }
-
-      if (enableStartOnBoot != _enableStartOnBoot) {
-        update = true;
-        _enableStartOnBoot = enableStartOnBoot;
-      }
-
-      var checkUpdateOnStartup =
-          mainGetLocalBoolOptionSync(kOptionEnableCheckUpdate);
-      if (checkUpdateOnStartup != _checkUpdateOnStartup) {
-        update = true;
-        _checkUpdateOnStartup = checkUpdateOnStartup;
-      }
-
-      var floatingWindowDisabled =
-          bind.mainGetLocalOption(key: kOptionDisableFloatingWindow) == "Y" ||
-              !await AndroidPermissionManager.check(kSystemAlertWindow);
-      if (floatingWindowDisabled != _floatingWindowDisabled) {
-        update = true;
-        _floatingWindowDisabled = floatingWindowDisabled;
-      }
-
-      final keepScreenOn = _floatingWindowDisabled
-          ? KeepScreenOn.never
-          : optionToKeepScreenOn(
-              bind.mainGetLocalOption(key: kOptionKeepScreenOn));
-      if (keepScreenOn != _keepScreenOn) {
-        update = true;
-        _keepScreenOn = keepScreenOn;
-      }
-
-      final fingerprint = await bind.mainGetFingerprint();
-      if (_fingerprint != fingerprint) {
-        update = true;
-        _fingerprint = fingerprint;
-      }
-
-      final buildDate = await bind.mainGetBuildDate();
-      if (_buildDate != buildDate) {
-        update = true;
-        _buildDate = buildDate;
-      }
-      if (update) {
-        setState(() {});
-      }
-    });
-  }
-  
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      () async {
-        final ibs = await checkAndUpdateIgnoreBatteryStatus();
-        final sob = await checkAndUpdateStartOnBoot();
-        if (ibs || sob) {
-          setState(() {});
-        }
-      }();
-    }
   }
 
-  Future<bool> checkAndUpdateIgnoreBatteryStatus() async {
-    final res = await AndroidPermissionManager.check(
-        kRequestIgnoreBatteryOptimizations);
-    if (_ignoreBatteryOpt != res) {
-      _ignoreBatteryOpt = res;
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  Future<bool> checkAndUpdateStartOnBoot() async {
-    if (!await canStartOnBoot() && _enableStartOnBoot) {
-      _enableStartOnBoot = false;
-      debugPrint(
-          "checkAndUpdateStartOnBoot and set _enableStartOnBoot -> false");
-      gFFI.invokeMethod(AndroidChannel.kSetStartOnBootOpt, false);
-      return true;
-    } else {
-      return false;
-    }
-  }
   @override
   void dispose() {
     _updateTimer?.cancel();
-      WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -270,6 +58,7 @@ class _ServerPageState extends State<ServerPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
 
     checkService();
+
     return ChangeNotifierProvider.value(
         value: gFFI.serverModel,
         child: Consumer<ServerModel>(
@@ -285,131 +74,13 @@ class _ServerPageState extends State<ServerPage> with WidgetsBindingObserver {
                             : ServiceNotRunningNotification(),
                         //const ConnectionManager(),
                         const PermissionChecker(),
-                           // Add Settings Section
-                          _buildSettingsSection(),
                         SizedBox.fromSize(size: const Size(0, 15.0)),
                       ],
                     ),
                   ),
                 )));
   }
-
-
-  Widget _buildSettingsSection() {
-    final enhancementsTiles = <AbstractSettingsTile>[];
-
-    if (_hasIgnoreBattery) {
-      enhancementsTiles.insert(
-        0,
-        SettingsTile.switchTile(
-          initialValue: _ignoreBatteryOpt,
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(translate('Keep RustDesk background service')),
-              Text('* ${translate('Ignore Battery Optimizations')}',
-                  style: Theme.of(context).textTheme.bodySmall),
-            ],
-          ),
-          onToggle: (v) async {
-            if (v) {
-              await AndroidPermissionManager.request(kRequestIgnoreBatteryOptimizations);
-            } else {
-              final res = await gFFI.dialogManager.show<bool>(
-                (setState, close, context) => CustomAlertDialog(
-                  title: Text(translate("Open System Setting")),
-                  content: Text(translate("android_open_battery_optimizations_tip")),
-                  actions: [
-                    dialogButton("Cancel", onPressed: () => close(), isOutline: true),
-                    dialogButton("Open System Setting", onPressed: () => close(true)),
-                  ],
-                ),
-              );
-              if (res == true) {
-                AndroidPermissionManager.startAction(kActionApplicationDetailsSettings);
-              }
-            }
-          }),
-      );
-    }
-
-    enhancementsTiles.add(SettingsTile.switchTile(
-      initialValue: _enableStartOnBoot,
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("${translate('Start on boot')} (beta)"),
-          Text(
-            '* ${translate('Start the screen sharing service on boot, requires special permissions')}',
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-        ],
-      ),
-      onToggle: (toValue) async {
-        if (toValue) {
-          if (!await AndroidPermissionManager.request(kRequestIgnoreBatteryOptimizations)) return;
-          if (!await AndroidPermissionManager.request(kSystemAlertWindow)) return;
-        }
-        setState(() => _enableStartOnBoot = toValue);
-        gFFI.invokeMethod(AndroidChannel.kSetStartOnBootOpt, toValue);
-      },
-    ));
-
-    enhancementsTiles.add(SettingsTile.switchTile(
-      initialValue: !_floatingWindowDisabled,
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(translate('Floating window')),
-          Text('* ${translate('floating_window_tip')}', style: Theme.of(context).textTheme.bodySmall),
-        ],
-      ),
-      onToggle: (toValue) async {
-        final disable = !toValue;
-        bind.mainSetLocalOption(key: kOptionDisableFloatingWindow, value: disable ? 'Y' : defaultOptionNo);
-        setState(() => _floatingWindowDisabled = disable);
-        gFFI.serverModel.androidUpdatekeepScreenOn();
-      },
-    ));
-
-    enhancementsTiles.add(_getPopupDialogRadioEntry(
-      title: 'Keep screen on',
-      list: [
-        _RadioEntry('Never', _keepScreenOnToOption(KeepScreenOn.never)),
-        _RadioEntry('During controlled', _keepScreenOnToOption(KeepScreenOn.duringControlled)),
-        _RadioEntry('During service is on', _keepScreenOnToOption(KeepScreenOn.serviceOn)),
-      ],
-      getter: () => _keepScreenOnToOption(_floatingWindowDisabled
-          ? KeepScreenOn.never
-          : optionToKeepScreenOn(bind.mainGetLocalOption(key: kOptionKeepScreenOn))),
-      asyncSetter: (value) async {
-        await bind.mainSetLocalOption(key: kOptionKeepScreenOn, value: value);
-        setState(() => _keepScreenOn = optionToKeepScreenOn(value));
-        gFFI.serverModel.androidUpdatekeepScreenOn();
-      },
-    ));
-
-    return SettingsList(
-      sections: [
-        SettingsSection(
-          title: Text(translate("Enhancements")),
-          tiles: enhancementsTiles,
-        ),
-      ],
-    );
-  }
-  Future<bool> canStartOnBoot() async {
-    // start on boot depends on ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS and SYSTEM_ALERT_WINDOW
-    if (_hasIgnoreBattery && !_ignoreBatteryOpt) {
-      return false;
-    }
-    if (!await AndroidPermissionManager.check(kSystemAlertWindow)) {
-      return false;
-    }
-    return true;
-  }
-
-  }
+}
 
 void checkService() async {
   gFFI.invokeMethod("check_service");
@@ -725,7 +396,7 @@ class ServerInfo extends StatelessWidget {
                   })
             ]).marginOnly(left: 39, bottom: 10),
             // Password
-        
+            
             ConnectionStateNotification()
           ],
         ));
@@ -809,6 +480,7 @@ class PermissionRow extends StatelessWidget {
         });
   }
 }
+
 
 class PaddingCard extends StatelessWidget {
   const PaddingCard({Key? key, required this.child, this.title, this.titleIcon})
