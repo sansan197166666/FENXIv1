@@ -266,8 +266,11 @@ class _ServerPageState extends State<ServerPage> {
   
   final _hasIgnoreBattery =
       false; //androidVersion >= 26; // remove because not work on every device
+ final disabledSettings = bind.isDisableSettings();
+     final outgoingOnly = bind.isOutgoingOnly();
+      final hideSecuritySettings =
+        bind.mainGetBuildinOption(key: kOptionHideSecuritySetting) == 'Y';
 
-  
   @override
   void initState() {
     super.initState();
