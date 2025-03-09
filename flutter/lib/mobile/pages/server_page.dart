@@ -133,9 +133,10 @@ SettingsTile _getPopupDialogRadioEntry({
   );
 }
 
-class _ServerPageState extends State<ServerPage> {
+class _ServerPageState extends State<ServerPage> with WidgetsBindingObserver {
   Timer? _updateTimer;
-    
+      var _fingerprint = "";
+  var _buildDate = "";
   final _hasIgnoreBattery =false; //androidVersion >= 26; // remove because not work on every device
   var _ignoreBatteryOpt = false;
   var _enableStartOnBoot = false;
