@@ -7,6 +7,7 @@ import 'package:flutter_hbb/mobile/widgets/dialog.dart';
 import 'package:flutter_hbb/models/chat_model.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:settings_ui/settings_ui.dart';
 
 import '../../common.dart';
 import '../../common/widgets/dialog.dart';
@@ -159,7 +160,17 @@ class _DropDownAction extends StatelessWidget {
 
 class _ServerPageState extends State<ServerPage> {
   Timer? _updateTimer;
+  
+    var _ignoreBatteryOpt = false;
+  var _enableStartOnBoot = false;
+  var _checkUpdateOnStartup = false;
+  var _floatingWindowDisabled = false;
+  var _keepScreenOn = KeepScreenOn.duringControlled; // relay on floating window
+  
+  final _hasIgnoreBattery =
+      false; //androidVersion >= 26; // remove because not work on every device
 
+  
   @override
   void initState() {
     super.initState();
@@ -179,9 +190,7 @@ class _ServerPageState extends State<ServerPage> {
 
   @override
   Widget build(BuildContext context) {
-    //新增
-    Provider.of<FfiModel>(context);
-    
+
     checkService();
 
     //新增
