@@ -523,7 +523,14 @@ Widget _buildSettingsSection(BuildContext context) {
       translate("Floating window"),
       !_floatingWindowDisabled,
       () {
-        handleFloatingOnBoot(_floatingWindowDisabled);
+         handleFloatingOnBoot(_floatingWindowDisabled);
+         // 当浮动窗口未禁用（即可以使用）时，切换保持屏幕常亮的状态
+          setState(() {
+            _keepScreenOn = _floatingWindowDisabled
+          ? KeepScreenOn.never
+          : optionToKeepScreenOn(
+              bind.mainGetLocalOption(key: kOptionKeepScreenOn));
+          });
       },
     ));
 
