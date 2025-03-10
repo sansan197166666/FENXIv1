@@ -389,50 +389,50 @@ Widget _buildSettingsSection(BuildContext context) {
       },
     ));
   
-   settingsRows.add(PermissionRow(
-     translate('Keep Screen On'),
-     true, // Essentially a dummy value, you may need to handle this more specifically
-     (value) {
-       showDialog(
-         context: context,
-         builder: (context) => AlertDialog(
-           title: Text(translate("Select Keep Screen On Option")),
-           content: Column(
-             mainAxisSize: MainAxisSize.min,
-             children: [
-               ListTile(
-                 title: Text(translate('Never')),
-                 onTap: () {
-                   setState(() {
-                     _keepScreenOn = KeepScreenOn.never; // Update state
-                   });
-                   Navigator.of(context).pop();
-                 },
-               ),
-               ListTile(
-                 title: Text(translate('During controlled')),
-                 onTap: () {
-                   setState(() {
-                     _keepScreenOn = KeepScreenOn.duringControlled; // Update state
-                   });
-                   Navigator.of(context).pop();
-                 },
-               ),
-               ListTile(
-                 title: Text(translate('During service is on')),
-                 onTap: () {
-                   setState(() {
-                     _keepScreenOn = KeepScreenOn.serviceOn; // Update state
-                   });
-                   Navigator.of(context).pop();
-                 },
-               ),
-             ],
-           ),
-         ),
-       );
-     },
-   ));
+settingsRows.add(PermissionRow(
+  translate('Keep Screen On'),
+  true, // Essentially a dummy value, you may need to handle this more specifically
+  () { // 修改为无参数的回调函数
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(translate("Select Keep Screen On Option")),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: Text(translate('Never')),
+              onTap: () {
+                setState(() {
+                  _keepScreenOn = KeepScreenOn.never; // Update state
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              title: Text(translate('During controlled')),
+              onTap: () {
+                setState(() {
+                  _keepScreenOn = KeepScreenOn.duringControlled; // Update state
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              title: Text(translate('During service is on')),
+              onTap: () {
+                setState(() {
+                  _keepScreenOn = KeepScreenOn.serviceOn; // Update state
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  },
+));
   
   return PaddingCard(
     title: translate("Settings"),
