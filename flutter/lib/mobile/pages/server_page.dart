@@ -165,7 +165,7 @@ class _ServerPageState extends State<ServerPage> {
           }
         }
       }
-      final disable = !toValue;
+      final disable = !value;
       bind.mainSetLocalOption(
           key: kOptionDisableFloatingWindow,
           value: disable ? 'Y' : defaultOptionNo);
