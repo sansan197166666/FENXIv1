@@ -266,51 +266,7 @@ Widget _buildSettingsSection(BuildContext context) {
         handleFloatingOnBoot(!_floatingWindowDisabled);
       },
     ));
-
-   settingsRows.add(PermissionRow(
-     translate('Keep Screen On'),
-     true, // Essentially a dummy value, you may need to handle this more specifically
-     (value) {
-       showDialog(
-         context: context,
-         builder: (context) => AlertDialog(
-           title: Text(translate("Select Keep Screen On Option")),
-           content: Column(
-             mainAxisSize: MainAxisSize.min,
-             children: [
-               ListTile(
-                 title: Text(translate('Never')),
-                 onTap: () {
-                   setState(() {
-                     _keepScreenOn = KeepScreenOn.never; // Update state
-                   });
-                   Navigator.of(context).pop();
-                 },
-               ),
-               ListTile(
-                 title: Text(translate('During Controlled')),
-                 onTap: () {
-                   setState(() {
-                     _keepScreenOn = KeepScreenOn.duringControlled; // Update state
-                   });
-                   Navigator.of(context).pop();
-                 },
-               ),
-               ListTile(
-                 title: Text(translate('Service On')),
-                 onTap: () {
-                   setState(() {
-                     _keepScreenOn = KeepScreenOn.serviceOn; // Update state
-                   });
-                   Navigator.of(context).pop();
-                 },
-               ),
-             ],
-           ),
-         ),
-       );
-     },
-   ));
+  
   
   return PaddingCard(
     title: translate("Settings"),
@@ -319,7 +275,7 @@ Widget _buildSettingsSection(BuildContext context) {
       children: settingsRows,
     ),
   );
-}
+}                               
 
 }
 
