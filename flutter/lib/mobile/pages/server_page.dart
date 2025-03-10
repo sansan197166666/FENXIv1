@@ -471,7 +471,7 @@ Widget _buildSettingsSection(BuildContext context) {
       },
     ));
 
-
+/*
 // Use the custom method in your settingsRows
 settingsRows.add(PermissionRow(
   translate('Keep screen on'),
@@ -483,8 +483,23 @@ settingsRows.add(PermissionRow(
       });
     });
   },
+));*/
+  
+settingsRows.add(PermissionRow(
+  translate('Keep screen on'),
+  true, // Essentially a dummy value; may need to handle this more specifically
+  () {
+    getPopupDialogRadioEntry(
+      context,
+      (KeepScreenOn value) {
+        setState(() {
+          _keepScreenOn = value; // Update state based on the selection
+        });
+      },
+      _keepScreenOn, // Pass the current selection here
+    );
+  },
 ));
-
   
   /*
 settingsRows.add(PermissionRow(
