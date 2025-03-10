@@ -120,7 +120,7 @@ class _ServerPageState extends State<ServerPage> {
     setState(() {
       _enableStartOnBoot = value;  // Update state based on toggle
     }); 
-    gFFI.invokeMethod(AndroidChannel.kSetStartOnBootOpt, toValue);
+    gFFI.invokeMethod(AndroidChannel.kSetStartOnBootOpt, value);
     // Handle start on boot logic
     print('Start on Boot: $value');
   }
