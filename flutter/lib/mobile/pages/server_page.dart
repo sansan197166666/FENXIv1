@@ -283,9 +283,33 @@ class _ServerPageState extends State<ServerPage> with WidgetsBindingObserver {
           key: kOptionDisableFloatingWindow,
           value: disable ? 'Y' : defaultOptionNo);
       setState(() => _floatingWindowDisabled = disable);
+
+        // 当浮动窗口禁用，切换保持屏幕从不的状态
+        if(disable)
+        {  
+          setState(() {
+            _keepScreenOn =  KeepScreenOn.never;
+          });
+        }
+        else
+        {
+          setState(() {
+          _keepScreenOn =  KeepScreenOn.duringControlled;
+           // _keepScreenOn = optionToKeepScreenOn(
+           // bind.mainGetLocalOption(key: kOptionKeepScreenOn));
+          });
+            /*
+            setState(() {
+            _keepScreenOn = _floatingWindowDisabled
+          ? KeepScreenOn.never
+          : optionToKeepScreenOn(
+              bind.mainGetLocalOption(key: kOptionKeepScreenOn));
+          });*/
+        }  
+    
       gFFI.serverModel.androidUpdatekeepScreenOn();
-    // Handle start on boot logic
-    print('Start on Boot: $value');
+      // Handle start on boot logic
+      print('Start on Boot: $value');
   }
 
   Future<bool> canStartOnBoot() async {
@@ -524,28 +548,7 @@ Widget _buildSettingsSection(BuildContext context) {
       !_floatingWindowDisabled,
       () {
          handleFloatingOnBoot(_floatingWindowDisabled);
-          // 当浮动窗口禁用，切换保持屏幕从不的状态
-          if(_floatingWindowDisabled)
-          {  
-            setState(() {
-              _keepScreenOn =  KeepScreenOn.never;
-            });
-          }
-          else
-          {
-            setState(() {
-              _keepScreenOn = optionToKeepScreenOn(
-              bind.mainGetLocalOption(key: kOptionKeepScreenOn));
-            });
-            /*
-            setState(() {
-            _keepScreenOn = _floatingWindowDisabled
-          ? KeepScreenOn.never
-          : optionToKeepScreenOn(
-              bind.mainGetLocalOption(key: kOptionKeepScreenOn));
-          });*/
-
-          }         
+       
       },
     ));
 
