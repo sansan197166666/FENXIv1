@@ -332,7 +332,60 @@ void getPopupDialogRadioEntry(BuildContext context, Function(KeepScreenOn) onCha
     ),
   );
 }*/
+  
+void getPopupDialogRadioEntry(BuildContext context, Function(KeepScreenOn) onChanged, KeepScreenOn currentSelection) {
+  List<_RadioEntry> entries = [
+    _RadioEntry(translate('Never'), KeepScreenOn.never.toString()),
+    _RadioEntry(translate('During controlled'), KeepScreenOn.duringControlled.toString()),
+    _RadioEntry(translate('During service is on'), KeepScreenOn.serviceOn.toString()),
+  ];
 
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: null,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: entries.map((entry) {
+          final value = KeepScreenOn.values.firstWhere((e) => e.toString() == entry.value);
+          return GestureDetector(
+            onTap: () {
+              onOptionSelected(value, context, onChanged);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Row(
+                children: [
+                  Radio<KeepScreenOn>(
+                    value: value,
+                    groupValue: currentSelection,
+                    onChanged: (KeepScreenOn? newValue) {
+                      if (newValue != null) {
+                        onOptionSelected(newValue, context, onChanged);
+                      }
+                    },
+                  ),
+                  Text(entry.label),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    ),
+  );
+}
+
+void onOptionSelected(KeepScreenOn value, BuildContext context, Function(KeepScreenOn) onChanged) async {
+  onChanged(value);
+  Navigator.of(context).pop();
+
+  // Assuming bind is an instance of your class that manages these options
+  await bind.mainSetLocalOption(key: kOptionKeepScreenOn, value: value);
+  setState(() => _keepScreenOn = optionToKeepScreenOn(value));
+  gFFI.serverModel.androidUpdatekeepScreenOn();
+}
+  /*
 void getPopupDialogRadioEntry(BuildContext context, Function(KeepScreenOn) onChanged, KeepScreenOn currentSelection) {
   // 定义 _RadioEntry 列表
   List<_RadioEntry> entries = [
@@ -378,6 +431,7 @@ void getPopupDialogRadioEntry(BuildContext context, Function(KeepScreenOn) onCha
     ),
   );
 }
+  */
   
   @override
   Widget build(BuildContext context) {
@@ -475,7 +529,8 @@ Widget _buildSettingsSection(BuildContext context) {
 // Use the custom method in your settingsRows
 settingsRows.add(PermissionRow(
   translate('Keep screen on'),
-  true, // Essentially a dummy value; may need to handle this more specifically
+  _keepScreenOn != KeepScreenOn.never && !_floatingWindowDisabled, // 只有在 _keepScreenOn 为 never 时返回 true
+  //true, // Essentially a dummy value; may need to handle this more specifically
   () {
     getPopupDialogRadioEntry(context, (KeepScreenOn value) {
       setState(() {
@@ -487,7 +542,8 @@ settingsRows.add(PermissionRow(
   
 settingsRows.add(PermissionRow(
   translate('Keep screen on'),
-  true, // Essentially a dummy value; may need to handle this more specifically
+  _keepScreenOn != KeepScreenOn.never, // 只有在 _keepScreenOn 为 never 时返回 true
+  // true, // Essentially a dummy value; may need to handle this more specifically
   () {
     getPopupDialogRadioEntry(
       context,
