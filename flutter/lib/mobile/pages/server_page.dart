@@ -333,8 +333,7 @@ void getPopupDialogRadioEntry(BuildContext context, Function(KeepScreenOn) onCha
   );
 }*/
 
-/ 将 getPopupDialogRadioEntry 函数更新为使用 _RadioEntry
-void getPopupDialogRadioEntry(BuildContext context, Function(KeepScreenOn) onChanged) {
+void getPopupDialogRadioEntry(BuildContext context, Function(KeepScreenOn) onChanged, KeepScreenOn currentSelection) {
   // 定义 _RadioEntry 列表
   List<_RadioEntry> entries = [
     _RadioEntry(translate('Never'), KeepScreenOn.never.toString()),
@@ -349,9 +348,10 @@ void getPopupDialogRadioEntry(BuildContext context, Function(KeepScreenOn) onCha
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: entries.map((entry) {
+          final value = KeepScreenOn.values.firstWhere((e) => e.toString() == entry.value);
           return GestureDetector(
             onTap: () {
-              onChanged(KeepScreenOn.values.firstWhere((e) => e.toString() == entry.value));
+              onChanged(value);
               Navigator.of(context).pop();
             },
             child: Padding(
@@ -359,8 +359,8 @@ void getPopupDialogRadioEntry(BuildContext context, Function(KeepScreenOn) onCha
               child: Row(
                 children: [
                   Radio<KeepScreenOn>(
-                    value: KeepScreenOn.values.firstWhere((e) => e.toString() == entry.value),
-                    groupValue: KeepScreenOn.values.firstWhere((e) => e.toString() == onChanged()),
+                    value: value,
+                    groupValue: currentSelection,
                     onChanged: (KeepScreenOn? value) {
                       if (value != null) {
                         onChanged(value);
