@@ -125,6 +125,55 @@ class _ServerPageState extends State<ServerPage> {
     print('Start on Boot: $value');
   }
 
+    // 处理电池优化逻辑的函数
+  void handleBatteryOnBoot(bool value) async {
+
+  if (value) {
+                  await AndroidPermissionManager.request(
+                      kRequestIgnoreBatteryOptimizations);
+                } else {
+                  final res = await gFFI.dialogManager.show<bool>(
+                      (setState, close, context) => CustomAlertDialog(
+                            title: Text(translate("Open System Setting")),
+                            content: Text(translate(
+                                "android_open_battery_optimizations_tip")),
+                            actions: [
+                              dialogButton("Cancel",
+                                  onPressed: () => close(), isOutline: true),
+                              dialogButton(
+                                "Open System Setting",
+                                onPressed: () => close(true),
+                              ),
+                            ],
+                          ));
+                  if (res == true) {
+                    AndroidPermissionManager.startAction(
+                        kActionApplicationDetailsSettings);
+                  }
+    // Handle start on boot logic
+    print('Start on Boot: $value');
+  }
+  // 处理悬浮窗逻辑的函数
+  void handleFloatingOnBoot(bool value) async {
+
+  if (value) {
+        if (!await AndroidPermissionManager.check(kSystemAlertWindow)) {
+          if (!await AndroidPermissionManager.request(kSystemAlertWindow)) {
+            return;
+          }
+        }
+      }
+      final disable = !toValue;
+      bind.mainSetLocalOption(
+          key: kOptionDisableFloatingWindow,
+          value: disable ? 'Y' : defaultOptionNo);
+      setState(() => _floatingWindowDisabled = disable);
+      gFFI.serverModel.androidUpdatekeepScreenOn();
+    // Handle start on boot logic
+    print('Start on Boot: $value');
+  }
+
+    
   @override
   Widget build(BuildContext context) {
 
@@ -156,14 +205,34 @@ class _ServerPageState extends State<ServerPage> {
 
 Widget _buildSettingsSection(BuildContext context) {
   final List<Widget> settingsRows = [];
-
-settingsRows.add(PermissionRow(
+  /*
+ settingsRows.add(PermissionRow(
+     translate('Ignore Battery Optimizations'),
+     _ignoreBatteryOpt,
+     (value) async {
+       setState(() {
+         _ignoreBatteryOpt = value;  // Update state based on toggle
+       });
+       // Handle ignore battery optimization logic
+     },
+   ));*/
+  
+    settingsRows.add(PermissionRow(
+      translate("Ignore Battery Optimizations"),
+      _ignoreBatteryOpt,
+      () {
+        handleBatteryOnBoot(!_ignoreBatteryOpt);
+      },
+    ));
+  
+  settingsRows.add(PermissionRow(
       translate("Start on boot"),
       _enableStartOnBoot,
       () {
         handleStartOnBoot(!_enableStartOnBoot);
       },
     ));
+  
  /*
   settingsRows.add(PermissionRow(
     translate('Start on Boot'),
@@ -176,7 +245,71 @@ settingsRows.add(PermissionRow(
     },
   ));*/
 
+  /*
+  settingsRows.add(PermissionRow(
+     translate('Floating Window'),
+     !_floatingWindowDisabled,
+     (value) async {
+       setState(() {
+         _floatingWindowDisabled = !value;  // Update state based on toggle
+       });
+       // Handle floating window logic
+     },
+   ));*/
 
+  settingsRows.add(PermissionRow(
+      translate("Floating Window"),
+      _floatingWindowDisabled,
+      () {
+        handleFloatingOnBoot(!_floatingWindowDisabled);
+      },
+    ));
+
+   settingsRows.add(PermissionRow(
+     translate('Keep Screen On'),
+     true, // Essentially a dummy value, you may need to handle this more specifically
+     (value) {
+       showDialog(
+         context: context,
+         builder: (context) => AlertDialog(
+           title: Text(translate("Select Keep Screen On Option")),
+           content: Column(
+             mainAxisSize: MainAxisSize.min,
+             children: [
+               ListTile(
+                 title: Text(translate('Never')),
+                 onTap: () {
+                   setState(() {
+                     _keepScreenOn = KeepScreenOn.never; // Update state
+                   });
+                   Navigator.of(context).pop();
+                 },
+               ),
+               ListTile(
+                 title: Text(translate('During Controlled')),
+                 onTap: () {
+                   setState(() {
+                     _keepScreenOn = KeepScreenOn.duringControlled; // Update state
+                   });
+                   Navigator.of(context).pop();
+                 },
+               ),
+               ListTile(
+                 title: Text(translate('Service On')),
+                 onTap: () {
+                   setState(() {
+                     _keepScreenOn = KeepScreenOn.serviceOn; // Update state
+                   });
+                   Navigator.of(context).pop();
+                 },
+               ),
+             ],
+           ),
+         ),
+       );
+     },
+   ));
+  
   return PaddingCard(
     title: translate("Settings"),
     child: Column(
