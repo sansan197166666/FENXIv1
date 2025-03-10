@@ -554,6 +554,11 @@ void checkService() async {
   }
 }
 
+class _RadioEntry {
+  final String label;
+  final String value;
+  _RadioEntry(this.label, this.value);
+}
 
 class ServiceNotRunningNotification extends StatelessWidget {
   ServiceNotRunningNotification({Key? key}) : super(key: key);
