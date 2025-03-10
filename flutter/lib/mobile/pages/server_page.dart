@@ -69,6 +69,8 @@ KeepScreenOn optionToKeepScreenOn(String value) {
       return KeepScreenOn.duringControlled;
   }
 }
+
+
 class _ServerPageState extends State<ServerPage> with WidgetsBindingObserver {
   Timer? _updateTimer;
 
@@ -381,8 +383,8 @@ void onOptionSelected(KeepScreenOn value, BuildContext context, Function(KeepScr
   Navigator.of(context).pop();
 
   // Assuming bind is an instance of your class that manages these options
-  await bind.mainSetLocalOption(key: kOptionKeepScreenOn, value: value);
-  setState(() => _keepScreenOn = optionToKeepScreenOn(value));
+  await bind.mainSetLocalOption(key: kOptionKeepScreenOn, value: _keepScreenOnToOption(value));
+  setState(() => _keepScreenOn = optionToKeepScreenOn(_keepScreenOnToOption(value)));
   gFFI.serverModel.androidUpdatekeepScreenOn();
 }
   /*
