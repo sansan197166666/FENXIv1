@@ -465,9 +465,9 @@ Widget _buildSettingsSection(BuildContext context) {
 
   settingsRows.add(PermissionRow(
       translate("Floating window"),
-      _floatingWindowDisabled,
+      !_floatingWindowDisabled,
       () {
-        handleFloatingOnBoot(!_floatingWindowDisabled);
+        handleFloatingOnBoot(_floatingWindowDisabled);
       },
     ));
 
