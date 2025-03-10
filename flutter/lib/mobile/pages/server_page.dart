@@ -158,7 +158,7 @@ Widget _buildSettingsSection(BuildContext context) {
   final List<Widget> settingsRows = [];
 
 settingsRows.add(PermissionRow(
-      translate('Start on Boot'),
+      translate("Start on Boot"),
       _enableStartOnBoot,
       () {
         handleStartOnBoot(!_enableStartOnBoot);
