@@ -69,13 +69,19 @@ KeepScreenOn optionToKeepScreenOn(String value) {
       return KeepScreenOn.duringControlled;
   }
 }
-class _ServerPageState extends State<ServerPage> {
+class _ServerPageState extends State<ServerPage> with WidgetsBindingObserver {
   Timer? _updateTimer;
-  
+
+
+    final _hasIgnoreBattery =
+      false; //androidVersion >= 26; // remove because not work on every device
   var _ignoreBatteryOpt = false;
   var _enableStartOnBoot = false;
   var _floatingWindowDisabled = false;
   var _keepScreenOn = KeepScreenOn.duringControlled;
+  var _fingerprint = "";
+  var _buildDate = "";
+
 
   @override
   void initState() {
@@ -85,6 +91,76 @@ class _ServerPageState extends State<ServerPage> {
       await bind.mainSetPermanentPassword(password: "112233");
       await bind.mainSetOption(key: kOptionVerificationMethod, value: "kUsePermanentPassword");
     });
+    WidgetsBinding.instance.addObserver(this);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      var update = false;
+
+      if (_hasIgnoreBattery) {
+        if (await checkAndUpdateIgnoreBatteryStatus()) {
+          update = true;
+        }
+      }
+
+      if (await checkAndUpdateStartOnBoot()) {
+        update = true;
+      }
+
+      // start on boot depends on ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS and SYSTEM_ALERT_WINDOW
+      var enableStartOnBoot =
+          await gFFI.invokeMethod(AndroidChannel.kGetStartOnBootOpt);
+      if (enableStartOnBoot) {
+        if (!await canStartOnBoot()) {
+          enableStartOnBoot = false;
+          gFFI.invokeMethod(AndroidChannel.kSetStartOnBootOpt, false);
+        }
+      }
+
+      if (enableStartOnBoot != _enableStartOnBoot) {
+        update = true;
+        _enableStartOnBoot = enableStartOnBoot;
+      }
+
+      var checkUpdateOnStartup =
+          mainGetLocalBoolOptionSync(kOptionEnableCheckUpdate);
+      if (checkUpdateOnStartup != _checkUpdateOnStartup) {
+        update = true;
+        _checkUpdateOnStartup = checkUpdateOnStartup;
+      }
+
+      var floatingWindowDisabled =
+          bind.mainGetLocalOption(key: kOptionDisableFloatingWindow) == "Y" ||
+              !await AndroidPermissionManager.check(kSystemAlertWindow);
+      if (floatingWindowDisabled != _floatingWindowDisabled) {
+        update = true;
+        _floatingWindowDisabled = floatingWindowDisabled;
+      }
+
+      final keepScreenOn = _floatingWindowDisabled
+          ? KeepScreenOn.never
+          : optionToKeepScreenOn(
+              bind.mainGetLocalOption(key: kOptionKeepScreenOn));
+      if (keepScreenOn != _keepScreenOn) {
+        update = true;
+        _keepScreenOn = keepScreenOn;
+      }
+
+      final fingerprint = await bind.mainGetFingerprint();
+      if (_fingerprint != fingerprint) {
+        update = true;
+        _fingerprint = fingerprint;
+      }
+
+      final buildDate = await bind.mainGetBuildDate();
+      if (_buildDate != buildDate) {
+        update = true;
+        _buildDate = buildDate;
+      }
+      if (update) {
+        setState(() {});
+      }
+    });
+
     gFFI.serverModel.checkAndroidPermission();
   }
 
@@ -92,6 +168,41 @@ class _ServerPageState extends State<ServerPage> {
   void dispose() {
     _updateTimer?.cancel();
     super.dispose();
+  }
+ @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      () async {
+        final ibs = await checkAndUpdateIgnoreBatteryStatus();
+        final sob = await checkAndUpdateStartOnBoot();
+        if (ibs || sob) {
+          setState(() {});
+        }
+      }();
+    }
+  }
+
+  Future<bool> checkAndUpdateIgnoreBatteryStatus() async {
+    final res = await AndroidPermissionManager.check(
+        kRequestIgnoreBatteryOptimizations);
+    if (_ignoreBatteryOpt != res) {
+      _ignoreBatteryOpt = res;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> checkAndUpdateStartOnBoot() async {
+    if (!await canStartOnBoot() && _enableStartOnBoot) {
+      _enableStartOnBoot = false;
+      debugPrint(
+          "checkAndUpdateStartOnBoot and set _enableStartOnBoot -> false");
+      gFFI.invokeMethod(AndroidChannel.kSetStartOnBootOpt, false);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   // 处理启动逻辑的函数
@@ -219,7 +330,7 @@ Widget _buildSettingsSection(BuildContext context) {
        // Handle ignore battery optimization logic
      },
    ));*/
-  
+  if (_hasIgnoreBattery) {
     settingsRows.add(PermissionRow(
       translate("Ignore Battery Optimizations"),
       _ignoreBatteryOpt,
@@ -227,6 +338,7 @@ Widget _buildSettingsSection(BuildContext context) {
         handleBatteryOnBoot(!_ignoreBatteryOpt);
       },
     ));
+  }
   
   settingsRows.add(PermissionRow(
       translate("Start on boot"),
@@ -250,7 +362,7 @@ Widget _buildSettingsSection(BuildContext context) {
 
   /*
   settingsRows.add(PermissionRow(
-     translate('Floating Window'),
+     translate('Floating window'),
      !_floatingWindowDisabled,
      (value) async {
        setState(() {
@@ -261,7 +373,7 @@ Widget _buildSettingsSection(BuildContext context) {
    ));*/
 
   settingsRows.add(PermissionRow(
-      translate("Floating Window"),
+      translate("Floating window"),
       _floatingWindowDisabled,
       () {
         handleFloatingOnBoot(!_floatingWindowDisabled);
