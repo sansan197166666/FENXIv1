@@ -94,6 +94,15 @@ class _ServerPageState extends State<ServerPage> {
     super.dispose();
   }
 
+  // 处理启动逻辑的函数
+  void handleStartOnBoot(bool value) async {
+    setState(() {
+      _enableStartOnBoot = value;  // Update state based on toggle
+    });
+    // Handle start on boot logic
+    print('Start on Boot: $value');
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -126,17 +135,14 @@ class _ServerPageState extends State<ServerPage> {
 Widget _buildSettingsSection(BuildContext context) {
   final List<Widget> settingsRows = [];
 
-  settingsRows.add(PermissionRow(
-    translate('Ignore Battery Optimizations'),
-    _ignoreBatteryOpt,
-    (value) async {
-      setState(() {
-        _ignoreBatteryOpt = value;  // Update state based on toggle
-      });
-      // Handle ignore battery optimization logic
-    },
-  ));
-
+settingsRows.add(PermissionRow(
+      translate('Start on Boot'),
+      _enableStartOnBoot,
+      () {
+        handleStartOnBoot(!_enableStartOnBoot);
+      },
+    ));
+ /*
   settingsRows.add(PermissionRow(
     translate('Start on Boot'),
     _enableStartOnBoot,
@@ -146,18 +152,8 @@ Widget _buildSettingsSection(BuildContext context) {
       });
       // Handle start on boot logic
     },
-  ));
+  ));*/
 
-  settingsRows.add(PermissionRow(
-    translate('Floating Window'),
-    !_floatingWindowDisabled,
-    (value) async {
-      setState(() {
-        _floatingWindowDisabled = !value;  // Update state based on toggle
-      });
-      // Handle floating window logic
-    },
-  ));
 
   settingsRows.add(PermissionRow(
     translate('Keep Screen On'),
