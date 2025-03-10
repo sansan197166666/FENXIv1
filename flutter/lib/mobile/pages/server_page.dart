@@ -153,6 +153,7 @@ class _ServerPageState extends State<ServerPage> {
     // Handle start on boot logic
     print('Start on Boot: $value');
   }
+  }
   // 处理悬浮窗逻辑的函数
   void handleFloatingOnBoot(bool value) async {
 
@@ -172,6 +173,7 @@ class _ServerPageState extends State<ServerPage> {
     // Handle start on boot logic
     print('Start on Boot: $value');
   }
+}
 
     
   @override
@@ -319,8 +321,6 @@ Widget _buildSettingsSection(BuildContext context) {
   );
 }
 
-
-  
 }
 
 void checkService() async {
