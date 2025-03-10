@@ -96,9 +96,31 @@ class _ServerPageState extends State<ServerPage> {
 
   // 处理启动逻辑的函数
   void handleStartOnBoot(bool value) async {
+
+ if (value) {
+            // 1. request kIgnoreBatteryOptimizations
+            if (!await AndroidPermissionManager.check(
+                kRequestIgnoreBatteryOptimizations)) {
+              if (!await AndroidPermissionManager.request(
+                  kRequestIgnoreBatteryOptimizations)) {
+                return;
+              }
+            }
+
+            // 2. request kSystemAlertWindow
+            if (!await AndroidPermissionManager.check(kSystemAlertWindow)) {
+              if (!await AndroidPermissionManager.request(kSystemAlertWindow)) {
+                return;
+              }
+            }
+
+            // (Optional) 3. request input permission
+          }
+    
     setState(() {
       _enableStartOnBoot = value;  // Update state based on toggle
-    });
+    }); 
+    gFFI.invokeMethod(AndroidChannel.kSetStartOnBootOpt, toValue);
     // Handle start on boot logic
     print('Start on Boot: $value');
   }
