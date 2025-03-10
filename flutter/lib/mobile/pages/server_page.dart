@@ -529,14 +529,14 @@ Widget _buildSettingsSection(BuildContext context) {
           {  
             setState(() {
               _keepScreenOn =  KeepScreenOn.never
-            }
+            });
           }
           else
           {
             setState(() {
               _keepScreenOn = optionToKeepScreenOn(
               bind.mainGetLocalOption(key: kOptionKeepScreenOn));
-            }
+            });
             /*
             setState(() {
             _keepScreenOn = _floatingWindowDisabled
