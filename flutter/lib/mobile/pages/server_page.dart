@@ -296,7 +296,8 @@ class _ServerPageState extends State<ServerPage> with WidgetsBindingObserver {
     }
     return true;
   }
-    
+
+  /*
 void getPopupDialogRadioEntry(BuildContext context, Function(KeepScreenOn) onChanged) {
   showDialog(
     context: context,
@@ -330,7 +331,54 @@ void getPopupDialogRadioEntry(BuildContext context, Function(KeepScreenOn) onCha
       ),
     ),
   );
+}*/
+
+/ 将 getPopupDialogRadioEntry 函数更新为使用 _RadioEntry
+void getPopupDialogRadioEntry(BuildContext context, Function(KeepScreenOn) onChanged) {
+  // 定义 _RadioEntry 列表
+  List<_RadioEntry> entries = [
+    _RadioEntry(translate('Never'), KeepScreenOn.never.toString()),
+    _RadioEntry(translate('During controlled'), KeepScreenOn.duringControlled.toString()),
+    _RadioEntry(translate('During service is on'), KeepScreenOn.serviceOn.toString()),
+  ];
+
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: null,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: entries.map((entry) {
+          return GestureDetector(
+            onTap: () {
+              onChanged(KeepScreenOn.values.firstWhere((e) => e.toString() == entry.value));
+              Navigator.of(context).pop();
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Row(
+                children: [
+                  Radio<KeepScreenOn>(
+                    value: KeepScreenOn.values.firstWhere((e) => e.toString() == entry.value),
+                    groupValue: KeepScreenOn.values.firstWhere((e) => e.toString() == onChanged()),
+                    onChanged: (KeepScreenOn? value) {
+                      if (value != null) {
+                        onChanged(value);
+                        Navigator.of(context).pop();
+                      }
+                    },
+                  ),
+                  Text(entry.label),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    ),
+  );
 }
+  
   @override
   Widget build(BuildContext context) {
 
