@@ -528,7 +528,7 @@ Widget _buildSettingsSection(BuildContext context) {
           if(_floatingWindowDisabled)
           {  
             setState(() {
-              _keepScreenOn =  KeepScreenOn.never
+              _keepScreenOn =  KeepScreenOn.never;
             });
           }
           else
