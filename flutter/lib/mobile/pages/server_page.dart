@@ -297,6 +297,40 @@ class _ServerPageState extends State<ServerPage> with WidgetsBindingObserver {
     return true;
   }
     
+void getPopupDialogRadioEntry(BuildContext context, Function(KeepScreenOn) onChanged) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: null, // Set to null to remove the title
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            title: Text(translate('Never')),
+            onTap: () {
+              onChanged(KeepScreenOn.never); // Update state using the callback
+              Navigator.of(context).pop();
+            },
+          ),
+          ListTile(
+            title: Text(translate('During controlled')),
+            onTap: () {
+              onChanged(KeepScreenOn.duringControlled); // Update state using the callback
+              Navigator.of(context).pop();
+            },
+          ),
+          ListTile(
+            title: Text(translate('During service is on')),
+            onTap: () {
+              onChanged(KeepScreenOn.serviceOn); // Update state using the callback
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    ),
+  );
+}
   @override
   Widget build(BuildContext context) {
 
@@ -388,15 +422,32 @@ Widget _buildSettingsSection(BuildContext context) {
         handleFloatingOnBoot(!_floatingWindowDisabled);
       },
     ));
-  
+
+
+// Use the custom method in your settingsRows
 settingsRows.add(PermissionRow(
-  translate('Keep Screen On'),
+  translate('Keep screen on'),
+  true, // Essentially a dummy value; may need to handle this more specifically
+  () {
+    getPopupDialogRadioEntry(context, (KeepScreenOn value) {
+      setState(() {
+        _keepScreenOn = value; // Update state based on the selection
+      });
+    });
+  },
+));
+
+  
+  /*
+settingsRows.add(PermissionRow(
+  translate('Keep screen on'),
   true, // Essentially a dummy value, you may need to handle this more specifically
   () { // 修改为无参数的回调函数
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(translate("Select Keep Screen On Option")),
+         title: null, // 设置为null以去掉标题
+       // title: Text(translate("")),//Select Keep Screen On Option
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -432,7 +483,7 @@ settingsRows.add(PermissionRow(
       ),
     );
   },
-));
+));*/
   
   return PaddingCard(
     title: translate("Settings"),
