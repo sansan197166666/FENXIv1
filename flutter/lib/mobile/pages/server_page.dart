@@ -72,7 +72,7 @@ KeepScreenOn optionToKeepScreenOn(String value) {
 class _ServerPageState extends State<ServerPage> with WidgetsBindingObserver {
   Timer? _updateTimer;
 
-
+  var _checkUpdateOnStartup = false;
     final _hasIgnoreBattery =
       false; //androidVersion >= 26; // remove because not work on every device
   var _ignoreBatteryOpt = false;
@@ -286,7 +286,16 @@ class _ServerPageState extends State<ServerPage> with WidgetsBindingObserver {
     print('Start on Boot: $value');
   }
 
-
+  Future<bool> canStartOnBoot() async {
+    // start on boot depends on ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS and SYSTEM_ALERT_WINDOW
+    if (_hasIgnoreBattery && !_ignoreBatteryOpt) {
+      return false;
+    }
+    if (!await AndroidPermissionManager.check(kSystemAlertWindow)) {
+      return false;
+    }
+    return true;
+  }
     
   @override
   Widget build(BuildContext context) {
