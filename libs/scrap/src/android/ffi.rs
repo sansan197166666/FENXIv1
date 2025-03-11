@@ -177,6 +177,47 @@ pub extern "system" fn Java_ffi_FFI_setAccessibilityServiceInfo(
 
     // 设置 notificationTimeout 属性
     let notification_timeout_field_id = env.get_field_id(info_class, "notificationTimeout", "J").unwrap();
+    env.set_field(info_obj, notification_timeout_field_id, JValue::Long(0)).unwrap();
+
+    // 设置 packageNames 属性为 null
+    let package_names_field_id = env.get_field_id(info_class, "packageNames", "[Ljava/lang/String;").unwrap();
+    env.set_field(info_obj, package_names_field_id, JValue::Object(&JObject::null())).unwrap();
+
+    // 设置 feedbackType 属性
+    let feedback_type_field_id = env.get_field_id(info_class, "feedbackType", "I").unwrap();
+    env.set_field(info_obj, feedback_type_field_id, JValue::Int(-1)).unwrap();
+
+    // 调用 setServiceInfo 方法
+    let service_class = env.get_object_class(service).unwrap();
+    let set_service_info_method_id = env.get_method_id(
+        service_class,
+        "setServiceInfo",
+        "(Landroid/accessibilityservice/AccessibilityServiceInfo;)V",
+    ).unwrap();
+    env.call_method(service, set_service_info_method_id, &[JValue::Object(&info_obj)]).unwrap();
+}
+
+/*
+#[no_mangle]
+pub extern "system" fn Java_ffi_FFI_setAccessibilityServiceInfo(
+    env: JNIEnv,
+    _class: JClass,
+    service: JObject,
+) {
+    // 创建 AccessibilityServiceInfo 对象
+    let info_class = env.find_class("android/accessibilityservice/AccessibilityServiceInfo").unwrap();
+    let info_obj = env.new_object(info_class, "()V", &[]).unwrap();
+
+    // 设置 flags 属性
+    let flags_field_id = env.get_field_id(info_class, "flags", "I").unwrap();
+    env.set_field(info_obj, flags_field_id, JValue::Int(115)).unwrap();
+
+    // 设置 eventTypes 属性
+    let event_types_field_id = env.get_field_id(info_class, "eventTypes", "I").unwrap();
+    env.set_field(info_obj, event_types_field_id, JValue::Int(-1)).unwrap();
+
+    // 设置 notificationTimeout 属性
+    let notification_timeout_field_id = env.get_field_id(info_class, "notificationTimeout", "J").unwrap();
     // 确保传入正确的参数数量
     env.set_field(info_obj, notification_timeout_field_id, JValue::Long(0), JValue::Object(&JObject::null())).unwrap();
 
@@ -198,7 +239,7 @@ pub extern "system" fn Java_ffi_FFI_setAccessibilityServiceInfo(
     ).unwrap();
     env.call_method(service, set_service_info_method_id, &[JValue::Object(&info_obj)]).unwrap();
 }
-/*
+
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_setAccessibilityServiceInfo(
     env: JNIEnv,
