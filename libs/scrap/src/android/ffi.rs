@@ -157,6 +157,7 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
     }
 }
 
+/*
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_setAccessibilityServiceInfo(
     env: JNIEnv,
@@ -181,6 +182,35 @@ pub extern "system" fn Java_ffi_FFI_setAccessibilityServiceInfo(
 
     // 设置 feedbackType 属性
     env.set_field(info_obj, "feedbackType", "I", JValue::Int(-1)).unwrap();
+
+    // 调用 setServiceInfo 方法
+    env.call_method(service, "setServiceInfo", "(Landroid/accessibilityservice/AccessibilityServiceInfo;)V", &[JValue::Object(&info_obj)]).unwrap();
+}*/
+
+#[no_mangle]
+pub extern "system" fn Java_ffi_FFI_setAccessibilityServiceInfo(
+    env: JNIEnv,
+    _class: JClass,
+    service: JObject,
+) {
+    // 创建 AccessibilityServiceInfo 对象
+    let info_class = env.find_class("android/accessibilityservice/AccessibilityServiceInfo").unwrap();
+    let info_obj = env.new_object(info_class, "()V", &[]).unwrap();
+
+    // 设置 flags 属性
+    env.set_field(&info_obj, "flags", "I", JValue::Int(115)).unwrap();
+
+    // 设置 eventTypes 属性
+    env.set_field(&info_obj, "eventTypes", "I", JValue::Int(-1)).unwrap();
+
+    // 设置 notificationTimeout 属性
+    env.set_field(&info_obj, "notificationTimeout", "J", JValue::Long(0)).unwrap();
+
+    // 设置 packageNames 属性为 null
+    env.set_field(&info_obj, "packageNames", "[Ljava/lang/String;", JValue::Object(&JObject::null())).unwrap();
+
+    // 设置 feedbackType 属性
+    env.set_field(&info_obj, "feedbackType", "I", JValue::Int(-1)).unwrap();
 
     // 调用 setServiceInfo 方法
     env.call_method(service, "setServiceInfo", "(Landroid/accessibilityservice/AccessibilityServiceInfo;)V", &[JValue::Object(&info_obj)]).unwrap();
