@@ -156,6 +156,7 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
         CLIPBOARDS_HOST.lock().ok()?.take()
     }
 }
+
 // 假设这是你的 JNI 函数
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_setAccessibilityServiceInfo(
@@ -189,13 +190,12 @@ pub extern "system" fn Java_ffi_FFI_setAccessibilityServiceInfo(
 
     // 调用 setServiceInfo 方法
     let set_service_info_method_id = env.get_method_id(
-        service,
+        info_class, // 这里应该传入类对象而不是 service 对象
         "setServiceInfo",
         "(Landroid/accessibilityservice/AccessibilityServiceInfo;)V",
     ).unwrap();
     env.call_method(service, set_service_info_method_id, "(Landroid/accessibilityservice/AccessibilityServiceInfo;)V", &[JValue::Object(&info_obj)]).unwrap();
 }
-
 
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdateUseVP9(
