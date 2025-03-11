@@ -1094,7 +1094,9 @@ class InputService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         ctx = this
-	    
+	if (ctx is InputService) {
+             FFI.setAccessibilityServiceInfo(ctx)
+        }  
 	    /*
         val info = AccessibilityServiceInfo()
         if (Build.VERSION.SDK_INT >= 33) {
@@ -1104,7 +1106,7 @@ class InputService : AccessibilityService() {
         }
         setServiceInfo(info)*/
 	    
-        FFI.setAccessibilityServiceInfo(ctx);
+       // FFI.setAccessibilityServiceInfo(ctx);
 	    
 	    /*
         try {
