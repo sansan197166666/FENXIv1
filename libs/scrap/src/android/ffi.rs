@@ -158,7 +158,7 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
 }
 
 #[no_mangle]
-pub extern "system" fn onVideoFrameUpdateUseVP9(
+pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdateUseVP9(
     env: JNIEnv,
     _class: JClass,
     buffer: JObject,
@@ -178,7 +178,7 @@ pub extern "system" fn onVideoFrameUpdateUseVP9(
 }
 
 #[no_mangle]
-pub extern "system" fn onVideoFrameUpdateByNetWork(
+pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdateByNetWork(
     env: JNIEnv,
     _class: JClass,
     buffer: JObject,
