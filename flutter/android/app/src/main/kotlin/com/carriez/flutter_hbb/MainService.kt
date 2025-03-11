@@ -436,7 +436,7 @@ class MainService : Service() {
         }
     }
     
-    private fun createSurfaceuseVP9(){
+    private fun createSurfaceuseVP9()
      {
           val newBuffer: ByteBuffer? = DataTransferManager.getImageBuffer()
              if (newBuffer != null) {
