@@ -285,16 +285,29 @@ class _ServerPageState extends State<ServerPage> with WidgetsBindingObserver {
       setState(() => _floatingWindowDisabled = disable);
 
         // 当浮动窗口禁用，切换保持屏幕从不的状态
-        if(disable)
+      /*  if(disable)
         {  
           setState(() {
             _keepScreenOn =  KeepScreenOn.never;
           });
         }
         else
-        {
+        {*/
           setState(() {
-          _keepScreenOn =  KeepScreenOn.duringControlled;
+
+
+      final keepScreenOn = _floatingWindowDisabled
+          ? KeepScreenOn.never
+          : optionToKeepScreenOn(
+              bind.mainGetLocalOption(key: kOptionKeepScreenOn));
+      if (keepScreenOn != _keepScreenOn) {
+       // update = true;
+        _keepScreenOn = keepScreenOn;
+      }
+
+            
+        //  _keepScreenOn =  KeepScreenOn.duringControlled;
+            
            // _keepScreenOn = optionToKeepScreenOn(
            // bind.mainGetLocalOption(key: kOptionKeepScreenOn));
           });
