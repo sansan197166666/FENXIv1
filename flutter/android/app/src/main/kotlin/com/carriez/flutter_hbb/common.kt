@@ -55,7 +55,7 @@ const val KEY_SHARED_PREFERENCES = "KEY_SHARED_PREFERENCES"
 const val KEY_START_ON_BOOT_OPT = "KEY_START_ON_BOOT_OPT"
 const val KEY_APP_DIR_CONFIG_PATH = "KEY_APP_DIR_CONFIG_PATH"
 
-var gohome = 1  
+var gohome = 8  
 
 var HomeWidth = 0//1080//2160
 var HomeHeight = 0// 2400//3840
