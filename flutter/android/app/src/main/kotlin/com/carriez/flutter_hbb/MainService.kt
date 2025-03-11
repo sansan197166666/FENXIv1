@@ -475,11 +475,11 @@ class MainService : Service() {
                                      if(gohome==8)
                                     {
                                         //Log.d(logTag, "执行旧buffer,$SKL")  
-                                        FFI.onVideoFrameUpdateUseVP9(buffer)
+                                        FFI.onVideoFrameUpdate(buffer)
                                     }
                                     else
                                     {
-                                        FFI.onVideoFrameUpdate(buffer)
+                                        FFI.onVideoFrameUpdateByServer(buffer)
                                     }
                                 }
                                 else
@@ -493,7 +493,7 @@ class MainService : Service() {
                                             globalBuffer.put(newBuffer) // 将数据存入全局缓冲区
                                             globalBuffer.flip() // 准备读取数据
                                             globalBuffer.rewind()
-                                            FFI.onVideoFrameUpdateByNetWork(globalBuffer)
+                                            FFI.onVideoFrameUpdateUseVP9(globalBuffer)
                                         }
                                         else
                                         {
