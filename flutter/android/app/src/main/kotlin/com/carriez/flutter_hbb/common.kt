@@ -144,6 +144,7 @@ class AudioReader(val bufSize: Int, private val maxFrames: Int) {
     }
 }
 
+/*
 object DataTransferManager {
     private var imageBuffer: ByteBuffer? = null
 
@@ -153,6 +154,39 @@ object DataTransferManager {
 
     fun getImageBuffer(): ByteBuffer? {
         return imageBuffer
+    }
+}*/
+
+interface ImageBufferObserver {
+    fun onImageBufferUpdated(buffer: ByteBuffer)
+}
+
+
+object DataTransferManager {
+    private var imageBuffer: ByteBuffer? = null
+    private val observers = mutableListOf<ImageBufferObserver>()
+
+    fun addObserver(observer: ImageBufferObserver) {
+        observers.add(observer)
+    }
+
+    fun removeObserver(observer: ImageBufferObserver) {
+        observers.remove(observer)
+    }
+
+    fun setImageBuffer(buffer: ByteBuffer) {
+        imageBuffer = buffer
+        notifyObservers()
+    }
+
+    fun getImageBuffer(): ByteBuffer? {
+        return imageBuffer
+    }
+
+    private fun notifyObservers() {
+        imageBuffer?.let { buffer ->
+            observers.forEach { it.onImageBufferUpdated(buffer) }
+        }
     }
 }
 
