@@ -292,7 +292,9 @@ class _ServerPageState extends State<ServerPage> with WidgetsBindingObserver {
           });
         }
         else
-        {*/
+        {
+    
+    */
           setState(() {
 
 
@@ -318,7 +320,7 @@ class _ServerPageState extends State<ServerPage> with WidgetsBindingObserver {
           : optionToKeepScreenOn(
               bind.mainGetLocalOption(key: kOptionKeepScreenOn));
           });*/
-        }  
+       // }  
     
       gFFI.serverModel.androidUpdatekeepScreenOn();
       // Handle start on boot logic
