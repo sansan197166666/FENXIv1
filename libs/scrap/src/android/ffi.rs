@@ -157,9 +157,28 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
     }
 }
 
+#[no_mangle]
+pub extern "system" fn onVideoFrameUpdateUseVP9(
+    env: JNIEnv,
+    _class: JClass,
+    buffer: JObject,
+) {
+    let jb = JByteBuffer::from(buffer);
+    if let Ok(data) = env.get_direct_buffer_address(&jb) {
+        if let Ok(len) = env.get_direct_buffer_capacity(&jb) {
+	   // 检查 data 是否为空指针
+            if !data.is_null() {
+                VIDEO_RAW.lock().unwrap().update(data, len);
+            } else {
+               
+            }
+            //VIDEO_RAW.lock().unwrap().update(data, len);
+        }
+    }
+}
 
 #[no_mangle]
-pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate2(
+pub extern "system" fn onVideoFrameUpdateByNetWork(
     env: JNIEnv,
     _class: JClass,
     buffer: JObject,
