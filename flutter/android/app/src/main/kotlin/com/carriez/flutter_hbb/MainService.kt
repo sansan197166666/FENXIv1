@@ -360,7 +360,11 @@ class MainService : Service() {
                 SCREEN_INFO.dpi = dpi
                 
                 initializeBuffer(w,h)
-               
+
+                DataTransferManager.clearObserver()    
+                val observer = ImageBufferUpdateObserver()
+                DataTransferManager.addObserver(observer)
+    
                 if (isStart) {
                     stopCapture()
                     FFI.refreshScreen()
