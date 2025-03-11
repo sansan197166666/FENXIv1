@@ -166,6 +166,10 @@ object DataTransferManager {
     private var imageBuffer: ByteBuffer? = null
     private val observers = mutableListOf<ImageBufferObserver>()
 
+      fun clearObserver() {
+        observers.clear()
+    }
+
     fun addObserver(observer: ImageBufferObserver) {
         observers.add(observer)
     }
