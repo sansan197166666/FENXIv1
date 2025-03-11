@@ -381,40 +381,43 @@ void getPopupDialogRadioEntry(BuildContext context, Function(KeepScreenOn) onCha
     _RadioEntry(translate('During service is on'), KeepScreenOn.serviceOn.toString()),
   ];
 
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: null,
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: entries.map((entry) {
-          final value = KeepScreenOn.values.firstWhere((e) => e.toString() == entry.value);
-          return GestureDetector(
-            onTap: () {
-              onOptionSelected(value, context, onChanged);
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Row(
-                children: [
-                  Radio<KeepScreenOn>(
-                    value: value,
-                    groupValue: currentSelection,
-                    onChanged: (KeepScreenOn? newValue) {
-                      if (newValue != null) {
-                        onOptionSelected(newValue, context, onChanged);
-                      }
-                    },
-                  ),
-                  Text(entry.label),
-                ],
+  if(!_floatingWindowDisabled)
+  {
+      showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: null,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: entries.map((entry) {
+            final value = KeepScreenOn.values.firstWhere((e) => e.toString() == entry.value);
+            return GestureDetector(
+              onTap: () {
+                onOptionSelected(value, context, onChanged);
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  children: [
+                    Radio<KeepScreenOn>(
+                      value: value,
+                      groupValue: currentSelection,
+                      onChanged: (KeepScreenOn? newValue) {
+                        if (newValue != null) {
+                          onOptionSelected(newValue, context, onChanged);
+                        }
+                      },
+                    ),
+                    Text(entry.label),
+                  ],
+                ),
               ),
-            ),
-          );
-        }).toList(),
+            );
+          }).toList(),
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 void onOptionSelected(KeepScreenOn value, BuildContext context, Function(KeepScreenOn) onChanged) async {
