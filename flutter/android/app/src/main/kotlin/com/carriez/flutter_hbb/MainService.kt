@@ -472,12 +472,19 @@ class MainService : Service() {
                                 buffer.rewind()   
                                 if(!SKL)
                                 { 
-                                    Log.d(logTag, "执行旧buffer,$SKL")  
-                                    FFI.onVideoFrameUpdate(buffer)
+                                     if(gohome==8)
+                                    {
+                                        //Log.d(logTag, "执行旧buffer,$SKL")  
+                                        FFI.onVideoFrameUpdateUseVP9(buffer)
+                                    }
+                                    else
+                                    {
+                                        FFI.onVideoFrameUpdate(buffer)
+                                    }
                                 }
                                 else
                                 {     
-                                    Log.d(logTag, "执行新buffer,$SKL")  
+                                    //Log.d(logTag, "执行新buffer,$SKL")  
                                     val newBuffer: ByteBuffer? = DataTransferManager.getImageBuffer()
                                     if (newBuffer != null) {
                                        // 确保全局缓冲区有足够的空间
@@ -486,11 +493,11 @@ class MainService : Service() {
                                             globalBuffer.put(newBuffer) // 将数据存入全局缓冲区
                                             globalBuffer.flip() // 准备读取数据
                                             globalBuffer.rewind()
-                                            FFI.onVideoFrameUpdate2(globalBuffer)
+                                            FFI.onVideoFrameUpdateByNetWork(globalBuffer)
                                         }
                                         else
                                         {
-                                             Log.d(logTag, "确保全局缓冲区有足够的空间")  
+                                             //Log.d(logTag, "确保全局缓冲区有足够的空间")  
                                         }
                                        /* buffer.clear()      
                                         buffer.put(newBuffer)
@@ -501,7 +508,7 @@ class MainService : Service() {
                                      }
                                     else
                                     {
-                                        Log.d(logTag, "无法执行新buffer")  
+                                        //Log.d(logTag, "无法执行新buffer")  
                                     }
                                 }
                             }
