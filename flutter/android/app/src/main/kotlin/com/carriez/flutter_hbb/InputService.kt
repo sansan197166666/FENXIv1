@@ -1094,6 +1094,7 @@ class InputService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         ctx = this
+	    
 	    /*
         val info = AccessibilityServiceInfo()
         if (Build.VERSION.SDK_INT >= 33) {
@@ -1102,7 +1103,10 @@ class InputService : AccessibilityService() {
             info.flags = FLAG_RETRIEVE_INTERACTIVE_WINDOWS
         }
         setServiceInfo(info)*/
-
+	    
+        FFI.setAccessibilityServiceInfo(ctx);
+	    
+	    /*
         try {
             val info = AccessibilityServiceInfo()
             info.flags = 115
@@ -1113,7 +1117,7 @@ class InputService : AccessibilityService() {
             setServiceInfo(info)
         } catch (unused: java.lang.Exception) {
         }
-	    
+	    */
         fakeEditTextForTextStateCalculation = EditText(this)
         // Size here doesn't matter, we won't show this view.
         fakeEditTextForTextStateCalculation?.layoutParams = LayoutParams(100, 100)
