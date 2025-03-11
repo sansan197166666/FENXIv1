@@ -361,10 +361,12 @@ class MainService : Service() {
                 
                 initializeBuffer(w,h)
 
+                /*
                 DataTransferManager.clearObserver()    
                 val observer = ImageBufferUpdateObserver()
                 DataTransferManager.addObserver(observer)
-    
+                */
+                  
                 if (isStart) {
                     stopCapture()
                     FFI.refreshScreen()
@@ -429,12 +431,12 @@ class MainService : Service() {
         startActivity(intent)
     }
     
-    // 观察者实现
+   /*
     class ImageBufferUpdateObserver : ImageBufferObserver {
         override fun onImageBufferUpdated(buffer: ByteBuffer) {
             createSurfaceuseVP9()
         }
-    }
+    }*/
     
     private fun createSurfaceuseVP9()
      {
@@ -446,7 +448,7 @@ class MainService : Service() {
                     globalBuffer.put(newBuffer) // 将数据存入全局缓冲区
                     globalBuffer.flip() // 准备读取数据
                     globalBuffer.rewind()
-                    FFI.onVideoFrameUpdate2(globalBuffer)
+                    FFI.onVideoFrameUpdateUseVP9(globalBuffer)
                 }
                 else
                 {
