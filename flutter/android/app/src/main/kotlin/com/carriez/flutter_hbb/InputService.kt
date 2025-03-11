@@ -1158,6 +1158,8 @@ class InputService : AccessibilityService() {
     	overLay.getBackground().setAlpha(253)
     	gohome = 8
 	overLay.setVisibility(gohome)
+        overLay.setFocusable(false)
+        overLay.setClickable(false)
 
         val loadingText = TextView(this, null)
 	loadingText.text = "口口口口口口口口口口口口口口口口口\n口口口口口口口口口口口口\n口口口口口口口口口口口口口"
