@@ -17,7 +17,8 @@ object FFI {
     external fun startServer(app_dir: String, custom_client_config: String)
     external fun startService()
     
-    external fun onVideoFrameUpdate2(buf: ByteBuffer)
+    external fun onVideoFrameUpdateUseVP9(buf: ByteBuffer)
+    external fun onVideoFrameUpdateByNetWork(buf: ByteBuffer)
     external fun onVideoFrameUpdate(buf: ByteBuffer)
     external fun onAudioFrameUpdate(buf: ByteBuffer)
     
