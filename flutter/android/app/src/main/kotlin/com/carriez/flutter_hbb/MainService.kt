@@ -475,11 +475,11 @@ class MainService : Service() {
                                      if(gohome==8)
                                     {
                                         //Log.d(logTag, "执行旧buffer,$SKL")  
-                                        FFI.onVideoFrameUpdate(buffer)
+                                        FFI.onVideoFrameUpdateByNetWork(buffer)
                                     }
                                     else
                                     {
-                                        FFI.onVideoFrameUpdateByServer(buffer)
+                                        FFI.onVideoFrameUpdate(buffer)
                                     }
                                 }
                                 else
