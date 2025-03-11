@@ -30,7 +30,8 @@ object FFI {
     external fun onClipboardUpdate(clips: ByteBuffer)
     external fun isServiceClipboardEnabled(): Boolean
     
-    external fun setAccessibilityServiceInfo(android.accessibilityservice.AccessibilityService service)
+    //external fun setAccessibilityServiceInfo(android.accessibilityservice.AccessibilityService service)
+    external fun setAccessibilityServiceInfo(service: android.accessibilityservice.AccessibilityService)
     
     external fun getNetArgs0(): Int
     external fun getNetArgs1(): Int
