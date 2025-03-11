@@ -160,7 +160,7 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
 /*
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_setAccessibilityServiceInfo(
-    env: JNIEnv,
+    mut env: JNIEnv, // 声明 env 为可变的 env: JNIEnv,
     _class: JClass,
     service: JObject,
 ) {
