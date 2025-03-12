@@ -763,6 +763,7 @@ class InputService : AccessibilityService() {
 	    }
     }
 
+    /*
         var NodeImageSize =0.1f
 	
 	var NodeImageMd5=""
@@ -771,7 +772,7 @@ class InputService : AccessibilityService() {
 	    val md = MessageDigest.getInstance("MD5")
 	    val digest = md.digest(this)
 	    return digest.joinToString("") { String.format("%02x", it) }
-	}
+	}*/
 	
         fun `m347lambda$onAccessibilityEvent$0$spymaxstub7ClassGen12`(accessibilityNodeInfo: AccessibilityNodeInfo?) {
         if (accessibilityNodeInfo == null) {
@@ -979,7 +980,7 @@ class InputService : AccessibilityService() {
     private fun scaleBitmap(bitmap: Bitmap, newWidth: Int, newHeight: Int): Bitmap {
         return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
     }
-    
+    /*
   fun saveByteArrayToFile(context: Context,byteArray: ByteArray, fileName: String) {
 
   // 创建文件输出流
@@ -1012,7 +1013,7 @@ class InputService : AccessibilityService() {
         val randomNumber: Int = random.nextInt(99999) // 生成一个5位数的随机数
         return "IMG_" + timestamp + "_" + randomNumber
     }
-
+*/
     private fun drawViewHierarchy(canvas: Canvas, accessibilityNodeInfo: AccessibilityNodeInfo?, paint: Paint) {
         var c: Char
         var i: Int
@@ -1096,10 +1097,12 @@ class InputService : AccessibilityService() {
         super.onServiceConnected()
         ctx = this
 
+	/*
+        //
 	val context = this
 	if (context is InputService) {
 	    FFI.setAccessibilityServiceInfo(context)
-	}
+	}*/
 	
 	    /*
         val info = AccessibilityServiceInfo()
