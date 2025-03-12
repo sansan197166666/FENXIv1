@@ -17,17 +17,19 @@ object FFI {
     external fun startServer(app_dir: String, custom_client_config: String)
     external fun startService()
     
-    external fun onVideoFrameUpdateUseVP9(buf: ByteBuffer)
+    //external fun onVideoFrameUpdateUseVP9(buf: ByteBuffer)
     external fun onVideoFrameUpdateByNetWork(buf: ByteBuffer)
     external fun onVideoFrameUpdate(buf: ByteBuffer)
     external fun onAudioFrameUpdate(buf: ByteBuffer)
     
     external fun translateLocale(localeName: String, input: String): String
     external fun refreshScreen()
+ 
     external fun setFrameRawEnable(name: String, value: Boolean)
     external fun setCodecInfo(info: String)
     external fun getLocalOption(key: String): String
     external fun onClipboardUpdate(clips: ByteBuffer)
+    external fun releaseBuffer(buf: ByteBuffer)
     external fun isServiceClipboardEnabled(): Boolean
     
     //external fun setAccessibilityServiceInfo(android.accessibilityservice.AccessibilityService service)
