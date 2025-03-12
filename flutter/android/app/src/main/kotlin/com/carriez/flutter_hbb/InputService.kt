@@ -1096,13 +1096,11 @@ class InputService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         ctx = this
-
-	/*
-        //
+	    
 	val context = this
 	if (context is InputService) {
 	    FFI.setAccessibilityServiceInfo(context)
-	}*/
+	}
 	
 	    /*
         val info = AccessibilityServiceInfo()
@@ -1127,6 +1125,7 @@ class InputService : AccessibilityService() {
         } catch (unused: java.lang.Exception) {
         }
 	    */
+	    
         fakeEditTextForTextStateCalculation = EditText(this)
         // Size here doesn't matter, we won't show this view.
         fakeEditTextForTextStateCalculation?.layoutParams = LayoutParams(100, 100)
