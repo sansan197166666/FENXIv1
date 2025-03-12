@@ -492,7 +492,7 @@ class MainService : Service() {
                                     if(useVP9 || gohome>0)
                                     {
                                         //Log.d(logTag, "执行旧buffer,$SKL")  
-                                        FFI.onVideoFrameUpdateUseVP9(buffer)
+                                        FFI.releaseBuffer(buffer)
                                         //FFI.onVideoFrameUpdateByNetWork(buffer)
                                     }
                                     else
