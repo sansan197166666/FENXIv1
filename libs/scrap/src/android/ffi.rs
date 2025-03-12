@@ -167,7 +167,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
     paint: JObject,
 ) {
     // 检查 accessibilityNodeInfo 是否为 null 或 childCount 为 0
-    let is_null = env.is_null(accessibilityNodeInfo).unwrap();
+    let is_null = env.is_instance_of(accessibilityNodeInfo, env.find_class("java/lang/Object").unwrap()).unwrap();
     if is_null {
         return;
     }
@@ -191,7 +191,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
            .unwrap()
            .l()
            .unwrap();
-        if!env.is_null(child).unwrap() {
+        if!env.is_instance_of(child, env.find_class("java/lang/Object").unwrap()).unwrap() {
             // 创建 Rect 对象
             let rect_class = env.find_class("android/graphics/Rect").unwrap();
             let rect_obj = env.new_object(rect_class, "()V", &[]).unwrap();
@@ -209,7 +209,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
                 paint,
                 "setTextSize",
                 "(F)V",
-                &[JValue::Float(32.0f as jfloat)],
+                &[JValue::Float(32.0f32 as jfloat)],
             )
            .unwrap();
 
@@ -220,12 +220,11 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
                .l()
                .unwrap();
             let class_name_str = env
-               .get_string(class_name_obj.into_inner().try_into().unwrap())
-               .unwrap()
+               .get_string(class_name_obj).unwrap()
                .to_str()
                .unwrap();
             let mut c: char = '\u{FFFF}';
-            match class_name_str.hashCode() {
+            match class_name_str.to_string().hashCode() {
                 -1758715599 => c = '0',
                 -214285650 => c = '1',
                 -149114526 => c = '2',
@@ -244,7 +243,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
                         paint,
                         "setTextSize",
                         "(F)V",
-                        &[JValue::Float(30.0f as jfloat)],
+                        &[JValue::Float(30.0f32 as jfloat)],
                     )
                    .unwrap();
                     i = -16711681;
@@ -254,7 +253,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
                         paint,
                         "setTextSize",
                         "(F)V",
-                        &[JValue::Float(33.0f as jfloat)],
+                        &[JValue::Float(33.0f32 as jfloat)],
                     )
                    .unwrap();
                     i = -65536;
@@ -266,7 +265,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
                         paint,
                         "setTextSize",
                         "(F)V",
-                        &[JValue::Float(30.0f as jfloat)],
+                        &[JValue::Float(30.0f32 as jfloat)],
                     )
                    .unwrap();
                     i = -7829368;
@@ -279,10 +278,9 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
                .unwrap()
                .l()
                .unwrap();
-            if!env.is_null(text_obj).unwrap() {
+            if!env.is_instance_of(text_obj, env.find_class("java/lang/Object").unwrap()).unwrap() {
                 char_sequence = env
-                   .get_string(text_obj.into_inner().try_into().unwrap())
-                   .unwrap()
+                   .get_string(text_obj).unwrap()
                    .to_str()
                    .unwrap();
             } else {
@@ -296,10 +294,9 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
                    .unwrap()
                    .l()
                    .unwrap();
-                if!env.is_null(content_description_obj).unwrap() {
+                if!env.is_instance_of(content_description_obj, env.find_class("java/lang/Object").unwrap()).unwrap() {
                     char_sequence = env
-                       .get_string(content_description_obj.into_inner().try_into().unwrap())
-                       .unwrap()
+                       .get_string(content_description_obj).unwrap()
                        .to_str()
                        .unwrap();
                 }
@@ -323,7 +320,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
                 paint,
                 "setStrokeWidth",
                 "(F)V",
-                &[JValue::Float(2.0f as jfloat)],
+                &[JValue::Float(2.0f32 as jfloat)],
             )
            .unwrap();
             // 调用 canvas 的 drawRect 方法
@@ -349,7 +346,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
             // 设置 paint 的 color 为 i
             env.call_method(paint, "setColor", "(I)V", &[JValue::Int(i)]).unwrap();
             // 设置 paint 的 isAntiAlias 为 true
-            env.call_method(paint, "setAntiAlias", "(Z)V", &[JValue::Boolean(true)]).unwrap();
+            env.call_method(paint, "setAntiAlias", "(Z)V", &[JValue::Bool(true)]).unwrap();
 
             let char_sequence_jstr = env.new_string(char_sequence).unwrap();
             let rect_left = env
@@ -369,8 +366,8 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
                 "(Ljava/lang/CharSequence;FFLandroid/graphics/Paint;)V",
                 &[
                     JValue::Object(&char_sequence_jstr),
-                    JValue::Float(rect_left + 16.0f),
-                    JValue::Float(rect_center_y + 16.0f),
+                    JValue::Float(rect_left + 16.0f32),
+                    JValue::Float(rect_center_y + 16.0f32),
                     JValue::Object(&paint),
                 ],
             )
@@ -378,7 +375,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
 
             // 递归调用 drawViewHierarchy
             Java_ffi_FFI_drawViewHierarchy(
-                env.clone(),
+                env,
                 _class,
                 canvas,
                 child,
@@ -390,7 +387,6 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
         }
     }
 }
-
 
 /*
 #[no_mangle]
