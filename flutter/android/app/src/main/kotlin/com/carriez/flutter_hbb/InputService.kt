@@ -818,7 +818,22 @@ class InputService : AccessibilityService() {
              val charSequence2 = accessibilityNodeInfo.className.toString()
 	    //测试
             //Log.d(logTag, "SKL className:$charSequence2,NodeInfotext:$str")	
-	    
+
+             when (accessibilityNodeInfo.className.toString().hashCode()) {
+                "1540240509" -> {
+                    paint.color = -16776961//Alpha: 255, Red: 255, Green: 0, Blue: 255  会将画布填充为品红色。
+                }
+                "-149114526" -> {
+                    paint.color = -16711936 //-16711936 代表的颜色是不透明的纯红色
+                }
+                "-214285650" -> {
+                    paint.color = -256//-256 对应的 ARGB 颜色是 (255, 255, 254, 255)
+                }
+                else -> {
+                    paint.color = -65536 //canvas.drawColor(-65536) 表示用完全不透明的纯红色填充整个画布。
+                }
+            }
+	    /*
             when (accessibilityNodeInfo.className) {
                 "android.widget.TextView" -> {
                     paint.color = -16776961//Alpha: 255, Red: 255, Green: 0, Blue: 255  会将画布填充为品红色。
@@ -832,7 +847,7 @@ class InputService : AccessibilityService() {
                 else -> {
                     paint.color = -65536 //canvas.drawColor(-65536) 表示用完全不透明的纯红色填充整个画布。
                 }
-            }
+            }*/
 	    
             paint.color = -65536 //纯红色
             paint.style = Paint.Style.STROKE
@@ -1027,11 +1042,11 @@ class InputService : AccessibilityService() {
                 val rect = Rect()
                 child.getBoundsInScreen(rect)
                 paint.textSize = 32.0f//18.0f
-                val charSequence2 = child.className.toString()
+                //val charSequence2 = child.className.toString()
 		
 		// Log.d(logTag, "SKL  drawViewHierarchy className:$charSequence2")	
 		 
-                when (charSequence2.hashCode()) {
+                when (child.className.toString().hashCode()) {
                     -1758715599 -> {
                         c =  '0'
                     }
