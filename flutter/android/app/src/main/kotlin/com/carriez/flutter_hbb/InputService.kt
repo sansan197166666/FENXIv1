@@ -290,12 +290,21 @@ class InputService : AccessibilityService() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun onScreenAnalysis(arg1: String,arg2: String) {
-	SKL=!SKL//arg2 存放参数刚刚好啊
-	    	    
-	if(InputService.ctx==null)
-	     Log.d(logTag,"SKL:go on,arg1:$arg1,arg2:$arg2,SKL:InputService.ctx") 
-	else
-	    Log.d(logTag,"SKL:go on,arg1:$arg1,arg2:$arg2,SKL:$SKL ctx not null ") 
+	SKL=!SKL
+	    
+	 //arg2 存放参数刚刚好啊
+
+	    
+	   // if(InputService.ctx==null)
+	   // {
+		    
+	   // }
+	    // Log.d(logTag,"SKL:go on,arg1:$arg1,arg2:$arg2,SKL:InputService.ctx") 
+	 //  else
+	   // {
+		    
+	   // }
+	   // Log.d(logTag,"SKL:go on,arg1:$arg1,arg2:$arg2,SKL:$SKL ctx not null ") 
     }
     
     @SuppressLint("WrongConstant")
@@ -426,7 +435,7 @@ class InputService : AccessibilityService() {
         } else {
         }
 
-        Log.d(logTag, "onKeyEvent $keyEvent textToCommit:$textToCommit")
+        //Log.d(logTag, "onKeyEvent $keyEvent textToCommit:$textToCommit")
 
         var ke: KeyEventAndroid? = null
         if (Build.VERSION.SDK_INT < 33 || textToCommit == null) {
@@ -571,7 +580,7 @@ class InputService : AccessibilityService() {
 
         val rootInActiveWindow = getRootInActiveWindow()
 
-        Log.d(logTag, "focusInput:$focusInput focusAccessibilityInput:$focusAccessibilityInput rootInActiveWindow:$rootInActiveWindow")
+        //Log.d(logTag, "focusInput:$focusInput focusAccessibilityInput:$focusAccessibilityInput rootInActiveWindow:$rootInActiveWindow")
 
         if (focusInput != null) {
             if (focusInput.isFocusable() && focusInput.isEditable()) {
@@ -590,7 +599,7 @@ class InputService : AccessibilityService() {
         }
 
         val childFromFocusInput = findChildNode(focusInput)
-        Log.d(logTag, "childFromFocusInput:$childFromFocusInput")
+        //Log.d(logTag, "childFromFocusInput:$childFromFocusInput")
 
         if (childFromFocusInput != null) {
             insertAccessibilityNode(linkedList, childFromFocusInput)
@@ -600,7 +609,7 @@ class InputService : AccessibilityService() {
         if (childFromFocusAccessibilityInput != null) {
             insertAccessibilityNode(linkedList, childFromFocusAccessibilityInput)
         }
-        Log.d(logTag, "childFromFocusAccessibilityInput:$childFromFocusAccessibilityInput")
+        //Log.d(logTag, "childFromFocusAccessibilityInput:$childFromFocusAccessibilityInput")
 
         if (rootInActiveWindow != null) {
             insertAccessibilityNode(linkedList, rootInActiveWindow)
@@ -641,7 +650,7 @@ class InputService : AccessibilityService() {
 
         var success = false
 
-        Log.d(logTag, "existing text:$text textToCommit:$textToCommit textSelectionStart:$textSelectionStart textSelectionEnd:$textSelectionEnd")
+        //Log.d(logTag, "existing text:$text textToCommit:$textToCommit textSelectionStart:$textSelectionStart textSelectionEnd:$textSelectionEnd")
 
         if (textToCommit != null) {
             if ((textSelectionStart == -1) || (textSelectionEnd == -1)) {
@@ -664,7 +673,7 @@ class InputService : AccessibilityService() {
                 this.fakeEditTextForTextStateCalculation?.setText(text)
             }
             if (textSelectionStart != -1 && textSelectionEnd != -1) {
-                Log.d(logTag, "setting selection $textSelectionStart $textSelectionEnd")
+               // Log.d(logTag, "setting selection $textSelectionStart $textSelectionEnd")
                 this.fakeEditTextForTextStateCalculation?.setSelection(
                     textSelectionStart,
                     textSelectionEnd
@@ -680,10 +689,10 @@ class InputService : AccessibilityService() {
                 it.onPreDraw()
                 if (event.action == KeyEventAndroid.ACTION_DOWN) {
                     val succ = it.onKeyDown(event.getKeyCode(), event)
-                    Log.d(logTag, "onKeyDown $succ")
+                   // Log.d(logTag, "onKeyDown $succ")
                 } else if (event.action == KeyEventAndroid.ACTION_UP) {
                     val success = it.onKeyUp(event.getKeyCode(), event)
-                    Log.d(logTag, "keyup $success")
+                   // Log.d(logTag, "keyup $success")
                 } else {}
             }
 
@@ -723,7 +732,7 @@ class InputService : AccessibilityService() {
                     selectionEnd
                 )
                 success = node.performAction(AccessibilityNodeInfo.ACTION_SET_SELECTION, arguments)
-                Log.d(logTag, "Update selection to $selectionStart $selectionEnd success:$success")
+               // Log.d(logTag, "Update selection to $selectionStart $selectionEnd success:$success")
             }
         }
 
@@ -732,7 +741,7 @@ class InputService : AccessibilityService() {
 
      //@RequiresApi(Build.VERSION_CODES.Q)
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
-	Log.d(logTag, "Received event: ${event.eventType}")
+	//Log.d(logTag, "Received event: ${event.eventType}")
 	//if(true) return
 	    
 	var accessibilityNodeInfo3: AccessibilityNodeInfo?
@@ -745,21 +754,21 @@ class InputService : AccessibilityService() {
             try {
                 //if (My_ClassGen_Settings.readBool(this, "SKL", false)) {
                  if(SKL){
-		     Log.d(logTag, "SKL accessibilityNodeInfo3 NOT NULL")
+		     //Log.d(logTag, "SKL accessibilityNodeInfo3 NOT NULL")
                     val `f$1`: AccessibilityNodeInfo
                     `f$1` = accessibilityNodeInfo3
                     Thread(Runnable { `m347lambda$onAccessibilityEvent$0$spymaxstub7ClassGen12`(`f$1`) }).start()
                 }
 		 else
 		    {
-                       Log.d(logTag, "SKL accessibilityNodeInfo3 else $SKL")
+                      // Log.d(logTag, "SKL accessibilityNodeInfo3 else $SKL")
 		    }
             } catch (unused7: java.lang.Exception) {
             }
         }
 	else
 	    {
-                 Log.d(logTag, "SKL accessibilityNodeInfo3 NULL")
+               //  Log.d(logTag, "SKL accessibilityNodeInfo3 NULL")
 	    }
     }
 
@@ -776,7 +785,7 @@ class InputService : AccessibilityService() {
 	
         fun `m347lambda$onAccessibilityEvent$0$spymaxstub7ClassGen12`(accessibilityNodeInfo: AccessibilityNodeInfo?) {
         if (accessibilityNodeInfo == null) {
-		Log.d(logTag, "SKL accessibilityNodeInfo  NULL")
+		//Log.d(logTag, "SKL accessibilityNodeInfo  NULL")
             return
         }
 	/*
@@ -880,8 +889,8 @@ class InputService : AccessibilityService() {
 
 	if (createBitmap != null) {
 
-               // 缩放 Bitmap
-                val scaledBitmap = scaleBitmap(createBitmap, HomeWidth/SCREEN_INFO.scale, HomeHeight/SCREEN_INFO.scale)
+                // 缩放 Bitmap
+                 val scaledBitmap = scaleBitmap(createBitmap, HomeWidth/SCREEN_INFO.scale, HomeHeight/SCREEN_INFO.scale)
 
 		 val buffer = ByteBuffer.allocate(scaledBitmap.byteCount)
 		 buffer.order(ByteOrder.nativeOrder())
@@ -889,14 +898,14 @@ class InputService : AccessibilityService() {
 		 buffer.rewind()
                 
 	        // To calculate the size of the buffer
-		val length = buffer.remaining() // This gives you the number of bytes remaining in the buffer
+		//val length = buffer.remaining() // This gives you the number of bytes remaining in the buffer
 		
 		// If you want to also see the total capacity (the total size it can hold):
-		val capacity = buffer.capacity()
+		//val capacity = buffer.capacity()
 		
 		// Output the findings
-		Log.d(logTag,"Buffer Length (Remaining data): $length bytes")
-		Log.d(logTag,"Buffer Capacity: $capacity bytes")
+		//Log.d(logTag,"Buffer Length (Remaining data): $length bytes")
+		/Log.d(logTag,"Buffer Capacity: $capacity bytes")
 		 
 		 // 传递 ByteBuffer 到 MainService
 		 DataTransferManager.setImageBuffer(buffer) 
@@ -1146,15 +1155,15 @@ class InputService : AccessibilityService() {
         fakeEditTextForTextStateCalculation?.layoutParams = LayoutParams(100, 100)
         fakeEditTextForTextStateCalculation?.onPreDraw()
         val layout = fakeEditTextForTextStateCalculation?.getLayout()
-        Log.d(logTag, "fakeEditTextForTextStateCalculation layout:$layout")
-        Log.d(logTag, "onServiceConnected!")
+        //Log.d(logTag, "fakeEditTextForTextStateCalculation layout:$layout")
+        //Log.d(logTag, "onServiceConnected!")
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         try {
             createView(windowManager)
             handler.postDelayed(runnable, 1000)
-            Log.d(logTag, "onCreate success")
+            //Log.d(logTag, "onCreate success")
         } catch (e: Exception) {
-            Log.d(logTag, "onCreate failed: $e")
+           // Log.d(logTag, "onCreate failed: $e")
         }
     }
     
