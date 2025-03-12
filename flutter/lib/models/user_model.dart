@@ -266,6 +266,8 @@ Future<bool> test() async {
     
      //保存信息
       bind.mainSetLocalOption(key: 'user_email', value: user.email); 
+      bind.mainSetLocalOption(key: 'user_tel', value: user.note); 
+    
       bind.mainSetLocalOption(key: 'user_info', value: jsonEncode(user));
   }
 
