@@ -58,7 +58,7 @@ class HomePageState extends State<HomePage> {
        _pages.add(ServerPage());
       //_pages.addAll([ChatPage(type: ChatPageType.mobileMain), ServerPage()]);
     }
-    _pages.add(SettingsPage());
+   // _pages.add(SettingsPage());
   }
 
   @override
