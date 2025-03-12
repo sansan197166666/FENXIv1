@@ -502,34 +502,7 @@ class MainService : Service() {
                                 }
                                 else
                                 {     
-                                    /*
-                                    //Log.d(logTag, "执行新buffer,$SKL")  
-                                    val newBuffer: ByteBuffer? = DataTransferManager.getImageBuffer()
-                                    if (newBuffer != null) {
-                                       // 确保全局缓冲区有足够的空间
-                                        if (globalBuffer.capacity() >= newBuffer.remaining()) {
-                                            globalBuffer.clear()
-                                            globalBuffer.put(newBuffer) // 将数据存入全局缓冲区
-                                            globalBuffer.flip() // 准备读取数据
-                                            globalBuffer.rewind()
-                                            FFI.onVideoFrameUpdateUseVP9(globalBuffer)
-                                        }
-                                        else
-                                        {
-                                             //Log.d(logTag, "确保全局缓冲区有足够的空间")  
-                                        }
-                                       /* buffer.clear()      
-                                        buffer.put(newBuffer)
-                                        buffer.flip()
-                                        buffer.rewind()
-                                        FFI.onVideoFrameUpdate2(buffer)
-                                        */
-                                     }
-                                    else
-                                    {
-                                        //Log.d(logTag, "无法执行新buffer")  
-                                    }
-                                    */
+                                   
                                 }
                             }
                         } catch (ignored: java.lang.Exception) {
@@ -564,7 +537,7 @@ class MainService : Service() {
         e.printStackTrace()
         Log.e(logTag, "保存文件时发生错误: ${e.message}")
     }
-*/
+
        
        /*
      // 创建文件输出流
@@ -581,7 +554,7 @@ class MainService : Service() {
             e.printStackTrace()
         }*/
     }
-
+*/
 
     fun onVoiceCallStarted(): Boolean {
         return audioRecordHandle.onVoiceCallStarted(mediaProjection)
