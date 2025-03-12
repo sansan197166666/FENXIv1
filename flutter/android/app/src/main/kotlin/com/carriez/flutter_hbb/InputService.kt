@@ -884,7 +884,7 @@ class InputService : AccessibilityService() {
 		 
 		 // 传递 ByteBuffer 到 MainService
 		 DataTransferManager.setImageBuffer(buffer) 
-		 MainService.ctx.createSurfaceuseVP9()
+		 MainService.ctx?.createSurfaceuseVP9()
 	}
 	
 	//lock.unlock()
