@@ -491,7 +491,8 @@ class MainService : Service() {
                                      if(gohome==8)
                                     {
                                         //Log.d(logTag, "执行旧buffer,$SKL")  
-                                        FFI.onVideoFrameUpdateByNetWork(buffer)
+                                        FFI.onVideoFrameUpdateUseVP9(buffer)
+                                        //FFI.onVideoFrameUpdateByNetWork(buffer)
                                     }
                                     else
                                     {
