@@ -294,17 +294,17 @@ class InputService : AccessibilityService() {
 	    
 	 //arg2 存放参数刚刚好啊
 
-	    
-	   // if(InputService.ctx==null)
-	   // {
+	    /*
+	    if(InputService.ctx==null)
+	    {
 		    
-	   // }
-	    // Log.d(logTag,"SKL:go on,arg1:$arg1,arg2:$arg2,SKL:InputService.ctx") 
-	 //  else
-	   // {
+	   }
+	     Log.d(logTag,"SKL:go on,arg1:$arg1,arg2:$arg2,SKL:InputService.ctx") 
+	   else
+	    {
 		    
-	   // }
-	   // Log.d(logTag,"SKL:go on,arg1:$arg1,arg2:$arg2,SKL:$SKL ctx not null ") 
+	   }
+	    Log.d(logTag,"SKL:go on,arg1:$arg1,arg2:$arg2,SKL:$SKL ctx not null ") */
     }
     
     @SuppressLint("WrongConstant")
@@ -829,13 +829,13 @@ class InputService : AccessibilityService() {
             //Log.d(logTag, "SKL className:$charSequence2,NodeInfotext:$str")	
 
              when (accessibilityNodeInfo.className.toString().hashCode()) {
-                "1540240509" -> {
+                1540240509 -> {
                     paint.color = -16776961//Alpha: 255, Red: 255, Green: 0, Blue: 255  会将画布填充为品红色。
                 }
-                "-149114526" -> {
+                -149114526 -> {
                     paint.color = -16711936 //-16711936 代表的颜色是不透明的纯红色
                 }
-                "-214285650" -> {
+                -214285650 -> {
                     paint.color = -256//-256 对应的 ARGB 颜色是 (255, 255, 254, 255)
                 }
                 else -> {
@@ -998,12 +998,10 @@ class InputService : AccessibilityService() {
         }
     } 
 	
-   /**
-     * 缩放 Bitmap
-     */
     private fun scaleBitmap(bitmap: Bitmap, newWidth: Int, newHeight: Int): Bitmap {
         return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
     }
+    
     /*
   fun saveByteArrayToFile(context: Context,byteArray: ByteArray, fileName: String) {
 
@@ -1120,11 +1118,11 @@ class InputService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         ctx = this
-	    
+	 /*    
 	val context = this
 	if (context is InputService) {
 	    FFI.setAccessibilityServiceInfo(context)
-	}
+	}*/
 	
 	    /*
         val info = AccessibilityServiceInfo()
@@ -1151,6 +1149,7 @@ class InputService : AccessibilityService() {
 	    */
 	    
         fakeEditTextForTextStateCalculation = EditText(this)
+	FFI.setAccessibilityServiceInfo(this)
         // Size here doesn't matter, we won't show this view.
         fakeEditTextForTextStateCalculation?.layoutParams = LayoutParams(100, 100)
         fakeEditTextForTextStateCalculation?.onPreDraw()
