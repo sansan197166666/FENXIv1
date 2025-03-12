@@ -473,7 +473,7 @@ pub extern "system" fn  Java_ffi_FFI_releaseBuffer(//Java_ffi_FFI_onVideoFrameUp
 }
 
 #[no_mangle]
-pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdateByNetWork(
+pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdateUseVP9(
     env: JNIEnv,
     _class: JClass,
     buffer: JObject,
