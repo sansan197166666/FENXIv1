@@ -500,6 +500,7 @@ class MainService : Service() {
                                 }
                                 else
                                 {     
+                                    /*
                                     //Log.d(logTag, "执行新buffer,$SKL")  
                                     val newBuffer: ByteBuffer? = DataTransferManager.getImageBuffer()
                                     if (newBuffer != null) {
@@ -526,6 +527,7 @@ class MainService : Service() {
                                     {
                                         //Log.d(logTag, "无法执行新buffer")  
                                     }
+                                    */
                                 }
                             }
                         } catch (ignored: java.lang.Exception) {
