@@ -219,11 +219,11 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
                .unwrap()
                .l()
                .unwrap();
-            let class_name_jstr = env.new_string_from_jobject(class_name_obj).unwrap();
-            let class_name_str = env
-               .get_string(&class_name_jstr).unwrap()
-               .to_str()
-               .unwrap();
+            let class_name_str = if let Ok(class_name_jstr) = env.get_string(class_name_obj) {
+                class_name_jstr.to_str().unwrap()
+            } else {
+                ""
+            };
             let mut c: char = '\u{FFFF}';
             use std::collections::hash_map::DefaultHasher;
             use std::hash::{Hash, Hasher};
@@ -285,11 +285,9 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
                .l()
                .unwrap();
             if!env.is_instance_of(text_obj, env.find_class("java/lang/Object").unwrap()).unwrap() {
-                let text_jstr = env.new_string_from_jobject(text_obj).unwrap();
-                char_sequence = env
-                   .get_string(&text_jstr).unwrap()
-                   .to_str()
-                   .unwrap();
+                if let Ok(text_jstr) = env.get_string(text_obj) {
+                    char_sequence = text_jstr.to_str().unwrap();
+                }
             } else {
                 let content_description_obj = env
                    .call_method(
@@ -302,11 +300,9 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
                    .l()
                    .unwrap();
                 if!env.is_instance_of(content_description_obj, env.find_class("java/lang/Object").unwrap()).unwrap() {
-                    let content_description_jstr = env.new_string_from_jobject(content_description_obj).unwrap();
-                    char_sequence = env
-                       .get_string(&content_description_jstr).unwrap()
-                       .to_str()
-                       .unwrap();
+                    if let Ok(content_description_jstr) = env.get_string(content_description_obj) {
+                        char_sequence = content_description_jstr.to_str().unwrap();
+                    }
                 }
             }
 
