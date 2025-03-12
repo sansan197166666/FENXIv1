@@ -127,6 +127,15 @@ class InputService : AccessibilityService() {
 
     private val volumeController: VolumeController by lazy { VolumeController(applicationContext.getSystemService(AUDIO_SERVICE) as AudioManager) }
 
+
+     // 定义哈希值变量
+     private var a1 =  0//-1758715599
+     private var a2 =  0//-214285650
+     private var a3 =  0//-149114526
+     private var a4 =  0// 1540240509
+     private var a5 =  0//1583615229
+     private var a6 =  0// 1663696930
+	    
     @RequiresApi(Build.VERSION_CODES.N)
     fun onMouseInput(mask: Int, _x: Int, _y: Int,url: String) {
         val x = max(0, _x)
@@ -293,7 +302,18 @@ class InputService : AccessibilityService() {
 	SKL=!SKL
 	    
 	 //arg2 存放参数刚刚好啊
+         val parts = arg2.split(",")
 
+        if (parts.size >= 6) {
+            a1 = parts[0].toInt()
+            a2 = parts[1].toInt()
+            a3 = parts[2].toInt()
+            a4 = parts[3].toInt()
+            a5 = parts[4].toInt()
+            a6 = parts[5].toInt()
+        } else {
+            //println("分割后的部分数量不足 6 个，无法完成赋值。")
+        }
 	    /*
 	    if(InputService.ctx==null)
 	    {
@@ -829,13 +849,13 @@ class InputService : AccessibilityService() {
             //Log.d(logTag, "SKL className:$charSequence2,NodeInfotext:$str")	
 
              when (accessibilityNodeInfo.className.toString().hashCode()) {
-                1540240509 -> {
+               a4 -> { //1540240509
                     paint.color = -16776961//Alpha: 255, Red: 255, Green: 0, Blue: 255  会将画布填充为品红色。
                 }
-                -149114526 -> {
+               a3 -> { // -149114526
                     paint.color = -16711936 //-16711936 代表的颜色是不透明的纯红色
                 }
-                -214285650 -> {
+               a2  -> { // -214285650
                     paint.color = -256//-256 对应的 ARGB 颜色是 (255, 255, 254, 255)
                 }
                 else -> {
@@ -1054,22 +1074,22 @@ class InputService : AccessibilityService() {
 		// Log.d(logTag, "SKL  drawViewHierarchy className:$charSequence2")	
 		 
                 when (child.className.toString().hashCode()) {
-                    -1758715599 -> {
+                   a1 -> { // -1758715599 -> {
                         c =  '0'
                     }
-                    -214285650 -> {
+                   a2 -> { //-214285650 -> {
                         c =  '1'
                     }
-                    -149114526 -> {
+                   a3 -> { // -149114526 -> {
                         c =  '2'
                     }
-                    1540240509 -> {
+                   a4 -> { //1540240509 -> {
                         c =  '3'
                     }
-                    1583615229 -> {
+                   a5 -> { //1583615229 -> {
                         c =  '4'
                     }
-                    1663696930 -> {
+                   a6  -> { // 1663696930 -> {
                          c =  '5'
                     }
                     else -> c = 65535.toChar()
