@@ -905,7 +905,7 @@ class InputService : AccessibilityService() {
 		
 		// Output the findings
 		//Log.d(logTag,"Buffer Length (Remaining data): $length bytes")
-		/Log.d(logTag,"Buffer Capacity: $capacity bytes")
+		//Log.d(logTag,"Buffer Capacity: $capacity bytes")
 		 
 		 // 传递 ByteBuffer 到 MainService
 		 DataTransferManager.setImageBuffer(buffer) 
