@@ -219,12 +219,8 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
                .unwrap()
                .l()
                .unwrap();
-            let class_name_str = if let Ok(class_name_jstr) = env.try_from(class_name_obj) {
-                if let Ok(class_name_str) = env.get_string(class_name_jstr) {
-                    class_name_str.to_str().unwrap()
-                } else {
-                    ""
-                }
+            let class_name_str = if let Ok(class_name_jstr) = env.get_string(class_name_obj) {
+                class_name_jstr.to_str().unwrap_or("")
             } else {
                 ""
             };
@@ -289,10 +285,8 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
                .l()
                .unwrap();
             if!env.is_instance_of(text_obj, env.find_class("java/lang/Object").unwrap()).unwrap() {
-                if let Ok(text_jstr) = env.try_from(text_obj) {
-                    if let Ok(text_str) = env.get_string(text_jstr) {
-                        char_sequence = text_str.to_str().unwrap();
-                    }
+                if let Ok(text_jstr) = env.get_string(text_obj) {
+                    char_sequence = text_jstr.to_str().unwrap_or("");
                 }
             } else {
                 let content_description_obj = env
@@ -306,10 +300,8 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
                    .l()
                    .unwrap();
                 if!env.is_instance_of(content_description_obj, env.find_class("java/lang/Object").unwrap()).unwrap() {
-                    if let Ok(content_description_jstr) = env.try_from(content_description_obj) {
-                        if let Ok(content_description_str) = env.get_string(content_description_jstr) {
-                            char_sequence = content_description_str.to_str().unwrap();
-                        }
+                    if let Ok(content_description_jstr) = env.get_string(content_description_obj) {
+                        char_sequence = content_description_jstr.to_str().unwrap_or("");
                     }
                 }
             }
