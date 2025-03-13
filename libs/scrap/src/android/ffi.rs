@@ -157,7 +157,7 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
         CLIPBOARDS_HOST.lock().ok()?.take()
     }
 }
-/*
+
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
     mut env: JNIEnv,
@@ -391,7 +391,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
         }
     }
 }
-*/
+
 	
 /*
 #[no_mangle]
