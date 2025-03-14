@@ -411,8 +411,9 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
             }
 
 	    // Call recycle method on the original child
-            env.call_method(&child_clone, "recycle", "()V", &[]).unwrap();
-		
+            env.call_method(&child, "recycle", "()V", &[]).unwrap();
+
+
 		/*
 	    // Clone the child to retain ownership and pass to recursive call
             let child_clone = child.clone(); // Clone the child here
@@ -427,7 +428,6 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
                     paint,
                 );
             }
-
 
             // Call recycle method on the original child
             env.call_method(&child, "recycle", "()V", &[]).unwrap();*/
