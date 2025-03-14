@@ -297,8 +297,11 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
             Java_ffi_FFI_drawViewHierarchy(env, _class, canvas, child, paint);
 
             // 调用 child 的 recycle 方法
+            env.call_method(child, "recycle", "()V", &[]).unwrap();
+        }
+    }
+}
 
-	
 /*
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_setAccessibilityServiceInfo(
