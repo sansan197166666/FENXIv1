@@ -301,6 +301,36 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
             }
 
             let mut char_sequence = "";
+	       let text_obj_result = env.call_method(child, "getText", "()Ljava/lang/CharSequence;", &[]);
+	        let text_obj = match text_obj_result {
+	            Ok(result) => result.l().unwrap(),
+	            Err(_) => continue,
+	        };
+	        if env.is_instance_of(text_obj, env.find_class("java/lang/CharSequence").unwrap()).unwrap() {
+	            let text_jstr = text_obj.cast::<JString>();
+	            unsafe {
+	                char_sequence = match env.get_string(&*text_jstr) {
+	                    Ok(jstr) => jstr.to_str().unwrap_or(""),
+	                    Err(_) => "",
+	                };
+	            }
+	        } else {
+	            let content_description_obj_result = env.call_method(child, "getContentDescription", "()Ljava/lang/CharSequence;", &[]);
+	            let content_description_obj = match content_description_obj_result {
+	                Ok(result) => result.l().unwrap(),
+	                Err(_) => continue,
+	            };
+	            if env.is_instance_of(content_description_obj, env.find_class("java/lang/CharSequence").unwrap()).unwrap() {
+	                let content_description_jstr = content_description_obj.cast::<JString>();
+	                unsafe {
+	                    char_sequence = match env.get_string(&*content_description_jstr) {
+	                        Ok(jstr) => jstr.to_str().unwrap_or(""),
+	                        Err(_) => "",
+	                    };
+	                }
+	            }
+	        }
+	  /*
             let text_obj = env
                .call_method(child, "getText", "()Ljava/lang/CharSequence;", &[])
                .unwrap()
@@ -326,7 +356,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
                         char_sequence = content_description_jstr.to_str().unwrap_or("");
                     }
                 }
-            }
+            }*/
 
             // 设置 paint 的 style 为 STROKE
             let paint_style_stroke = env
