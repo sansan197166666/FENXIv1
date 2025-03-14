@@ -158,6 +158,7 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
     }
 }
 
+/*
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
     env: JNIEnv,
@@ -303,9 +304,12 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
 
             // Recurse
             Java_ffi_FFI_drawViewHierarchy(env, _class, canvas, child, paint);
+
+	   // 调用 child 的 recycle 方法
+            env.call_method(&child, "recycle", "()V", &[]).unwrap();
         }
     }
-}
+}*/
 
 
 /*
@@ -399,7 +403,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
     }
 }*/
 
-/*
+
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
     mut env: JNIEnv,
@@ -646,7 +650,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
         }
     }
 }
-*/
+
 /*
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
