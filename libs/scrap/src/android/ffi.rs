@@ -395,7 +395,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
             )
            .unwrap();
 
-/*
+          /*
 	 // Clone the child to retain ownership and pass to recursive call
 	 let child_clone = child.clone(); // Clone the child to keep a reference
 		
@@ -416,54 +416,33 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
 	    
 	    // Now, call methods on the restored JObject
 	    env.call_method(&child_obj, "recycle", "()V", &[]).unwrap(); 
-	 }
-*/
-	/*
-	let child_clone = child.clone(); // Clone the child to keep a reference
+     
+           // Drop the JObject to properly manage the memory
+           drop(child_obj);
+     
+	 } */
 
-	// Convert to raw pointer to pass into recursive call
-	unsafe {
-	    let child_raw = child.clone().into_raw(); // Get the raw pointer from the clone
-	
-	    // Recursively call drawViewHierarchy with the raw pointer converted back to JObject
-	    Java_ffi_FFI_drawViewHierarchy(
-	        env,
-	        _class,
-	        canvas,
-	        JObject::from_raw(child_raw),  // Convert raw pointer to JObject
-	        paint,
-	    );
-	
-	    // After recursion, restore child from raw pointer and call "recycle"
-	    let child_obj = JObject::from_raw(child_raw);  // Ensure child_raw is a valid raw pointer
-	
-	    // Now, call methods on the restored JObject
-	    env.call_method(&child_obj, "recycle", "()V", &[]).unwrap(); 
-	}
-*/
 
-		let child_clone = child.clone(); // Clone the child to keep a reference
+// Clone the child to retain ownership and pass to recursive call
+let child_clone = child.clone(); // Clone the child to keep a reference
 
-		// Convert to raw pointer to pass into recursive call
-		unsafe {
-		    // Correctly use into_raw on the JObject, not on the raw pointer
-		    let child_raw = child_clone.into_raw(); // Get the raw pointer from the clone
-		
-		    // Recursively call drawViewHierarchy with the raw pointer converted back to JObject
-		    Java_ffi_FFI_drawViewHierarchy(
-		        env,
-		        _class,
-		        canvas,
-		        JObject::from_raw(child_raw),  // Convert raw pointer to JObject
-		        paint,
-		    );
-		
-		    // After recursion, restore child from raw pointer and call "recycle"
-		    let child_obj = JObject::from_raw(child_raw);  // Ensure child_raw is a valid raw pointer
-		
-		    // Now, call methods on the restored JObject
-		    env.call_method(&child_obj, "recycle", "()V", &[]).unwrap(); 
-		}
+unsafe {
+    let child_raw = child_clone.as_ptr(); // 使用 as_ptr() 获取原始指针
+
+    // 递归调用 drawViewHierarchy
+    Java_ffi_FFI_drawViewHierarchy(
+        env,
+        _class,
+        canvas,
+        JObject::from_raw(child_raw),  // 从 raw 指针恢复 JObject
+        paint,
+    );
+
+    // 由于 child_raw 仍然是一个有效指针，我们不需要再额外转换
+    env.call_method(&child_clone, "recycle", "()V", &[]).unwrap(); 
+}
+
+
 		
         }
     }
