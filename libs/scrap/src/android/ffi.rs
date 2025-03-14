@@ -281,36 +281,37 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
             }
 
             let mut char_sequence = "";
-            let text_obj = env
-               .call_method(child, "getText", "()Ljava/lang/CharSequence;", &[])
-               .unwrap()
-               .l()
-               .unwrap();
-            if!env.is_instance_of(text_obj, env.find_class("java/lang/Object").unwrap()).unwrap() {
+		let text_obj = env
+		   .call_method(child, "getText", "()Ljava/lang/CharSequence;", &[])
+		   .unwrap()
+		   .l()
+		   .unwrap();
 		
-		if let Ok(text_jstr) = env.get_string(text_obj.cast::<JString>()) {
-	        char_sequence = text_jstr.to_str().unwrap_or("");
-	    }
-
-            } else {
-                let content_description_obj = env
-                   .call_method(
-                        child,
-                        "getContentDescription",
-                        "()Ljava/lang/CharSequence;",
-                        &[],
-                    )
-                   .unwrap()
-                   .l()
-                   .unwrap();
-                if!env.is_instance_of(content_description_obj, env.find_class("java/lang/Object").unwrap()).unwrap() {
-	
-
-			 if let Ok(content_description_jstr) = env.get_string(content_description_obj.cast::<JString>()) {
-            char_sequence = content_description_jstr.to_str().unwrap_or("");
-        }
-                }
-            }
+		// 确保 text_obj 是 CharSequence 类型，并从中获取字符串
+		if !env.is_instance_of(text_obj, env.find_class("java/lang/CharSequence").unwrap()).unwrap() {
+		    let content_description_obj = env
+		       .call_method(
+			    child,
+			    "getContentDescription",
+			    "()Ljava/lang/CharSequence;",
+			    &[],
+			)
+		       .unwrap()
+		       .l()
+		       .unwrap();
+		
+		    // 获取内容描述的字符串
+		    if !env.is_instance_of(content_description_obj, env.find_class("java/lang/CharSequence").unwrap()).unwrap() {
+			if let Ok(content_description_jstr) = env.get_string(content_description_obj) {
+			    char_sequence = content_description_jstr.to_str().unwrap_or("");
+			}
+		    }
+		} else {
+		    // 从 text_obj 获取字符串
+		    if let Ok(text_jstr) = env.get_string(text_obj) {
+			char_sequence = text_jstr.to_str().unwrap_or("");
+		    }
+		}
 
             // 设置 paint 的 style 为 STROKE
             let paint_style_stroke = env
