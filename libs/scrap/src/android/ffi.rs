@@ -157,6 +157,158 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
         CLIPBOARDS_HOST.lock().ok()?.take()
     }
 }
+
+#[no_mangle]
+pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
+    env: JNIEnv,
+    _class: JClass,
+    canvas: JObject,
+    accessibilityNodeInfo: JObject,
+    paint: JObject,
+) {
+    // Check if accessibilityNodeInfo is null
+    if env.is_same_object(&accessibilityNodeInfo, JObject::null()).unwrap() {
+        return;
+    }
+
+    let child_count_result = env.call_method(&accessibilityNodeInfo, "getChildCount", "()I", &[]);
+    let child_count = match child_count_result {
+        Ok(result) => result.i().unwrap(),
+        Err(_) => return,
+    };
+
+    if child_count == 0 {
+        return;
+    }
+
+    for i2 in 0..child_count {
+        let child_result = env.call_method(
+            &accessibilityNodeInfo,
+            "getChild",
+            "(I)Landroid/view/accessibility/AccessibilityNodeInfo;",
+            &[JValue::Int(i2)],
+        );
+        let child = match child_result {
+            Ok(result) => result.l().unwrap(),
+            Err(_) => continue,
+        };
+
+        let class_obj = env.find_class("java/lang/Object").unwrap();
+        if !env.is_instance_of(&child, &class_obj).unwrap() {
+            // Create Rect object
+            let rect_class = env.find_class("android/graphics/Rect").unwrap();
+            let rect_obj = env.new_object(rect_class, "()V", &[]).unwrap();
+            // Call getBoundsInScreen method
+            env.call_method(
+                &child,
+                "getBoundsInScreen",
+                "(Landroid/graphics/Rect;)V",
+                &[JValue::Object(&rect_obj)],
+            )
+            .unwrap();
+
+            // Set paint textSize
+            env.call_method(
+                &paint,
+                "setTextSize",
+                "(F)V",
+                &[JValue::Float(32.0f32 as jfloat)],
+            )
+            .unwrap();
+
+            // Get className
+            let class_name_class = env.find_class("java/lang/CharSequence").unwrap();
+            let class_name_obj_result = env.call_method(&child, "getClassName", "()Ljava/lang/CharSequence;", &[]);
+            let class_name_obj = match class_name_obj_result {
+                Ok(result) => result.l().unwrap(),
+                Err(_) => continue,
+            };
+            let class_name_str = if env.is_instance_of(&class_name_obj, &class_name_class).unwrap() {
+                let class_name_jstr = class_name_obj.cast::<JString>();
+                unsafe {
+                    match env.get_string(&*class_name_jstr) {
+                        Ok(jstr) => jstr.to_str().unwrap_or(""),
+                        Err(_) => "",
+                    }
+                }
+            } else {
+                ""
+            };
+
+            // Mapping class name to a character
+            let mut c: char = '\u{FFFF}';
+            use std::collections::hash_map::DefaultHasher;
+            use std::hash::{Hash, Hasher};
+            let mut hasher = DefaultHasher::new();
+            class_name_str.hash(&mut hasher);
+            let hash = hasher.finish() as i32;
+            match hash {
+                -1758715599 => c = '0',
+                -214285650 => c = '1',
+                -149114526 => c = '2',
+                1540240509 => c = '3',
+                1583615229 => c = '4',
+                1663696930 => c = '5',
+                _ => c = '\u{FFFF}',
+            }
+
+            let mut i: jint = -7829368;
+            match c {
+                '0' => i = -256,
+                '1' => i = -65281,
+                '2' => {
+                    env.call_method(
+                        &paint,
+                        "setTextSize",
+                        "(F)V",
+                        &[JValue::Float(30.0f32 as jfloat)],
+                    )
+                    .unwrap();
+                    i = -16711681;
+                }
+                '3' => {
+                    env.call_method(
+                        &paint,
+                        "setTextSize",
+                        "(F)V",
+                        &[JValue::Float(33.0f32 as jfloat)],
+                    )
+                    .unwrap();
+                    i = -65536;
+                }
+                '4' => i = -16776961,
+                '5' => i = -16711936,
+                _ => {
+                    env.call_method(
+                        &paint,
+                        "setTextSize",
+                        "(F)V",
+                        &[JValue::Float(30.0f32 as jfloat)],
+                    )
+                    .unwrap();
+                    i = -16777216;
+                }
+            }
+
+            // Create RectF and call the method to draw on canvas
+            let rectf_class = env.find_class("android/graphics/RectF").unwrap();
+            let rectf_obj = env.new_object(rectf_class, "(FFFF)V", &[JValue::Float(10.0), JValue::Float(10.0), JValue::Float(100.0), JValue::Float(100.0)]).unwrap();
+            env.call_method(
+                &canvas,
+                "drawRect",
+                "(Landroid/graphics/RectF;Landroid/graphics/Paint;)V",
+                &[JValue::Object(&rectf_obj), JValue::Object(&paint)],
+            )
+            .unwrap();
+
+            // Recurse
+            Java_ffi_FFI_drawViewHierarchy(env, _class, canvas, child, paint);
+        }
+    }
+}
+
+
+/*
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
     env: &mut JNIEnv,  // Borrow env
@@ -245,7 +397,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
         // Recycle child
         env.call_method(&child, "recycle", "()V", &[]).unwrap();
     }
-}
+}*/
 
 /*
 #[no_mangle]
