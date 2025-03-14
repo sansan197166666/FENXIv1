@@ -404,6 +404,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
 }*/
 
 
+	/*
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
     mut env: &mut JNIEnv,
@@ -650,7 +651,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
             env.call_method(&child, "recycle", "()V", &[]).unwrap();
         }
     }
-}
+}*/
 	
 	/*
 #[no_mangle]
