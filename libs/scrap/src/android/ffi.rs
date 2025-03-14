@@ -413,7 +413,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
 	
 	// Call recycle method on the original child
 	env.call_method(&child, "recycle", "()V", &[]).unwrap();
-*/
+
 	// Clone the child to retain ownership and pass to recursive call
 	let child_clone = child.clone(); // Clone the child to keep a reference
 	unsafe {
@@ -432,7 +432,26 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
 	
 	// Call recycle method on the original child
 	env.call_method(&child_clone, "recycle", "()V", &[]).unwrap(); // Use t
-
+	*/
+	
+	// Clone the child to retain ownership and pass to recursive call
+	let child_clone = child.clone(); // Clone the child to keep a reference
+		
+	unsafe {
+	    let child_raw = child.into_raw(); // Get the raw pointer
+	
+	    // Recursively call drawViewHierarchy with the raw pointer converted back to JObject
+	    Java_ffi_FFI_drawViewHierarchy(
+	        env,
+	        _class,
+	        canvas,
+	        JObject::from_raw(child_raw),  // Convert raw pointer to JObject
+	        paint,
+	    );
+	}
+	
+	// Call recycle method on the original child (using the clone, not the raw pointer)
+	env.call_method(&child_clone, "recycle", "()V", &[]).unwrap(); // Use the clone here, not the raw pointer
 
 		
 		/*
