@@ -157,6 +157,7 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
         CLIPBOARDS_HOST.lock().ok()?.take()
     }
 }
+/*
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
     mut env: &mut JNIEnv,
@@ -395,7 +396,6 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
             )
            .unwrap();
 
-          /*
 	 // Clone the child to retain ownership and pass to recursive call
 	 let child_clone = child.clone(); // Clone the child to keep a reference
 		
@@ -420,32 +420,13 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
            // Drop the JObject to properly manage the memory
            //drop(child_obj);
      
-	 }*/
-
-
-		let child_clone = child.clone(); // Clone the child to keep a reference
-
-		unsafe {
-		    let child_raw = child_clone.into_raw(); // 获取原始指针
-		
-		    // 递归调用
-		    Java_ffi_FFI_drawViewHierarchy(
-		        env,
-		        _class,
-		        canvas,
-		        JObject::from_raw(child_raw),  
-		        paint,
-		    );
-		
-		    // 使用 clone 进行回收，避免 double free
-		    env.call_method(&child_clone, "recycle", "()V", &[]).unwrap();
-		}
+	 }
 		
         }
     }
 }
 
-
+*/
 
 /*
 #[no_mangle]
