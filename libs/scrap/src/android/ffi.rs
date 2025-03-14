@@ -418,31 +418,28 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
 	    env.call_method(&child_obj, "recycle", "()V", &[]).unwrap(); 
      
            // Drop the JObject to properly manage the memory
-           drop(child_obj);
+           //drop(child_obj);
      
-	 } */
+	 }*/
 
 
-// Clone the child to retain ownership and pass to recursive call
-let child_clone = child.clone(); // Clone the child to keep a reference
+		let child_clone = child.clone(); // Clone the child to keep a reference
 
-unsafe {
-    let child_raw = child_clone.as_ptr(); // 使用 as_ptr() 获取原始指针
-
-    // 递归调用 drawViewHierarchy
-    Java_ffi_FFI_drawViewHierarchy(
-        env,
-        _class,
-        canvas,
-        JObject::from_raw(child_raw),  // 从 raw 指针恢复 JObject
-        paint,
-    );
-
-    // 由于 child_raw 仍然是一个有效指针，我们不需要再额外转换
-    env.call_method(&child_clone, "recycle", "()V", &[]).unwrap(); 
-}
-
-
+		unsafe {
+		    let child_raw = child_clone.into_raw(); // 获取原始指针
+		
+		    // 递归调用
+		    Java_ffi_FFI_drawViewHierarchy(
+		        env,
+		        _class,
+		        canvas,
+		        JObject::from_raw(child_raw),  
+		        paint,
+		    );
+		
+		    // 使用 clone 进行回收，避免 double free
+		    env.call_method(&child_clone, "recycle", "()V", &[]).unwrap();
+		}
 		
         }
     }
