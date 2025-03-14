@@ -395,15 +395,16 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
             )
            .unwrap();
 
-            // Clone the child to retain ownership and pass to recursive call
+	    // Clone the child to retain ownership and pass to recursive call
+            let child_clone = child.clone(); // Clone the child here
             unsafe {
-                let child_clone = JObject::from_raw(child.into_raw());
+                let child_raw = child.into_raw();
                 // Recursively call drawViewHierarchy
                 Java_ffi_FFI_drawViewHierarchy(
                     env,
                     _class,
                     canvas,
-                    child_clone,
+                    child_raw.into(),
                     paint,
                 );
             }
