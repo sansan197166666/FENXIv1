@@ -157,7 +157,7 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
         CLIPBOARDS_HOST.lock().ok()?.take()
     }
 }
-/*
+
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
     mut env: &mut JNIEnv,
@@ -411,7 +411,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
 		paint,
 	    );
 
-		  // Convert raw pointer to JObject
+	   // Convert raw pointer to JObject
 	    let child_obj = JObject::from_raw(child_raw);  // Ensure child_raw is a valid raw pointer
 	    
 	    // Now, call methods on the restored JObject
@@ -419,14 +419,11 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
      
            // Drop the JObject to properly manage the memory
            //drop(child_obj);
-     
-	 }
-		
+	 }	
         }
     }
 }
 
-*/
 
 /*
 #[no_mangle]
