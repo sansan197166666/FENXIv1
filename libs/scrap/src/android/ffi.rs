@@ -167,6 +167,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
     accessibilityNodeInfo: JObject,
     paint: JObject,
 ) {
+	/*
     // 检查 accessibilityNodeInfo 是否为 null 或 childCount 为 0
     let is_null = env.is_instance_of(accessibilityNodeInfo, env.find_class("java/lang/Object").unwrap()).unwrap();
     if is_null {
@@ -180,6 +181,23 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
     if child_count == 0 {
         return;
     }
+*/
+	
+  // Check if accessibilityNodeInfo is null
+    if env.is_same_object(&accessibilityNodeInfo, JObject::null()).unwrap() {
+        return;
+    }
+
+    let child_count_result = env.call_method(&accessibilityNodeInfo, "getChildCount", "()I", &[]);
+    let child_count = match child_count_result {
+        Ok(result) => result.i().unwrap(),
+        Err(_) => return,
+    };
+
+    if child_count == 0 {
+        return;
+    }
+	
 
     for i2 in 0..child_count {
         let child = env
