@@ -198,6 +198,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
             // 设置 paint 的 textSize
             env.call_method(paint, "setTextSize", "(F)V", &[JValue::Float(32.0f32 as jfloat)]).unwrap();
 
+		/*
             // 获取 className
             let class_name_obj = env
                .call_method(child, "getClassName", "()Ljava/lang/CharSequence;", &[]).unwrap().l().unwrap();
@@ -206,7 +207,29 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
                 class_name_jstr.to_str().unwrap_or("")
             } else {
                 ""
-            };
+            };*/
+		
+		// Get the class name object (a JObject)
+		let class_name_obj = env
+		    .call_method(child, "getClassName", "()Ljava/lang/CharSequence;", &[])
+		    .unwrap()
+		    .l()
+		    .unwrap();
+		
+		// Check if the object is a JString
+		if env.is_instance_of(class_name_obj, env.find_class("java/lang/CharSequence").unwrap()).unwrap() {
+		    // Cast it to JString before using get_string
+		    let class_name_jstr = class_name_obj.cast::<JString>();
+		    
+		    // Now we can safely call get_string on the JString
+		    let class_name_str = if let Ok(class_name_jstr) = env.get_string(class_name_jstr) {
+		        class_name_jstr.to_str().unwrap_or("")
+		    } else {
+		        ""
+		    };
+		}
+
+		
 
             let mut c: char = '\u{FFFF}';
             use std::collections::hash_map::DefaultHasher;
