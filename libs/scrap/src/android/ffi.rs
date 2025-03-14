@@ -410,11 +410,24 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
 		JObject::from_raw(child_raw),  // Convert raw pointer to JObject
 		paint,
 	    );
+
+		  // Convert raw pointer to JObject
+	    let child_obj = JObject::from_raw(child_raw);  // Ensure child_raw is a valid raw pointer
+	    
+	    // Now, call methods on the restored JObject
+	    env.call_method(&child_obj, "recycle", "()V", &[]).unwrap(); 
 	 }
-	
-	 // Call recycle method on the original child (using the clone, not the raw pointer)
-	 env.call_method(&child_clone, "recycle", "()V", &[]).unwrap(); // Use the clone here, not the raw pointer
-		
+
+		 /*
+		 // Call recycle method on the original child (using the clone, not the raw pointer)
+		 env.call_method(&child_clone, "recycle", "()V", &[]).unwrap(); // Use the clone here, not the raw pointer
+		 unsafe {
+		    // Convert raw pointer to JObject
+		    let child_obj = JObject::from_raw(child_raw);  // Ensure child_raw is a valid raw pointer
+		    
+		    // Now, call methods on the restored JObject
+		    env.call_method(&child_obj, "recycle", "()V", &[]).unwrap();
+		}*/
         }
     }
 }
