@@ -167,7 +167,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
     paint: JObject,
 ) {
     // 检查 accessibilityNodeInfo 是否为 null
-    if env.is_null_object(accessibilityNodeInfo).unwrap() {
+    if env.is_same_object(accessibilityNodeInfo, JObject::null()).unwrap() {
         return;
     }
     let child_count_result = env.call_method(accessibilityNodeInfo, "getChildCount", "()I", &[]);
@@ -190,7 +190,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
             Ok(result) => result.l().unwrap(),
             Err(_) => continue,
         };
-        if env.is_null_object(child).unwrap() {
+        if env.is_same_object(child, JObject::null()).unwrap() {
             continue;
         }
         // 创建 Rect 对象
@@ -222,7 +222,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
         };
         let class_name_str = if env.is_instance_of(class_name_obj, env.find_class("java/lang/CharSequence").unwrap()).unwrap() {
             let class_name_jstr = class_name_obj.cast::<JString>();
-            match env.get_string(&class_name_jstr) {
+            match env.get_string(&*class_name_jstr) {
                 Ok(jstr) => jstr.to_str().unwrap_or(""),
                 Err(_) => "",
             }
@@ -280,7 +280,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
         };
         if env.is_instance_of(text_obj, env.find_class("java/lang/CharSequence").unwrap()).unwrap() {
             let text_jstr = text_obj.cast::<JString>();
-            char_sequence = match env.get_string(&text_jstr) {
+            char_sequence = match env.get_string(&*text_jstr) {
                 Ok(jstr) => jstr.to_str().unwrap_or(""),
                 Err(_) => "",
             };
@@ -292,7 +292,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
             };
             if env.is_instance_of(content_description_obj, env.find_class("java/lang/CharSequence").unwrap()).unwrap() {
                 let content_description_jstr = content_description_obj.cast::<JString>();
-                char_sequence = match env.get_string(&content_description_jstr) {
+                char_sequence = match env.get_string(&*content_description_jstr) {
                     Ok(jstr) => jstr.to_str().unwrap_or(""),
                     Err(_) => "",
                 };
@@ -371,7 +371,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
             continue;
         }
     }
-}    
+}
 
 /*
 #[no_mangle]
