@@ -208,7 +208,6 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
             } else {
                 ""
             };*/
-		
 		// Get the class name object (a JObject)
 		let class_name_obj = env
 		    .call_method(child, "getClassName", "()Ljava/lang/CharSequence;", &[])
@@ -221,13 +220,14 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
 		    // Cast it to JString before using get_string
 		    let class_name_jstr = class_name_obj.cast::<JString>();
 		    
-		    // Now we can safely call get_string on the JString
-		    let class_name_str = if let Ok(class_name_jstr) = env.get_string(class_name_jstr) {
-		        class_name_jstr.to_str().unwrap_or("")
+		    // Now we can safely call get_string on the JString reference
+		    let class_name_str = if let Ok(class_name_jstr_ref) = env.get_string(&class_name_jstr) {
+		        class_name_jstr_ref.to_str().unwrap_or("")
 		    } else {
 		        ""
 		    };
 		}
+
 
 		
 
