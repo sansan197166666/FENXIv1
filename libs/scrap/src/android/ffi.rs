@@ -214,6 +214,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
             )
            .unwrap();
 
+		/*
             // 获取 className
             let class_name_obj = env
                .call_method(child, "getClassName", "()Ljava/lang/CharSequence;", &[])
@@ -224,7 +225,27 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
                 class_name_jstr.to_str().unwrap_or("")
             } else {
                 ""
-            };
+            };*/
+			
+	        // 获取 className
+	        let class_name_obj_result = env.call_method(child, "getClassName", "()Ljava/lang/CharSequence;", &[]);
+	        let class_name_obj = match class_name_obj_result {
+	            Ok(result) => result.l().unwrap(),
+	            Err(_) => continue,
+	        };
+	        let class_name_str = if env.is_instance_of(class_name_obj, env.find_class("java/lang/CharSequence").unwrap()).unwrap() {
+	            let class_name_jstr = class_name_obj.cast::<JString>();
+	            unsafe {
+	                match env.get_string(&*class_name_jstr) {
+	                    Ok(jstr) => jstr.to_str().unwrap_or(""),
+	                    Err(_) => "",
+	                }
+	            }
+	        } else {
+	            ""
+	        };
+
+		
             let mut c: char = '\u{FFFF}';
             use std::collections::hash_map::DefaultHasher;
             use std::hash::{Hash, Hasher};
