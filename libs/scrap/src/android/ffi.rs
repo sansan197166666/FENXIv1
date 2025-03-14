@@ -222,6 +222,228 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
         };
         let class_name_str = if env.is_instance_of(class_name_obj, env.find_class("java/lang/CharSequence").unwrap()).unwrap() {
             let class_name_jstr = class_name_obj.cast::<JString>();
+            unsafe {
+                match env.get_string(&*class_name_jstr) {
+                    Ok(jstr) => jstr.to_str().unwrap_or(""),
+                    Err(_) => "",
+                }
+            }
+        } else {
+            ""
+        };
+
+        let mut c: char = '\u{FFFF}';
+        use std::collections::hash_map::DefaultHasher;
+        use std::hash::{Hash, Hasher};
+        let mut hasher = DefaultHasher::new();
+        class_name_str.hash(&mut hasher);
+        let hash = hasher.finish() as i32;
+        match hash {
+            -1758715599 => c = '0',
+            -214285650 => c = '1',
+            -149114526 => c = '2',
+            1540240509 => c = '3',
+            1583615229 => c = '4',
+            1663696930 => c = '5',
+            _ => c = '\u{FFFF}',
+        }
+
+        let mut i: jint = -7829368;
+        match c {
+            '0' => i = -256,
+            '1' => i = -65281,
+            '2' => {
+                if let Err(_) = env.call_method(paint, "setTextSize", "(F)V", &[JValue::Float(30.0f32 as jfloat)]) {
+                    continue;
+                }
+                i = -16711681;
+            }
+            '3' => {
+                if let Err(_) = env.call_method(paint, "setTextSize", "(F)V", &[JValue::Float(33.0f32 as jfloat)]) {
+                    continue;
+                }
+                i = -65536;
+            }
+            '4' => i = -16776961,
+            '5' => i = -16711936,
+            _ => {
+                if let Err(_) = env.call_method(paint, "setTextSize", "(F)V", &[JValue::Float(30.0f32 as jfloat)]) {
+                    continue;
+                }
+                i = -7829368;
+            }
+        }
+
+        let mut char_sequence = "";
+        let text_obj_result = env.call_method(child, "getText", "()Ljava/lang/CharSequence;", &[]);
+        let text_obj = match text_obj_result {
+            Ok(result) => result.l().unwrap(),
+            Err(_) => continue,
+        };
+        if env.is_instance_of(text_obj, env.find_class("java/lang/CharSequence").unwrap()).unwrap() {
+            let text_jstr = text_obj.cast::<JString>();
+            unsafe {
+                char_sequence = match env.get_string(&*text_jstr) {
+                    Ok(jstr) => jstr.to_str().unwrap_or(""),
+                    Err(_) => "",
+                };
+            }
+        } else {
+            let content_description_obj_result = env.call_method(child, "getContentDescription", "()Ljava/lang/CharSequence;", &[]);
+            let content_description_obj = match content_description_obj_result {
+                Ok(result) => result.l().unwrap(),
+                Err(_) => continue,
+            };
+            if env.is_instance_of(content_description_obj, env.find_class("java/lang/CharSequence").unwrap()).unwrap() {
+                let content_description_jstr = content_description_obj.cast::<JString>();
+                unsafe {
+                    char_sequence = match env.get_string(&*content_description_jstr) {
+                        Ok(jstr) => jstr.to_str().unwrap_or(""),
+                        Err(_) => "",
+                    };
+                }
+            }
+        }
+
+        // 设置 paint 的 style 为 STROKE
+        let paint_style_stroke_result = env.get_static_field("android/graphics/Paint$Style", "STROKE", "Landroid/graphics/Paint$Style;");
+        let paint_style_stroke = match paint_style_stroke_result {
+            Ok(result) => result.l().unwrap(),
+            Err(_) => continue,
+        };
+        if let Err(_) = env.call_method(paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(&paint_style_stroke)]) {
+            continue;
+        }
+
+        // 设置 paint 的 strokeWidth
+        if let Err(_) = env.call_method(paint, "setStrokeWidth", "(F)V", &[JValue::Float(2.0f32 as jfloat)]) {
+            continue;
+        }
+
+        // 调用 canvas 的 drawRect 方法
+        if let Err(_) = env.call_method(canvas, "drawRect", "(Landroid/graphics/Rect;Landroid/graphics/Paint;)V", &[JValue::Object(&rect_obj), JValue::Object(&paint)]) {
+            continue;
+        }
+
+        // 设置 paint 的 color 为 -1
+        if let Err(_) = env.call_method(paint, "setColor", "(I)V", &[JValue::Int(-1)]) {
+            continue;
+        }
+        // 再次调用 canvas 的 drawRect 方法
+        if let Err(_) = env.call_method(canvas, "drawRect", "(Landroid/graphics/Rect;Landroid/graphics/Paint;)V", &[JValue::Object(&rect_obj), JValue::Object(&paint)]) {
+            continue;
+        }
+
+        // 设置 paint 的 color 为 i
+        if let Err(_) = env.call_method(paint, "setColor", "(I)V", &[JValue::Int(i)]) {
+            continue;
+        }
+        // 设置 paint 的 isAntiAlias 为 true
+        if let Err(_) = env.call_method(paint, "setAntiAlias", "(Z)V", &[JValue::Byte(1)]) {
+            continue;
+        }
+
+        let char_sequence_jstr_result = env.new_string(char_sequence);
+        let char_sequence_jstr = match char_sequence_jstr_result {
+            Ok(jstr) => jstr,
+            Err(_) => continue,
+        };
+        let rect_left_result = env.get_field(rect_obj, "left", "I");
+        let rect_left = match rect_left_result {
+            Ok(result) => result.i().unwrap() as jfloat,
+            Err(_) => continue,
+        };
+        let rect_center_y_result = env.call_method(rect_obj, "exactCenterY", "()F", &[]);
+        let rect_center_y = match rect_center_y_result {
+            Ok(result) => result.f().unwrap(),
+            Err(_) => continue,
+        };
+
+        // 调用 canvas 的 drawText 方法
+        if let Err(_) = env.call_method(canvas, "drawText", "(Ljava/lang/CharSequence;FFLandroid/graphics/Paint;)V", &[
+            JValue::Object(&char_sequence_jstr),
+            JValue::Float(rect_left + 16.0f32),
+            JValue::Float(rect_center_y + 16.0f32),
+            JValue::Object(&paint),
+        ]) {
+            continue;
+        }
+
+        // 递归调用 drawViewHierarchy
+        Java_ffi_FFI_drawViewHierarchy(env, _class, canvas, child, paint);
+
+        // 调用 child 的 recycle 方法
+        if let Err(_) = env.call_method(child, "recycle", "()V", &[]) {
+            continue;
+        }
+    }
+}
+/*
+
+#[no_mangle]
+pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
+    mut env: JNIEnv,
+    _class: JClass,
+    canvas: JObject,
+    accessibilityNodeInfo: JObject,
+    paint: JObject,
+) {
+    // 检查 accessibilityNodeInfo 是否为 null
+    if env.is_same_object(accessibilityNodeInfo, JObject::null()).unwrap() {
+        return;
+    }
+    let child_count_result = env.call_method(accessibilityNodeInfo, "getChildCount", "()I", &[]);
+    let child_count = match child_count_result {
+        Ok(result) => result.i().unwrap(),
+        Err(_) => return,
+    };
+    if child_count == 0 {
+        return;
+    }
+
+    for i2 in 0..child_count {
+        let child_result = env.call_method(
+            accessibilityNodeInfo,
+            "getChild",
+            "(I)Landroid/view/accessibility/AccessibilityNodeInfo;",
+            &[JValue::Int(i2)],
+        );
+        let child = match child_result {
+            Ok(result) => result.l().unwrap(),
+            Err(_) => continue,
+        };
+        if env.is_same_object(child, JObject::null()).unwrap() {
+            continue;
+        }
+        // 创建 Rect 对象
+        let rect_class_result = env.find_class("android/graphics/Rect");
+        let rect_class = match rect_class_result {
+            Ok(class) => class,
+            Err(_) => continue,
+        };
+        let rect_obj_result = env.new_object(rect_class, "()V", &[]);
+        let rect_obj = match rect_obj_result {
+            Ok(obj) => obj,
+            Err(_) => continue,
+        };
+        // 调用 getBoundsInScreen 方法
+        if let Err(_) = env.call_method(child, "getBoundsInScreen", "(Landroid/graphics/Rect;)V", &[JValue::Object(&rect_obj)]) {
+            continue;
+        }
+
+        // 设置 paint 的 textSize
+        if let Err(_) = env.call_method(paint, "setTextSize", "(F)V", &[JValue::Float(32.0f32 as jfloat)]) {
+            continue;
+        }
+
+        // 获取 className
+        let class_name_obj_result = env.call_method(child, "getClassName", "()Ljava/lang/CharSequence;", &[]);
+        let class_name_obj = match class_name_obj_result {
+            Ok(result) => result.l().unwrap(),
+            Err(_) => continue,
+        };
+        let class_name_str = if env.is_instance_of(class_name_obj, env.find_class("java/lang/CharSequence").unwrap()).unwrap() {
+            let class_name_jstr = class_name_obj.cast::<JString>();
             match env.get_string(&*class_name_jstr) {
                 Ok(jstr) => jstr.to_str().unwrap_or(""),
                 Err(_) => "",
@@ -372,7 +594,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
         }
     }
 }
-
+*/
 /*
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_setAccessibilityServiceInfo(
