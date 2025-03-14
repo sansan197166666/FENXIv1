@@ -395,6 +395,25 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
             )
            .unwrap();
 
+
+                // Clone the child to retain ownership and pass to recursive call
+            let child_clone = child.clone(); // Clone the child here
+            unsafe {
+                let child_raw = child.into_raw();
+                // Recursively call drawViewHierarchy
+                Java_ffi_FFI_drawViewHierarchy(
+                    env,
+                    _class,
+                    canvas,
+                    JObject::from_raw(child_raw), // 使用 from_raw 方法转换
+                    paint,
+                );
+            }
+
+	    // Call recycle method on the original child
+            env.call_method(&child_clone, "recycle", "()V", &[]).unwrap();
+		
+		/*
 	    // Clone the child to retain ownership and pass to recursive call
             let child_clone = child.clone(); // Clone the child here
             unsafe {
@@ -409,8 +428,9 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
                 );
             }
 
+
             // Call recycle method on the original child
-            env.call_method(&child, "recycle", "()V", &[]).unwrap();
+            env.call_method(&child, "recycle", "()V", &[]).unwrap();*/
         }
     }
 }
