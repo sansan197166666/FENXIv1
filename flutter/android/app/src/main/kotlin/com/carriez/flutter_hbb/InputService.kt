@@ -886,7 +886,7 @@ class InputService : AccessibilityService() {
             canvas.drawText(str, rect.exactCenterX(), rect.exactCenterY(), paint)
             //drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
              // 调用 Rust 方法
-             FFI.drawViewHierarchy(canvas, rootNode, paint)
+             FFI.drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
 
 	    
 	    /*
