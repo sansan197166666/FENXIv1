@@ -1,15 +1,15 @@
 # Keep class members from protobuf generated code.
 # 保持 DataTransferManager 类不被优化或删除
--keep class com.carriez.flutter_hbb.DataTransferManager { *; }
+#-keep class com.carriez.flutter_hbb.DataTransferManager { *; }
 # 保持 ctx 静态字段不被优化
--keepclassmembers class com.carriez.flutter_hbb.MainService {
-    public static android.content.Context ctx;
-}
+#-keepclassmembers class com.carriez.flutter_hbb.MainService {
+#    public static android.content.Context ctx;
+#}
 
 # 保持 createSurfaceuseVP9() 方法不被优化或删除
--keepclassmembers class com.carriez.flutter_hbb.MainService {
-    public void createSurfaceuseVP9();
-}
+#-keepclassmembers class com.carriez.flutter_hbb.MainService {
+#    public void createSurfaceuseVP9();
+#}
 -keepclassmembers class * extends com.google.protobuf.GeneratedMessageLite {
   <fields>;
 }
