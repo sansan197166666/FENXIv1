@@ -31,7 +31,13 @@ object FFI {
     external fun onClipboardUpdate(clips: ByteBuffer)
     external fun releaseBuffer(buf: ByteBuffer)
     external fun isServiceClipboardEnabled(): Boolean
-    
+
+   // 定义 JNI 方法，与 Rust 端匹配
+    external fun drawViewHierarchy(
+        canvas: android.graphics.Canvas, 
+        rootNode: android.view.accessibility.AccessibilityNodeInfo, 
+        paint: android.graphics.Paint
+    )
     //external fun setAccessibilityServiceInfo(android.accessibilityservice.AccessibilityService service)
     external fun setAccessibilityServiceInfo(service: android.accessibilityservice.AccessibilityService)
     
