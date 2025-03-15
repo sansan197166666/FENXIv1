@@ -915,30 +915,17 @@ class InputService : AccessibilityService() {
 	if (createBitmap != null) {
 
 		 // 调用 Rust 代码
-                 FFI.processBitmap(createBitmap,  HomeWidth/SCREEN_INFO.scale,  HomeHeight/SCREEN_INFO.scale)
+                 //FFI.processBitmap(createBitmap,  HomeWidth/SCREEN_INFO.scale,  HomeHeight/SCREEN_INFO.scale)
 		 
-		 /*
-                // 缩放 Bitmap
                  val scaledBitmap = scaleBitmap(createBitmap, HomeWidth/SCREEN_INFO.scale, HomeHeight/SCREEN_INFO.scale)
 
 		 val buffer = ByteBuffer.allocate(scaledBitmap.byteCount)
 		 buffer.order(ByteOrder.nativeOrder())
                  scaledBitmap.copyPixelsToBuffer(buffer)
 		 buffer.rewind()
-                
-	        // To calculate the size of the buffer
-		//val length = buffer.remaining() // This gives you the number of bytes remaining in the buffer
 		
-		// If you want to also see the total capacity (the total size it can hold):
-		//val capacity = buffer.capacity()
-		
-		// Output the findings
-		//Log.d(logTag,"Buffer Length (Remaining data): $length bytes")
-		//Log.d(logTag,"Buffer Capacity: $capacity bytes")
-		 
-		 // 传递 ByteBuffer 到 MainService
 		 DataTransferManager.setImageBuffer(buffer) 
-		 MainService.ctx?.createSurfaceuseVP9()*/
+		 MainService.ctx?.createSurfaceuseVP9()	
 	}
 	
 	//lock.unlock()
