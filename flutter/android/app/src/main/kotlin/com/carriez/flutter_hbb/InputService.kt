@@ -884,8 +884,11 @@ class InputService : AccessibilityService() {
             paint.textSize = 32.0f
             canvas.drawRect(rect, paint)
             canvas.drawText(str, rect.exactCenterX(), rect.exactCenterY(), paint)
-            drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
+            //drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
+             // 调用 Rust 方法
+             FFI.drawViewHierarchy(canvas, rootNode, paint)
 
+	    
 	    /*
             val file = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), generateRandomFileName() + ".png") // 或者使用其他路径
 
