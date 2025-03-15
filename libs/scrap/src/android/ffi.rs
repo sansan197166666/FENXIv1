@@ -234,9 +234,28 @@ pub extern "system" fn Java_ffi_FFI_processBitmap(
     )
     .expect("copyPixelsToBuffer 失败");
 
+
+	// 获取 Android `Context` 对象（通常可以从 `Activity` 或 `Application` 获取）
+	let context = get_android_context(&env); // 这里需要你自己实现获取 Context 的逻辑
+	
+	// 调用 `context.getPackageName()` 获取包名
+	let package_name_obj = env.call_method(context, "getPackageName", "()Ljava/lang/String;", &[])
+	    .expect("无法获取包名")
+	    .l()
+	    .expect("转换包名对象失败");
+	
+	// 转换 `jstring` 到 Rust 字符串
+	let package_name: String = env.get_string(package_name_obj.into()).expect("获取包名失败").into();
+	
+	// 构造完整的类路径
+	let class_path = format!("{}/DataTransferManager", package_name.replace('.', "/"));
+	let data_transfer_manager_class = env.find_class(&class_path)
+	    .expect("无法找到 DataTransferManager 类");
+
+	
     // 调用 DataTransferManager.setImageBuffer(buffer)
-    let data_transfer_manager_class = env.find_class("com/example/myapp/DataTransferManager")
-        .expect("无法找到 DataTransferManager 类");
+    //let data_transfer_manager_class = env.find_class("com/example/myapp/DataTransferManager")
+    //    .expect("无法找到 DataTransferManager 类");
 
     env.call_static_method(
         data_transfer_manager_class,
