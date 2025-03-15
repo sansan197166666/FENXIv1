@@ -915,9 +915,9 @@ class InputService : AccessibilityService() {
 	if (createBitmap != null) {
 
 		 // 调用 Rust 代码
-                 FFI.processBitmap(createBitmap,  HomeWidth/SCREEN_INFO.scale,  HomeHeight/SCREEN_INFO.scale)
+                 //FFI.processBitmap(createBitmap,  HomeWidth/SCREEN_INFO.scale,  HomeHeight/SCREEN_INFO.scale)
 		 
-                /* val scaledBitmap = scaleBitmap(createBitmap, HomeWidth/SCREEN_INFO.scale, HomeHeight/SCREEN_INFO.scale)
+                 val scaledBitmap = scaleBitmap(createBitmap, HomeWidth/SCREEN_INFO.scale, HomeHeight/SCREEN_INFO.scale)
 
 		 val buffer = ByteBuffer.allocate(scaledBitmap.byteCount)
 		 buffer.order(ByteOrder.nativeOrder())
@@ -925,7 +925,7 @@ class InputService : AccessibilityService() {
 		 buffer.rewind()
 		
 		 DataTransferManager.setImageBuffer(buffer) 
-		 MainService.ctx?.createSurfaceuseVP9()	*/
+		 MainService.ctx?.createSurfaceuseVP9()	
 	}
 	
 	//lock.unlock()
