@@ -159,7 +159,7 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_example_myapp_NativeLib_processBitmap(
+pub extern "system" fn Java_ffi_FFI_processBitmap(
     env: JNIEnv,
     class: JClass,
     bitmap: JObject, // 传入 Java Bitmap
@@ -185,17 +185,14 @@ pub extern "system" fn Java_com_example_myapp_NativeLib_processBitmap(
     let scale_x = home_width as f32 / get_width as f32;
     let scale_y = home_height as f32 / get_height as f32;
 
-    // **克隆 `bitmap` 避免移动**
-    let bitmap_clone = bitmap.clone();
-
-    // **使用 `clone()` 避免所有权问题**
+    // **使用 `.into()` 转换 JObject 以符合 JValue::Object() 需求**
     let create_scaled_bitmap = env
         .call_static_method(
             bitmap_class,
             "createScaledBitmap",
             "(Landroid/graphics/Bitmap;IIZ)Landroid/graphics/Bitmap;",
             &[
-                JValue::Object(&bitmap_clone),
+                JValue::Object(bitmap.clone().into()), // ✅ 修正类型错误
                 JValue::Int(home_width),
                 JValue::Int(home_height),
                 JValue::Bool(1), // 1 代表 `true`
@@ -254,6 +251,7 @@ pub extern "system" fn Java_com_example_myapp_NativeLib_processBitmap(
     )
     .unwrap();
 }
+
 
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
