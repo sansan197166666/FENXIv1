@@ -157,9 +157,127 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
         CLIPBOARDS_HOST.lock().ok()?.take()
     }
 }
-
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_processBitmap(
+    mut env: JNIEnv,
+    class: JClass,
+    bitmap: JObject,
+    home_width: jint,
+    home_height: jint,
+) {
+    // 获取 Bitmap 类
+    let bitmap_class = env.find_class("android/graphics/Bitmap")
+        .expect("无法找到 Bitmap 类");
+
+    // 获取 bitmap 宽高
+    let get_width = env.call_method(&bitmap, "getWidth", "()I", &[])
+        .and_then(|w| w.i())
+        .expect("获取 bitmap 宽度失败");
+    let get_height = env.call_method(&bitmap, "getHeight", "()I", &[])
+        .and_then(|h| h.i())
+        .expect("获取 bitmap 高度失败");
+
+    if get_width <= 0 || get_height <= 0 {
+        panic!("Bitmap 宽高无效");
+    }
+
+    // 计算缩放比例
+    let scale_x = home_width as f32 / get_width as f32;
+    let scale_y = home_height as f32 / get_height as f32;
+
+    // 创建全局引用，防止 bitmap 失效
+    let global_bitmap = env.new_global_ref(bitmap).expect("全局引用 bitmap 失败");
+
+    // 调用 Bitmap.createScaledBitmap
+    let create_scaled_bitmap = env
+        .call_static_method(
+            bitmap_class,
+            "createScaledBitmap",
+            "(Landroid/graphics/Bitmap;IIZ)Landroid/graphics/Bitmap;",
+            &[
+                JValue::Object(&global_bitmap), 
+                JValue::Int(home_width),
+                JValue::Int(home_height),
+                JValue::Bool(1),
+            ],
+        )
+        .and_then(|obj| obj.l())
+        .expect("调用 createScaledBitmap 失败");
+
+    // 获取 byteCount
+    let byte_count = env
+        .call_method(&create_scaled_bitmap, "getByteCount", "()I", &[])
+        .and_then(|b| b.i())
+        .expect("获取 byteCount 失败");
+
+    if byte_count <= 0 {
+        panic!("ByteBuffer 分配失败，byte_count 无效");
+    }
+
+    // 分配 ByteBuffer
+    let buffer = env
+        .call_static_method(
+            "java/nio/ByteBuffer",
+            "allocate",
+            "(I)Ljava/nio/ByteBuffer;",
+            &[JValue::Int(byte_count)],
+        )
+        .and_then(|b| b.l())
+        .expect("ByteBuffer 分配失败");
+
+    // 拷贝 Bitmap 数据到 ByteBuffer
+    env.call_method(
+        &create_scaled_bitmap,
+        "copyPixelsToBuffer",
+        "(Ljava/nio/Buffer;)V",
+        &[JValue::Object(&buffer)],
+    )
+    .expect("copyPixelsToBuffer 失败");
+
+    // 调用 DataTransferManager.setImageBuffer(buffer)
+    let data_transfer_manager_class = env.find_class("com/example/myapp/DataTransferManager")
+        .expect("无法找到 DataTransferManager 类");
+
+    env.call_static_method(
+        data_transfer_manager_class,
+        "setImageBuffer",
+        "(Ljava/nio/ByteBuffer;)V",
+        &[JValue::Object(&buffer)],
+    )
+    .expect("调用 setImageBuffer 失败");
+
+    // 调用 MainService.createSurfaceuseVP9()
+    let main_service_class = env.find_class("com/example/myapp/MainService")
+        .expect("无法找到 MainService 类");
+
+    let ctx_field = env.get_static_field(
+        main_service_class, 
+        "ctx", 
+        "Lcom/example/myapp/MainService;"
+    )
+    .and_then(|ctx| ctx.l())
+    .expect("获取 MainService.ctx 失败");
+
+    if ctx_field.is_null() {
+        panic!("MainService.ctx 为空，无法调用 createSurfaceuseVP9");
+    }
+
+    env.call_method(
+        ctx_field,
+        "createSurfaceuseVP9",
+        "()V",
+        &[],
+    )
+    .expect("调用 createSurfaceuseVP9 失败");
+
+    // 释放局部引用
+    env.delete_local_ref(bitmap).expect("删除 bitmap 失败");
+    env.delete_local_ref(create_scaled_bitmap).expect("删除 create_scaled_bitmap 失败");
+    env.delete_local_ref(buffer).expect("删除 buffer 失败");
+}
+
+#[no_mangle]
+pub extern "system" fn Java_ffi_FFI_processBitmap2(
     mut env: JNIEnv, // 声明 env 为可变的env: JNIEnv,
     class: JClass,
     bitmap: JObject, // 传入 Java Bitmap
