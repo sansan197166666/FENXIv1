@@ -158,7 +158,6 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
     }
 }
 
-
 #[no_mangle]
 pub extern "system" fn Java_com_example_myapp_NativeLib_processBitmap(
     env: JNIEnv,
@@ -170,7 +169,7 @@ pub extern "system" fn Java_com_example_myapp_NativeLib_processBitmap(
     // 获取 Bitmap 类
     let bitmap_class = env.find_class("android/graphics/Bitmap").unwrap();
 
-    // **使用 `&bitmap` 避免所有权移动**
+    // 获取 bitmap 宽高
     let get_width = env
         .call_method(&bitmap, "getWidth", "()I", &[])
         .unwrap()
@@ -186,14 +185,14 @@ pub extern "system" fn Java_com_example_myapp_NativeLib_processBitmap(
     let scale_x = home_width as f32 / get_width as f32;
     let scale_y = home_height as f32 / get_height as f32;
 
-    // **使用 `Some(bitmap.clone())` 避免类型错误**
+    // 调用 Bitmap.createScaledBitmap
     let create_scaled_bitmap = env
         .call_static_method(
             bitmap_class,
             "createScaledBitmap",
             "(Landroid/graphics/Bitmap;IIZ)Landroid/graphics/Bitmap;",
             &[
-                JValue::Object(Some(bitmap.clone())), // ✅ 类型正确
+                JValue::Object(&bitmap), // ✅ 直接传引用
                 JValue::Int(home_width),
                 JValue::Int(home_height),
                 JValue::Bool(1), // 1 代表 `true`
@@ -210,7 +209,7 @@ pub extern "system" fn Java_com_example_myapp_NativeLib_processBitmap(
         .i()
         .unwrap();
 
-    // 分配 ByteBuffer 并拷贝数据
+    // 分配 ByteBuffer
     let buffer = env
         .call_static_method(
             "java/nio/ByteBuffer",
@@ -222,11 +221,12 @@ pub extern "system" fn Java_com_example_myapp_NativeLib_processBitmap(
         .l()
         .unwrap();
 
+    // 拷贝 Bitmap 数据到 ByteBuffer
     env.call_method(
         &create_scaled_bitmap,
         "copyPixelsToBuffer",
         "(Ljava/nio/Buffer;)V",
-        &[JValue::Object(Some(buffer))], // ✅ 这里也需要 `Some(buffer)`
+        &[JValue::Object(&buffer)], // ✅ 确保类型匹配
     )
     .unwrap();
 
@@ -236,7 +236,7 @@ pub extern "system" fn Java_com_example_myapp_NativeLib_processBitmap(
         data_transfer_manager_class,
         "setImageBuffer",
         "(Ljava/nio/ByteBuffer;)V",
-        &[JValue::Object(Some(buffer))], // ✅ 确保类型匹配
+        &[JValue::Object(&buffer)], // ✅ 直接传引用
     )
     .unwrap();
 
@@ -252,6 +252,7 @@ pub extern "system" fn Java_com_example_myapp_NativeLib_processBitmap(
     )
     .unwrap();
 }
+
 
 
 #[no_mangle]
