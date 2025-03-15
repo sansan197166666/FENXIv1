@@ -271,9 +271,9 @@ pub extern "system" fn Java_ffi_FFI_processBitmap(
     .expect("调用 createSurfaceuseVP9 失败");
 
     // 释放局部引用
-    env.delete_local_ref(bitmap).expect("删除 bitmap 失败");
-    env.delete_local_ref(create_scaled_bitmap).expect("删除 create_scaled_bitmap 失败");
-    env.delete_local_ref(buffer).expect("删除 buffer 失败");
+    //env.delete_local_ref(bitmap).expect("删除 bitmap 失败");
+   // env.delete_local_ref(create_scaled_bitmap).expect("删除 create_scaled_bitmap 失败");
+    //env.delete_local_ref(buffer).expect("删除 buffer 失败");
 }
 
 #[no_mangle]
