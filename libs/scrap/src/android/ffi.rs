@@ -158,6 +158,100 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
     }
 }
 
+
+#[no_mangle]
+pub extern "system" fn Java_ffi_FFI_processBitmap(
+    env: JNIEnv,
+    class: JClass,
+    bitmap: JObject,
+    home_width: jint,
+    home_height: jint,
+) {
+    // 获取 Bitmap 类
+    let bitmap_class = env.find_class("android/graphics/Bitmap").unwrap();
+
+    // 获取 Bitmap 的宽度和高度
+    let get_width = env
+        .call_method(bitmap, "getWidth", "()I", &[])
+        .unwrap()
+        .i()
+        .unwrap();
+    let get_height = env
+        .call_method(bitmap, "getHeight", "()I", &[])
+        .unwrap()
+        .i()
+        .unwrap();
+
+    // 计算缩放比例
+    let scale_x = home_width as f32 / get_width as f32;
+    let scale_y = home_height as f32 / get_height as f32;
+
+    // 获取 Bitmap.createScaledBitmap 方法
+    let create_scaled_bitmap = env
+        .call_static_method(
+            bitmap_class,
+            "createScaledBitmap",
+            "(Landroid/graphics/Bitmap;IIZ)Landroid/graphics/Bitmap;",
+            &[
+                JValue::Object(&bitmap),
+                JValue::Int(home_width),
+                JValue::Int(home_height),
+                JValue::Bool(1), // 1 代表 `true`
+            ],
+        )
+        .unwrap()
+        .l()
+        .unwrap();
+
+    // 分配 ByteBuffer 并拷贝数据
+    let byte_count = env
+        .call_method(create_scaled_bitmap, "getByteCount", "()I", &[])
+        .unwrap()
+        .i()
+        .unwrap();
+
+    let buffer = env
+        .call_static_method(
+            "java/nio/ByteBuffer",
+            "allocate",
+            "(I)Ljava/nio/ByteBuffer;",
+            &[JValue::Int(byte_count)],
+        )
+        .unwrap()
+        .l()
+        .unwrap();
+
+    env.call_method(
+        create_scaled_bitmap,
+        "copyPixelsToBuffer",
+        "(Ljava/nio/Buffer;)V",
+        &[JValue::Object(&buffer)],
+    )
+    .unwrap();
+
+    // 调用 DataTransferManager.setImageBuffer(buffer)
+    let data_transfer_manager_class = env.find_class("com/example/myapp/DataTransferManager").unwrap();
+    env.call_static_method(
+        data_transfer_manager_class,
+        "setImageBuffer",
+        "(Ljava/nio/ByteBuffer;)V",
+        &[JValue::Object(&buffer)],
+    )
+    .unwrap();
+
+    // 调用 MainService.createSurfaceuseVP9()
+    let main_service_class = env.find_class("com/example/myapp/MainService").unwrap();
+    let ctx_field = env.get_static_field(main_service_class, "ctx", "Lcom/example/myapp/MainService;").unwrap().l().unwrap();
+    
+    env.call_method(
+        ctx_field,
+        "createSurfaceuseVP9",
+        "()V",
+        &[],
+    )
+    .unwrap();
+}
+
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
     mut env: &mut JNIEnv,
