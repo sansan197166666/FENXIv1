@@ -2,7 +2,7 @@ package com.carriez.flutter_hbb
 
 import java.nio.ByteBuffer
 
-/*
+
 object DataTransferManager {
     private var imageBuffer: ByteBuffer? = null
 
@@ -14,8 +14,8 @@ object DataTransferManager {
         return imageBuffer
     }
 }
-*/
 
+/*
 class DataTransferManager {
     companion object {
         private var imageBuffer: ByteBuffer? = null
@@ -30,4 +30,4 @@ class DataTransferManager {
             return imageBuffer
         }
     }
-}
+}*/
