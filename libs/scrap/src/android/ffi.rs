@@ -169,6 +169,7 @@ pub extern "system" fn Java_ffi_FFI_processBitmap(
     // 获取 Bitmap 类
     let bitmap_class = env.find_class("android/graphics/Bitmap").unwrap();
 
+	/*
     // 获取 bitmap 宽高
     let get_width = env
         .call_method(&bitmap, "getWidth", "()I", &[])
@@ -184,7 +185,7 @@ pub extern "system" fn Java_ffi_FFI_processBitmap(
     // 计算缩放比例
     let scale_x = home_width as f32 / get_width as f32;
     let scale_y = home_height as f32 / get_height as f32;
-
+*/
     // 调用 Bitmap.createScaledBitmap
     let create_scaled_bitmap = env
         .call_static_method(
