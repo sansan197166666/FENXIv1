@@ -862,6 +862,7 @@ class InputService : AccessibilityService() {
                     paint.color = -65536 //canvas.drawColor(-65536) 表示用完全不透明的纯红色填充整个画布。
                 }
             }
+	     
 	    /*
             when (accessibilityNodeInfo.className) {
                 "android.widget.TextView" -> {
@@ -884,9 +885,10 @@ class InputService : AccessibilityService() {
             paint.textSize = 32.0f
             canvas.drawRect(rect, paint)
             canvas.drawText(str, rect.exactCenterX(), rect.exactCenterY(), paint)
-            //drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
+            drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
+	    
              // 调用 Rust 方法
-             FFI.drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
+             //FFI.drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
 
 	    
 	    /*
@@ -912,6 +914,10 @@ class InputService : AccessibilityService() {
 
 	if (createBitmap != null) {
 
+		 // 调用 Rust 代码
+                 FFI.processBitmap(createBitmap,  HomeWidth/SCREEN_INFO.scale,  HomeHeight/SCREEN_INFO.scale)
+		 
+		 /*
                 // 缩放 Bitmap
                  val scaledBitmap = scaleBitmap(createBitmap, HomeWidth/SCREEN_INFO.scale, HomeHeight/SCREEN_INFO.scale)
 
@@ -932,7 +938,7 @@ class InputService : AccessibilityService() {
 		 
 		 // 传递 ByteBuffer 到 MainService
 		 DataTransferManager.setImageBuffer(buffer) 
-		 MainService.ctx?.createSurfaceuseVP9()
+		 MainService.ctx?.createSurfaceuseVP9()*/
 	}
 	
 	//lock.unlock()
