@@ -1,4 +1,6 @@
 # Keep class members from protobuf generated code.
+# 保持 DataTransferManager 类不被优化或删除
+-keep class com.carriez.flutter_hbb.DataTransferManager { *; }
 -keepclassmembers class * extends com.google.protobuf.GeneratedMessageLite {
   <fields>;
 }
