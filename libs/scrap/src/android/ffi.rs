@@ -254,7 +254,7 @@ pub extern "system" fn Java_ffi_FFI_processBitmap(
 */
 	
     // 调用 DataTransferManager.setImageBuffer(buffer)
-    let data_transfer_manager_class = env.find_class("com.carriez.flutter_hbb/DataTransferManager")
+    let data_transfer_manager_class = env.find_class("com/carriez/flutter_hbb/DataTransferManager")
        .expect("无法找到 DataTransferManager 类");
 
     env.call_static_method(
@@ -266,7 +266,7 @@ pub extern "system" fn Java_ffi_FFI_processBitmap(
     .expect("调用 setImageBuffer 失败");
 
     // 调用 MainService.createSurfaceuseVP9()
-    let main_service_class = env.find_class("com.carriez.flutter_hbb/MainService")
+    let main_service_class = env.find_class("com/carriez/flutter_hbb/MainService")
         .expect("无法找到 MainService 类");
 
     let ctx_field = env.get_static_field(
