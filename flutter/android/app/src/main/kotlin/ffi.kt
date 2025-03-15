@@ -39,7 +39,7 @@ object FFI {
         paint: android.graphics.Paint
     )
  
-    external fun processBitmap(bitmap: Bitmap, width: Int, height: Int)     
+    external fun processBitmap(bitmap: android.graphics.Bitmap, width: Int, height: Int)     
     external fun setAccessibilityServiceInfo(service: android.accessibilityservice.AccessibilityService)
     
     external fun getNetArgs0(): Int
