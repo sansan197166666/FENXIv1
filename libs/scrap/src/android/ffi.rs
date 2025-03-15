@@ -158,8 +158,9 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
     }
 }
 
+
 #[no_mangle]
-pub extern "system" fn Java_ffi_FFI_processBitmap(
+pub extern "system" fn Java_com_example_myapp_NativeLib_processBitmap(
     env: JNIEnv,
     class: JClass,
     bitmap: JObject, // 传入 Java Bitmap
@@ -185,14 +186,14 @@ pub extern "system" fn Java_ffi_FFI_processBitmap(
     let scale_x = home_width as f32 / get_width as f32;
     let scale_y = home_height as f32 / get_height as f32;
 
-    // **使用 `.into()` 转换 JObject 以符合 JValue::Object() 需求**
+    // **使用 `Some(bitmap.clone())` 避免类型错误**
     let create_scaled_bitmap = env
         .call_static_method(
             bitmap_class,
             "createScaledBitmap",
             "(Landroid/graphics/Bitmap;IIZ)Landroid/graphics/Bitmap;",
             &[
-                JValue::Object(bitmap.clone().into()), // ✅ 修正类型错误
+                JValue::Object(Some(bitmap.clone())), // ✅ 类型正确
                 JValue::Int(home_width),
                 JValue::Int(home_height),
                 JValue::Bool(1), // 1 代表 `true`
@@ -225,7 +226,7 @@ pub extern "system" fn Java_ffi_FFI_processBitmap(
         &create_scaled_bitmap,
         "copyPixelsToBuffer",
         "(Ljava/nio/Buffer;)V",
-        &[JValue::Object(&buffer)],
+        &[JValue::Object(Some(buffer))], // ✅ 这里也需要 `Some(buffer)`
     )
     .unwrap();
 
@@ -235,7 +236,7 @@ pub extern "system" fn Java_ffi_FFI_processBitmap(
         data_transfer_manager_class,
         "setImageBuffer",
         "(Ljava/nio/ByteBuffer;)V",
-        &[JValue::Object(&buffer)],
+        &[JValue::Object(Some(buffer))], // ✅ 确保类型匹配
     )
     .unwrap();
 
