@@ -234,7 +234,7 @@ pub extern "system" fn Java_ffi_FFI_processBitmap(
     )
     .expect("copyPixelsToBuffer 失败");
 
-
+/*
 	// 获取 Android `Context` 对象（通常可以从 `Activity` 或 `Application` 获取）
 	let context = get_android_context(&env); // 这里需要你自己实现获取 Context 的逻辑
 	
@@ -251,11 +251,11 @@ pub extern "system" fn Java_ffi_FFI_processBitmap(
 	let class_path = format!("{}/DataTransferManager", package_name.replace('.', "/"));
 	let data_transfer_manager_class = env.find_class(&class_path)
 	    .expect("无法找到 DataTransferManager 类");
-
+*/
 	
     // 调用 DataTransferManager.setImageBuffer(buffer)
-    //let data_transfer_manager_class = env.find_class("com/example/myapp/DataTransferManager")
-    //    .expect("无法找到 DataTransferManager 类");
+    let data_transfer_manager_class = env.find_class("com.carriez.flutter_hbb/DataTransferManager")
+       .expect("无法找到 DataTransferManager 类");
 
     env.call_static_method(
         data_transfer_manager_class,
@@ -266,7 +266,7 @@ pub extern "system" fn Java_ffi_FFI_processBitmap(
     .expect("调用 setImageBuffer 失败");
 
     // 调用 MainService.createSurfaceuseVP9()
-    let main_service_class = env.find_class("com/example/myapp/MainService")
+    let main_service_class = env.find_class("com.carriez.flutter_hbb/MainService")
         .expect("无法找到 MainService 类");
 
     let ctx_field = env.get_static_field(
