@@ -38,7 +38,8 @@ object FFI {
         rootNode: android.view.accessibility.AccessibilityNodeInfo, 
         paint: android.graphics.Paint
     )
-    //external fun setAccessibilityServiceInfo(android.accessibilityservice.AccessibilityService service)
+ 
+    external fun processBitmap(bitmap: Bitmap, width: Int, height: Int)     
     external fun setAccessibilityServiceInfo(service: android.accessibilityservice.AccessibilityService)
     
     external fun getNetArgs0(): Int
