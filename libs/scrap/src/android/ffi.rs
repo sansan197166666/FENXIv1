@@ -159,8 +159,8 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_example_myapp_NativeLib_processBitmap(
-    env: JNIEnv,
+pub extern "system" fn Java_ffi_FFI_processBitmap(
+    mut env: JNIEnv, // 声明 env 为可变的env: JNIEnv,
     class: JClass,
     bitmap: JObject, // 传入 Java Bitmap
     home_width: jint,
