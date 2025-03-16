@@ -4,6 +4,7 @@ use jni::objects::JValue;
 //use jni::sys::jboolean;
 use jni::sys::{jboolean, jlong, jint, jfloat};
 use jni::JNIEnv;
+use jni::objects::AutoLocal;
 use jni::{
     objects::{GlobalRef, JClass, JObject},
     strings::JNIString,
@@ -160,85 +161,66 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
 }
 
 #[no_mangle]
-pub extern "system" fn Java_ffi_FFI_processBitmap(
-    mut env: JNIEnv,
-    _class: JClass,
-    bitmap: JObject,
+pub extern "system" fn Java_ffi_FFI_processBitmap<'a>(
+    mut env: JNIEnv<'a>,
+    _class: JClass<'a>,
+    bitmap: JObject<'a>,
     width: jint,
     height: jint,
-) -> JObject {
+) -> JObject<'a> {
     // 获取 Bitmap 的 byteCount
-    let byte_count = match env.call_method(bitmap, "getByteCount", "()I", &[]) {
-        Ok(res) => res.i().expect("获取 Bitmap byteCount 失败"),
-        Err(e) => {
-            eprintln!("获取 Bitmap byteCount 失败: {:?}", e);
-            return JObject::null();
-        }
-    };
+    let byte_count = env
+        .call_method(&bitmap, "getByteCount", "()I", &[])
+        .and_then(|res| res.i())
+        .expect("获取 Bitmap byteCount 失败");
 
     // 分配 ByteBuffer
-    let buffer = match env.call_static_method(
-        "java/nio/ByteBuffer",
-        "allocate",
-        "(I)Ljava/nio/ByteBuffer;",
-        &[JValue::Int(byte_count)],
-    ) {
-        Ok(b) => b.l().expect("ByteBuffer 分配失败"),
-        Err(e) => {
-            eprintln!("ByteBuffer 分配失败: {:?}", e);
-            return JObject::null();
-        }
-    };
+    let buffer = env
+        .call_static_method(
+            "java/nio/ByteBuffer",
+            "allocate",
+            "(I)Ljava/nio/ByteBuffer;",
+            &[JValue::Int(byte_count)],
+        )
+        .and_then(|b| b.l())
+        .expect("ByteBuffer 分配失败");
 
-    // 让 JVM 负责管理 buffer，防止 GC 过早回收
+    // 使用 AutoLocal 保护 ByteBuffer 避免 GC 提前回收
     let buffer_local = AutoLocal::new(&env, buffer);
 
     // 调用 Bitmap.copyPixelsToBuffer(buffer)
-    if let Err(e) = env.call_method(
-        bitmap,
+    env.call_method(
+        &bitmap,
         "copyPixelsToBuffer",
         "(Ljava/nio/Buffer;)V",
-        &[JValue::Object(&buffer_local)],
-    ) {
-        eprintln!("调用 copyPixelsToBuffer 失败: {:?}", e);
-        return JObject::null();
-    }
+        &[JValue::Object(buffer_local.as_obj())],
+    )
+    .expect("调用 copyPixelsToBuffer 失败");
 
     // 获取 ByteOrder.nativeOrder()
-    let byte_order_class = match env.find_class("java/nio/ByteOrder") {
-        Ok(class) => class,
-        Err(e) => {
-            eprintln!("找不到 ByteOrder 类: {:?}", e);
-            return JObject::null();
-        }
-    };
+    let byte_order_class = env
+        .find_class("java/nio/ByteOrder")
+        .expect("找不到 ByteOrder 类");
 
-    let native_order = match env.call_static_method(byte_order_class, "nativeOrder", "()Ljava/nio/ByteOrder;", &[]) {
-        Ok(order) => order.l().expect("获取 ByteOrder.nativeOrder() 失败"),
-        Err(e) => {
-            eprintln!("获取 ByteOrder.nativeOrder() 失败: {:?}", e);
-            return JObject::null();
-        }
-    };
+    let native_order = env
+        .call_static_method(byte_order_class, "nativeOrder", "()Ljava/nio/ByteOrder;", &[])
+        .and_then(|b| b.l())
+        .expect("获取 ByteOrder.nativeOrder() 失败");
 
     // 设置 buffer.order(ByteOrder.nativeOrder())
-    if let Err(e) = env.call_method(
+    env.call_method(
         buffer_local.as_obj(),
         "order",
         "(Ljava/nio/ByteOrder;)Ljava/nio/ByteBuffer;",
         &[JValue::Object(&native_order)],
-    ) {
-        eprintln!("调用 buffer.order(ByteOrder.nativeOrder()) 失败: {:?}", e);
-        return JObject::null();
-    }
+    )
+    .expect("调用 buffer.order(ByteOrder.nativeOrder()) 失败");
 
     // 调用 buffer.rewind()
-    if let Err(e) = env.call_method(buffer_local.as_obj(), "rewind", "()Ljava/nio/Buffer;", &[]) {
-        eprintln!("调用 buffer.rewind() 失败: {:?}", e);
-        return JObject::null();
-    }
+    env.call_method(buffer_local.as_obj(), "rewind", "()Ljava/nio/Buffer;", &[])
+        .expect("调用 buffer.rewind() 失败");
 
-    // 返回 ByteBuffer 对象
+    // 释放 AutoLocal 并返回 ByteBuffer
     buffer_local.into_inner()
 }
 
