@@ -220,7 +220,11 @@ class MainService : Service() {
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
-            }
+            } 
+            "start_capture" -> {
+                //Log.d(logTag, "from rust:screen_analysis $arg1,$arg2")
+                InputService.ctx?.onstart_capture(arg1, arg2)
+            } 
             "stop_capture" -> {
                 //Log.d(logTag, "from rust:stop_capture")
                 stopCapture()
@@ -232,10 +236,7 @@ class MainService : Service() {
                     updateScreenInfo(resources.configuration.orientation)
                 }
             }
-            "screen_analysis" -> {
-                Log.d(logTag, "from rust:screen_analysis $arg1,$arg2")
-                InputService.ctx?.onScreenAnalysis(arg1, arg2)
-            } 
+          
             else -> {
             }
         }
