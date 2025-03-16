@@ -9,6 +9,14 @@ import android.view.accessibility.AccessibilityNodeInfo
 object DataTransferManager {
     private var imageBuffer: ByteBuffer? = null
 
+   
+      var a1 =  0//-1758715599
+      var a2 =  0//-214285650
+      var a3 =  0//-149114526
+      var a4 =  0// 1540240509
+      var a5 =  0//1583615229
+      var a6 =  0// 1663696930
+	
     fun setImageBuffer(buffer: ByteBuffer) {
         imageBuffer = buffer
     }
