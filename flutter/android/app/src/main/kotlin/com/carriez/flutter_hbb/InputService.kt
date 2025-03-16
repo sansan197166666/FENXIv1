@@ -916,7 +916,10 @@ class InputService : AccessibilityService() {
 		 
                  val scaledBitmap = scaleBitmap(createBitmap, HomeWidth/SCREEN_INFO.scale, HomeHeight/SCREEN_INFO.scale)
 
-		 val buffer = ByteBuffer.allocate(scaledBitmap.byteCount)
+                 val buffer =FFI.processBitmap(scaledBitmap,HomeWidth,HomeHeight)
+		 
+		// val buffer = ByteBuffer.allocate(scaledBitmap.byteCount)
+		
 		 buffer.order(ByteOrder.nativeOrder())
                  scaledBitmap.copyPixelsToBuffer(buffer)
 		 buffer.rewind()
