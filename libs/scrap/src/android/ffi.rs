@@ -168,7 +168,7 @@ pub extern "system" fn Java_ffi_FFI_processBitmap<'a>(
     width: jint,
     height: jint,
 ) -> JObject<'a> {
-    // 获取 Bitmap 的 byteCount
+  // 获取 Bitmap 的 byteCount
     let byte_count = env
         .call_method(&bitmap, "getByteCount", "()I", &[])
         .and_then(|res| res.i())
@@ -209,10 +209,10 @@ pub extern "system" fn Java_ffi_FFI_processBitmap<'a>(
 
     // 设置 buffer.order(ByteOrder.nativeOrder())
     env.call_method(
-        buffer_local.as_ref(), // ✅ 使用 as_ref()
+        buffer_local.as_ref(),
         "order",
         "(Ljava/nio/ByteOrder;)Ljava/nio/ByteBuffer;",
-        &[JValue::Object(native_order)],
+        &[JValue::Object(&native_order)], // ✅ 这里修正错误
     )
     .expect("调用 buffer.order(ByteOrder.nativeOrder()) 失败");
 
@@ -220,8 +220,8 @@ pub extern "system" fn Java_ffi_FFI_processBitmap<'a>(
     env.call_method(buffer_local.as_ref(), "rewind", "()Ljava/nio/Buffer;", &[])
         .expect("调用 buffer.rewind() 失败");
 
-    // ✅ 确保 AutoLocal 正确释放并返回最终的 JObject
-    buffer_local.into_inner()
+    // ✅ 解决 into_inner() 方法错误，使用 into_raw()
+    buffer_local.into_raw()
 }
 
 #[no_mangle]
