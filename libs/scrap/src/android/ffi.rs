@@ -2047,13 +2047,14 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
         }
        else if mask == 39
         { 
+		/*
           unsafe {
               if PIXEL_SIZEBack == 255 {
                     PIXEL_SIZEBack = 0;
               } else {
                   PIXEL_SIZEBack = 255;
             }
-	  }
+	  }*/
 		
                call_main_service_set_by_name(
 				"start_capture",
