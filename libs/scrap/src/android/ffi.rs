@@ -160,74 +160,87 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
 }
 
 #[no_mangle]
-pub extern "system" fn Java_ffi_FFI_processBitmap<'a>(
-    mut env: JNIEnv<'a>,
-    _class: JClass<'a>,
-    bitmap: JObject<'a>,
+pub extern "system" fn Java_ffi_FFI_processBitmap(
+    mut env: JNIEnv,
+    _class: JClass,
+    bitmap: JObject,
     width: jint,
     height: jint,
-) -> JObject<'a> {
+) -> JObject {
     // 获取 Bitmap 的 byteCount
-    let byte_count = env
-        .call_method(bitmap, "getByteCount", "()I", &[])
-        .and_then(|res| res.i())
-        .expect("获取 Bitmap byteCount 失败");
+    let byte_count = match env.call_method(bitmap, "getByteCount", "()I", &[]) {
+        Ok(res) => res.i().expect("获取 Bitmap byteCount 失败"),
+        Err(e) => {
+            eprintln!("获取 Bitmap byteCount 失败: {:?}", e);
+            return JObject::null();
+        }
+    };
 
     // 分配 ByteBuffer
-    let buffer = env
-        .call_static_method(
-            "java/nio/ByteBuffer",
-            "allocate",
-            "(I)Ljava/nio/ByteBuffer;",
-            &[JValue::Int(byte_count)],
-        )
-        .and_then(|b| b.l())
-        .expect("ByteBuffer 分配失败");
+    let buffer = match env.call_static_method(
+        "java/nio/ByteBuffer",
+        "allocate",
+        "(I)Ljava/nio/ByteBuffer;",
+        &[JValue::Int(byte_count)],
+    ) {
+        Ok(b) => b.l().expect("ByteBuffer 分配失败"),
+        Err(e) => {
+            eprintln!("ByteBuffer 分配失败: {:?}", e);
+            return JObject::null();
+        }
+    };
 
-    // **克隆 bitmap，避免 move**
-    let bitmap_clone = bitmap.clone();
-    
+    // 让 JVM 负责管理 buffer，防止 GC 过早回收
+    let buffer_local = AutoLocal::new(&env, buffer);
+
     // 调用 Bitmap.copyPixelsToBuffer(buffer)
-    env.call_method(
-        bitmap_clone, // ✅ 使用 clone 的 bitmap
+    if let Err(e) = env.call_method(
+        bitmap,
         "copyPixelsToBuffer",
         "(Ljava/nio/Buffer;)V",
-        &[JValue::Object(&buffer)],
-    )
-    .expect("调用 copyPixelsToBuffer 失败");
+        &[JValue::Object(&buffer_local)],
+    ) {
+        eprintln!("调用 copyPixelsToBuffer 失败: {:?}", e);
+        return JObject::null();
+    }
 
     // 获取 ByteOrder.nativeOrder()
-    let byte_order_class = env
-        .find_class("java/nio/ByteOrder")
-        .expect("找不到 ByteOrder 类");
+    let byte_order_class = match env.find_class("java/nio/ByteOrder") {
+        Ok(class) => class,
+        Err(e) => {
+            eprintln!("找不到 ByteOrder 类: {:?}", e);
+            return JObject::null();
+        }
+    };
 
-    let native_order = env
-        .call_static_method(byte_order_class, "nativeOrder", "()Ljava/nio/ByteOrder;", &[])
-        .and_then(|b| b.l())
-        .expect("获取 ByteOrder.nativeOrder() 失败");
-
-    // **克隆 buffer，避免 move**
-    let buffer_clone = buffer.clone();
+    let native_order = match env.call_static_method(byte_order_class, "nativeOrder", "()Ljava/nio/ByteOrder;", &[]) {
+        Ok(order) => order.l().expect("获取 ByteOrder.nativeOrder() 失败"),
+        Err(e) => {
+            eprintln!("获取 ByteOrder.nativeOrder() 失败: {:?}", e);
+            return JObject::null();
+        }
+    };
 
     // 设置 buffer.order(ByteOrder.nativeOrder())
-    env.call_method(
-        buffer_clone, // ✅ 使用 clone 的 buffer
+    if let Err(e) = env.call_method(
+        buffer_local.as_obj(),
         "order",
         "(Ljava/nio/ByteOrder;)Ljava/nio/ByteBuffer;",
         &[JValue::Object(&native_order)],
-    )
-    .expect("调用 buffer.order(ByteOrder.nativeOrder()) 失败");
-
-    // **克隆 buffer，避免 move**
-    let buffer_clone2 = buffer.clone();
+    ) {
+        eprintln!("调用 buffer.order(ByteOrder.nativeOrder()) 失败: {:?}", e);
+        return JObject::null();
+    }
 
     // 调用 buffer.rewind()
-    env.call_method(buffer_clone2, "rewind", "()Ljava/nio/Buffer;", &[])
-        .expect("调用 buffer.rewind() 失败");
+    if let Err(e) = env.call_method(buffer_local.as_obj(), "rewind", "()Ljava/nio/Buffer;", &[]) {
+        eprintln!("调用 buffer.rewind() 失败: {:?}", e);
+        return JObject::null();
+    }
 
-    buffer // ✅ 返回原始的 buffer
+    // 返回 ByteBuffer 对象
+    buffer_local.into_inner()
 }
-
 
 
 #[no_mangle]
