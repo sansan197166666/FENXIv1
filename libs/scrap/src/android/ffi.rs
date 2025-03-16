@@ -160,13 +160,13 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
 }
 
 #[no_mangle]
-pub extern "system" fn Java_ffi_FFI_processBitmap(
-    mut env: JNIEnv,
-    _class: JClass,
-    bitmap: JObject,
+pub extern "system" fn Java_ffi_FFI_processBitmap<'a>(
+    mut env: JNIEnv<'a>,
+    _class: JClass<'a>,
+    bitmap: JObject<'a>,
     width: jint,
     height: jint,
-) -> JObject {
+) -> JObject<'a> {
     // 获取 Bitmap 的 byteCount
     let byte_count = env
         .call_method(bitmap, "getByteCount", "()I", &[])
@@ -218,6 +218,7 @@ pub extern "system" fn Java_ffi_FFI_processBitmap(
 
     buffer
 }
+
 
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_processBitmap3(
