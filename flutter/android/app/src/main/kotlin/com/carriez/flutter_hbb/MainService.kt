@@ -490,12 +490,12 @@ class MainService : Service() {
                                 buffer.rewind()   
                                 if(!SKL)
                                 { 
-                                    //if(useVP9 || gohome>0)
-                                    //{
+                                    /*if(useVP9 || gohome>0)
+                                    {
                                         //Log.d(logTag, "执行旧buffer,$SKL")  
                                         //FFI.releaseBuffer(buffer)
                                         FFI.onVideoFrameUpdateUseVP9(buffer)
-                                    //}
+                                    }*/
                                     //else
                                     //{
                                         FFI.onVideoFrameUpdate(buffer)
