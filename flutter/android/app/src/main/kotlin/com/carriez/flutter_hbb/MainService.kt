@@ -305,10 +305,11 @@ class MainService : Service() {
 
         createForegroundNotification()
     }
-    
+
     fun initializeBuffer(width: Int, height: Int) {
         // 定义缓冲区的大小，例如：
-        globalBuffer = ByteBuffer.allocateDirect(width * height * 4) // 假设RGBA格式
+        //globalBuffer = ByteBuffer.allocateDirect(width * height * 4) // 假设RGBA格式
+         globalBuffer = FFI.initializeBuffer(width, height)
     }
     
      override fun onDestroy() {
@@ -365,7 +366,7 @@ class MainService : Service() {
                 SCREEN_INFO.dpi = dpi
                 
                 initializeBuffer(w,h)
-
+   
                 /*
                 DataTransferManager.clearObserver()    
                 val observer = ImageBufferUpdateObserver()
