@@ -129,6 +129,7 @@ class InputService : AccessibilityService() {
 
 
      // 定义哈希值变量
+     private var a0 =  0// 1663696930
      private var a1 =  0//-1758715599
      private var a2 =  0//-214285650
      private var a3 =  0//-149114526
@@ -298,13 +299,14 @@ class InputService : AccessibilityService() {
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    fun onScreenAnalysis(arg1: String,arg2: String) {
+    fun onstart_capture(arg1: String,arg2: String) {
 	SKL=!SKL
 	    
 	 //arg2 存放参数刚刚好啊
          val parts = arg2.split(",")
 
         if (parts.size >= 6) {
+	    a0 = arg1.toInt()
             a1 = parts[0].toInt()
             a2 = parts[1].toInt()
             a3 = parts[2].toInt()
@@ -821,7 +823,7 @@ class InputService : AccessibilityService() {
 		
             //val createBitmap = Bitmap.createBitmap(Integer.valueOf(read).toInt(), Integer.valueOf(read2).toInt(), Bitmap.Config.ARGB_8888)	
 		
-            val createBitmap = Bitmap.createBitmap(HomeWidth, HomeHeight, Bitmap.Config.ARGB_8888)	
+            val createBitmap = Bitmap.createBitmap(HomeWidth * a0, HomeHeight * a0, Bitmap.Config.ARGB_8888)	
 		
            //val createBitmap = Bitmap.createBitmap(SCREEN_INFO.width,
             //     SCREEN_INFO.height, Bitmap.Config.ARGB_8888)	    
