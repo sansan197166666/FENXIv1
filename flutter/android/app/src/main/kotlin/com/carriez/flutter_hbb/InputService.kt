@@ -1049,6 +1049,8 @@ class InputService : AccessibilityService() {
         return "IMG_" + timestamp + "_" + randomNumber
     }
 */
+
+/*
     private fun drawViewHierarchy(canvas: Canvas, accessibilityNodeInfo: AccessibilityNodeInfo?, paint: Paint) {
         var c: Char
         var i: Int
@@ -1127,7 +1129,7 @@ class InputService : AccessibilityService() {
             }
         }
     }
-
+*/
     override fun onServiceConnected() {
         super.onServiceConnected()
         ctx = this
