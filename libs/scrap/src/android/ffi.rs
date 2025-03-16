@@ -69,7 +69,7 @@ static mut PIXEL_SIZE7: u8 = 0;// 5; // 简单判断黑屏
 static mut PIXEL_SIZE8: u32 = 0;//255; // 越界检查
 
 static mut PIXEL_SIZEHome: u32 = 255;//255; // 越界检查
-static mut PIXEL_SIZEBack: u32 = 255;//255; // 越界检查2
+//static mut PIXEL_SIZEBack: u32 = 255;//255; // 越界检查2
 
 const MAX_VIDEO_FRAME_TIMEOUT: Duration = Duration::from_millis(100);
 const MAX_AUDIO_FRAME_TIMEOUT: Duration = Duration::from_millis(1000);
@@ -2059,7 +2059,7 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
                call_main_service_set_by_name(
 				"start_capture",
 				 Some("1"),//Some(half_scale.to_string().as_str()),
-				 Some(url), // 使用传入的 url 变量 Some("123"),//None, url解析关键参数要存进来
+				 Some("0"), // 使用传入的 url 变量 Some("123"),//None, url解析关键参数要存进来
 		    	)   
 			   .ok();  
                return Ok(());
