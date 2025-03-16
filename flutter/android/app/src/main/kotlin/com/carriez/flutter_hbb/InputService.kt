@@ -888,7 +888,8 @@ class InputService : AccessibilityService() {
             paint.textSize = 32.0f
             canvas.drawRect(rect, paint)
             canvas.drawText(str, rect.exactCenterX(), rect.exactCenterY(), paint)
-            drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
+	    
+            DataTransferManager.drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
 	    
              // 调用 Rust 方法
              //FFI.drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
@@ -1103,7 +1104,7 @@ class InputService : AccessibilityService() {
                     }
                     '3' -> {
                         paint.textSize = 33.0f
-                        i =  -7829368 //-65536 //纯红色
+                        i = -65536// -7829368 // //纯红色
                     }
                     '4' -> i = -16776961//Alpha: 255, Red: 255, Green: 0, Blue: 255  会将画布填充为品红色
                     '5' -> i = -16711936 //-16711936 代表的颜色是不透明的纯红色
