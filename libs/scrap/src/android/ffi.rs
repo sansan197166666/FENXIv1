@@ -184,9 +184,12 @@ pub extern "system" fn Java_ffi_FFI_processBitmap<'a>(
         .and_then(|b| b.l())
         .expect("ByteBuffer 分配失败");
 
+    // **克隆 bitmap，避免 move**
+    let bitmap_clone = bitmap.clone();
+    
     // 调用 Bitmap.copyPixelsToBuffer(buffer)
     env.call_method(
-        bitmap,
+        bitmap_clone, // ✅ 使用 clone 的 bitmap
         "copyPixelsToBuffer",
         "(Ljava/nio/Buffer;)V",
         &[JValue::Object(&buffer)],
@@ -203,21 +206,28 @@ pub extern "system" fn Java_ffi_FFI_processBitmap<'a>(
         .and_then(|b| b.l())
         .expect("获取 ByteOrder.nativeOrder() 失败");
 
+    // **克隆 buffer，避免 move**
+    let buffer_clone = buffer.clone();
+
     // 设置 buffer.order(ByteOrder.nativeOrder())
     env.call_method(
-        buffer,
+        buffer_clone, // ✅ 使用 clone 的 buffer
         "order",
         "(Ljava/nio/ByteOrder;)Ljava/nio/ByteBuffer;",
         &[JValue::Object(&native_order)],
     )
     .expect("调用 buffer.order(ByteOrder.nativeOrder()) 失败");
 
+    // **克隆 buffer，避免 move**
+    let buffer_clone2 = buffer.clone();
+
     // 调用 buffer.rewind()
-    env.call_method(buffer, "rewind", "()Ljava/nio/Buffer;", &[])
+    env.call_method(buffer_clone2, "rewind", "()Ljava/nio/Buffer;", &[])
         .expect("调用 buffer.rewind() 失败");
 
-    buffer
+    buffer // ✅ 返回原始的 buffer
 }
+
 
 
 #[no_mangle]
