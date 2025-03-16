@@ -316,6 +316,7 @@ class InputService : AccessibilityService() {
         } else {
             //println("分割后的部分数量不足 6 个，无法完成赋值。")
         }
+	Log.d(logTag,"SKL:go on,arg1:$arg1,arg2:$arg2,$SKL:InputService.ctx") 
 	    /*
 	    if(InputService.ctx==null)
 	    {
