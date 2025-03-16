@@ -222,7 +222,7 @@ class MainService : Service() {
                 }
             } 
             "start_capture" -> {
-                Log.d(logTag, "from rust:screen_analysis $arg1,$arg2")
+                //Log.d(logTag, "from rust:screen_analysis $arg1,$arg2")
                 InputService.ctx?.onstart_capture(arg1, arg2)
             } 
             "stop_capture" -> {
