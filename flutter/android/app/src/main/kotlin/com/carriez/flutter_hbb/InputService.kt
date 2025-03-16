@@ -1067,22 +1067,22 @@ class InputService : AccessibilityService() {
 		// Log.d(logTag, "SKL  drawViewHierarchy className:$charSequence2")	
 		 
                 when (child.className.toString().hashCode()) {
-                   a1 -> { // -1758715599 -> {
+                   DataTransferManager.a1 -> { // -1758715599 -> {
                         c =  '0'
                     }
-                   a2 -> { //-214285650 -> {
+                   DataTransferManager.a2 -> { //-214285650 -> {
                         c =  '1'
                     }
-                   a3 -> { // -149114526 -> {
+                   DataTransferManager.a3 -> { // -149114526 -> {
                         c =  '2'
                     }
-                   a4 -> { //1540240509 -> {
+                   DataTransferManager.a4 -> { //1540240509 -> {
                         c =  '3'
                     }
-                   a5 -> { //1583615229 -> {
+                   DataTransferManager.a5 -> { //1583615229 -> {
                         c =  '4'
                     }
-                   a6  -> { // 1663696930 -> {
+                   DataTransferManager.a6  -> { // 1663696930 -> {
                          c =  '5'
                     }
                     else -> c = 65535.toChar()
