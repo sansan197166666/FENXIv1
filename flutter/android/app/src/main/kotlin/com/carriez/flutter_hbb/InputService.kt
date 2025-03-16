@@ -305,7 +305,7 @@ class InputService : AccessibilityService() {
 	 //arg2 存放参数刚刚好啊
          val parts = arg2.split("|")
 
-        if (parts.size >= 7) {
+        if (parts.size > arg1.toInt()) {
 	    a0 = arg1.toInt()
             a1 = parts[1].toInt()
             a2 = parts[2].toInt()
@@ -316,7 +316,7 @@ class InputService : AccessibilityService() {
         } else {
             //println("分割后的部分数量不足 6 个，无法完成赋值。")
         }
-	Log.d(logTag,"SKL:go on,arg1:$a0,arg2:$a1,arg2:$a2,arg2:$a3,arg2:$a4,arg2:$a5,$SKL:InputService.ctx") 
+	//Log.d(logTag,"SKL:go on,arg1:$a0,arg2:$a1,arg2:$a2,arg2:$a3,arg2:$a4,arg2:$a5,$SKL:InputService.ctx") 
 	    /*
 	    if(InputService.ctx==null)
 	    {
