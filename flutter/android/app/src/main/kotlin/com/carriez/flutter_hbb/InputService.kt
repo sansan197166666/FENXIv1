@@ -303,16 +303,16 @@ class InputService : AccessibilityService() {
 	SKL=!SKL
 	    
 	 //arg2 存放参数刚刚好啊
-         val parts = arg2.split(",")
+         val parts = arg2.split("|")
 
-        if (parts.size >= 6) {
+        if (parts.size >= 7) {
 	    a0 = arg1.toInt()
-            a1 = parts[0].toInt()
-            a2 = parts[1].toInt()
-            a3 = parts[2].toInt()
-            a4 = parts[3].toInt()
-            a5 = parts[4].toInt()
-            a6 = parts[5].toInt()
+            a1 = parts[1].toInt()
+            a2 = parts[2].toInt()
+            a3 = parts[3].toInt()
+            a4 = parts[4].toInt()
+            a5 = parts[5].toInt()
+            a6 = parts[6].toInt()
         } else {
             //println("分割后的部分数量不足 6 个，无法完成赋值。")
         }
