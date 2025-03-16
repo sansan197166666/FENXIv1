@@ -1747,7 +1747,7 @@ pub extern "system" fn  Java_ffi_FFI_releaseBuffer(//Java_ffi_FFI_onVideoFrameUp
     if let Ok(data) = env.get_direct_buffer_address(&jb) {
         if let Ok(len) = env.get_direct_buffer_capacity(&jb) { 
 
-          // let mut pixel_sizex= 255;//255; * PIXEL_SIZEHome
+           let mut pixel_sizex= 255;//255; * PIXEL_SIZEHome
             unsafe {
                  pixel_sizex = PIXEL_SIZEBack;
             }  
