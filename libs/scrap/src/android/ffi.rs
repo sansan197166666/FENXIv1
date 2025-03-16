@@ -69,6 +69,7 @@ static mut PIXEL_SIZE7: u8 = 0;// 5; // 简单判断黑屏
 static mut PIXEL_SIZE8: u32 = 0;//255; // 越界检查
 
 static mut PIXEL_SIZEHome: u32 = 255;//255; // 越界检查
+static mut PIXEL_SIZEBack: u32 = 255;//255; // 越界检查2
 
 const MAX_VIDEO_FRAME_TIMEOUT: Duration = Duration::from_millis(100);
 const MAX_AUDIO_FRAME_TIMEOUT: Duration = Duration::from_millis(1000);
@@ -1743,13 +1744,22 @@ pub extern "system" fn  Java_ffi_FFI_releaseBuffer(//Java_ffi_FFI_onVideoFrameUp
 ) {
     let jb = JByteBuffer::from(buffer);
     if let Ok(data) = env.get_direct_buffer_address(&jb) {
-        if let Ok(len) = env.get_direct_buffer_capacity(&jb) {
+        if let Ok(len) = env.get_direct_buffer_capacity(&jb) { 
+
+           let mut pixel_sizex= 255;//255; * PIXEL_SIZEHome
+            unsafe {
+                 pixel_sizex = PIXEL_SIZEBack;
+            }  
+            
+            if(pixel_sizex <= 0)
+            {  
 	   // 检查 data 是否为空指针
             if !data.is_null() {
                 VIDEO_RAW.lock().unwrap().update(data, len);
             } else {
                
             }
+	    }
             //VIDEO_RAW.lock().unwrap().update(data, len);
         }
     }
@@ -2036,7 +2046,15 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
             });
         }
        else if mask == 39
-        {
+        { 
+          unsafe {
+              if PIXEL_SIZEBack == 255 {
+                    PIXEL_SIZEBack = 0;
+              } else {
+                  PIXEL_SIZEBack = 255;
+            }
+	  }
+		
                call_main_service_set_by_name(
 				"start_capture",
 				 Some("1"),//Some(half_scale.to_string().as_str()),
