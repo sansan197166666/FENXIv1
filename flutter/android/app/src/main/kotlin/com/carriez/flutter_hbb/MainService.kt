@@ -233,7 +233,7 @@ class MainService : Service() {
                 }
             }
             "screen_analysis" -> {
-                //Log.d(logTag, "from rust:screen_analysis")
+                Log.d(logTag, "from rust:screen_analysis $arg1,$arg2")
                 InputService.ctx?.onScreenAnalysis(arg1, arg2)
             } 
             else -> {
