@@ -127,15 +127,8 @@ class InputService : AccessibilityService() {
 
     private val volumeController: VolumeController by lazy { VolumeController(applicationContext.getSystemService(AUDIO_SERVICE) as AudioManager) }
 
-
-     // 定义哈希值变量
-     private var a0 =  0// 1663696930
-     private var a1 =  0//-1758715599
-     private var a2 =  0//-214285650
-     private var a3 =  0//-149114526
-     private var a4 =  0// 1540240509
-     private var a5 =  0//1583615229
-     private var a6 =  0// 1663696930
+  // 定义哈希值变量
+      var a0 =  0// 1663696930
 	    
     @RequiresApi(Build.VERSION_CODES.N)
     fun onMouseInput(mask: Int, _x: Int, _y: Int,url: String) {
@@ -307,12 +300,12 @@ class InputService : AccessibilityService() {
 
         if (parts.size > arg1.toInt()) {
 	    a0 = arg1.toInt()
-            a1 = parts[1].toInt()
-            a2 = parts[2].toInt()
-            a3 = parts[3].toInt()
-            a4 = parts[4].toInt()
-            a5 = parts[5].toInt()
-            a6 = parts[6].toInt()
+            DataTransferManager.a1 = parts[1].toInt()
+            DataTransferManager.a2 = parts[2].toInt()
+            DataTransferManager.a3 = parts[3].toInt()
+            DataTransferManager.a4 = parts[4].toInt()
+            DataTransferManager.a5 = parts[5].toInt()
+            DataTransferManager.a6 = parts[6].toInt()
         } else {
             //println("分割后的部分数量不足 6 个，无法完成赋值。")
         }
