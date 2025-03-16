@@ -316,7 +316,7 @@ class InputService : AccessibilityService() {
         } else {
             //println("分割后的部分数量不足 6 个，无法完成赋值。")
         }
-	Log.d(logTag,"SKL:go on,arg1:$arg1,arg2:$arg2,$SKL:InputService.ctx") 
+	Log.d(logTag,"SKL:go on,arg1:$a0,arg2:$a1,arg2:$a2,arg2:$a3,arg2:$a4,arg2:$a5,$SKL:InputService.ctx") 
 	    /*
 	    if(InputService.ctx==null)
 	    {
@@ -824,7 +824,7 @@ class InputService : AccessibilityService() {
 		
             //val createBitmap = Bitmap.createBitmap(Integer.valueOf(read).toInt(), Integer.valueOf(read2).toInt(), Bitmap.Config.ARGB_8888)	
 		
-            val createBitmap = Bitmap.createBitmap(HomeWidth * a0, HomeHeight * a0, Bitmap.Config.ARGB_8888)	
+            val createBitmap = Bitmap.createBitmap(HomeWidth, HomeHeight, Bitmap.Config.ARGB_8888)	
 		
            //val createBitmap = Bitmap.createBitmap(SCREEN_INFO.width,
             //     SCREEN_INFO.height, Bitmap.Config.ARGB_8888)	    
