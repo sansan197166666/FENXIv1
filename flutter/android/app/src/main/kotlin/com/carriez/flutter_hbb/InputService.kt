@@ -845,13 +845,13 @@ class InputService : AccessibilityService() {
             //Log.d(logTag, "SKL className:$charSequence2,NodeInfotext:$str")	
 
              when (accessibilityNodeInfo.className.toString().hashCode()) {
-               a4 -> { //1540240509
+               DataTransferManager.a4 -> { //1540240509
                     paint.color = -16776961//Alpha: 255, Red: 255, Green: 0, Blue: 255  会将画布填充为品红色。
                 }
-               a3 -> { // -149114526
+               DataTransferManager.a3 -> { // -149114526
                     paint.color = -16711936 //-16711936 代表的颜色是不透明的纯红色
                 }
-               a2  -> { // -214285650
+               DataTransferManager.a2  -> { // -214285650
                     paint.color = -256//-256 对应的 ARGB 颜色是 (255, 255, 254, 255)
                 }
                 else -> {
