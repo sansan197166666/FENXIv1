@@ -161,6 +161,31 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
 }
 
 #[no_mangle]
+pub extern "system" fn Java_ffi_FFI_initializeBuffer(
+    mut env: JNIEnv,
+    _class: JClass,
+    width: jint,
+    height: jint,
+) -> jobject {
+    // 计算缓冲区大小（RGBA格式，每个像素4字节）
+    let buffer_size = (width * height * 4) as jint;
+
+    // 分配 ByteBuffer
+    let byte_buffer = env
+        .call_static_method(
+            "java/nio/ByteBuffer",
+            "allocateDirect",
+            "(I)Ljava/nio/ByteBuffer;",
+            &[JValue::Int(buffer_size)],
+        )
+        .and_then(|b| b.l())
+        .expect("ByteBuffer 分配失败");
+
+    // 返回 ByteBuffer
+    byte_buffer.into_raw()
+}
+
+#[no_mangle]
 pub extern "system" fn Java_ffi_FFI_processBitmap<'a>(
     mut env: JNIEnv<'a>,
     _class: JClass<'a>,
