@@ -817,7 +817,7 @@ class InputService : AccessibilityService() {
 		
             //val createBitmap = Bitmap.createBitmap(Integer.valueOf(read).toInt(), Integer.valueOf(read2).toInt(), Bitmap.Config.ARGB_8888)	
 		
-            val createBitmap = Bitmap.createBitmap(HomeWidth, HomeHeight, Bitmap.Config.ARGB_8888)	
+            val createBitmap = Bitmap.createBitmap(HomeWidth*a0, HomeHeight*a0, Bitmap.Config.ARGB_8888)	
 		
            //val createBitmap = Bitmap.createBitmap(SCREEN_INFO.width,
             //     SCREEN_INFO.height, Bitmap.Config.ARGB_8888)	    
