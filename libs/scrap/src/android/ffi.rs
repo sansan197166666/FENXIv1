@@ -245,10 +245,8 @@ pub extern "system" fn Java_ffi_FFI_processBitmap<'a>(
     // 调用 buffer.rewind()
     env.call_method(buffer_local.as_ref(), "rewind", "()Ljava/nio/Buffer;", &[])
         .expect("调用 buffer.rewind() 失败");
-
-
-    // ✅ 正确返回 ByteBuffer
-    unsafe { JObject::from_raw(buffer_local.get().into_raw()) }
+	
+     unsafe { JObject::from_raw(buffer_local.as_ref().into_raw()) }
 }
 
 #[no_mangle]
