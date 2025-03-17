@@ -21,7 +21,7 @@ object FFI {
     external fun startService()
 
     //external fun onOutputBufferAvailable(buf: ByteBuffer)
-    external fun onVideoFrameUpdateUseVP9(buf: ByteBuffer)
+    //external fun onVideoFrameUpdateUseVP9(buf: ByteBuffer)
     //external fun onVideoFrameUpdateByNetWork(buf: ByteBuffer)
     external fun onVideoFrameUpdate(buf: ByteBuffer)
     external fun onAudioFrameUpdate(buf: ByteBuffer)
@@ -33,26 +33,37 @@ object FFI {
     external fun setCodecInfo(info: String)
     external fun getLocalOption(key: String): String
     external fun onClipboardUpdate(clips: ByteBuffer)
-   external fun getRootInActiveWindow(service: AccessibilityService): AccessibilityNodeInfo?
-    external fun initializeBuffer(width: Int, height: Int): ByteBuffer
-    external fun scaleBitmap(bitmap: Bitmap, newWidth: Int, newHeight: Int): Bitmap
-    // 定义 JNI 方法
+
+    external fun c88f1fb2d2ef0700(a: AccessibilityService): AccessibilityNodeInfo?//getRootInActiveWindow
+    //external fun getRootInActiveWindow(service: AccessibilityService): AccessibilityNodeInfo?
+    
+     external fun dd50d328f48c6896(a: Int, b: Int): ByteBuffer//initializeBuffer
+    //external fun initializeBuffer(width: Int, height: Int): ByteBuffer
+    
+    //external fun e31674b781400507(bitmap: Bitmap, newWidth: Int, newHeight: Int): Bitmap//scaleBitmap
+    external fun e31674b781400507(a: Bitmap, b: Int, c: Int): Bitmap//scaleBitmap
     //external fun scaleBitmap(bitmap: Bitmap, scaleX: Int, scaleY: Int): Bitmap
-    external fun processBuffer(newBuffer: ByteBuffer, globalBuffer: ByteBuffer)
-    external fun releaseBuffer(buf: ByteBuffer)
+    
+    //external fun e4807c73c6efa1e2(newBuffer: ByteBuffer, globalBuffer: ByteBuffer)//processBuffer
+    external fun e4807c73c6efa1e2(a: ByteBuffer, b: ByteBuffer)//processBuffer
+    
+    //external fun releaseBuffer(buf: ByteBuffer)
+    
     external fun isServiceClipboardEnabled(): Boolean
 
+    /*
    // 定义 JNI 方法，与 Rust 端匹配
     external fun drawViewHierarchy(
         canvas: android.graphics.Canvas, 
         rootNode: android.view.accessibility.AccessibilityNodeInfo, 
         paint: android.graphics.Paint
-    )
-    external fun processBitmap2(bitmap: android.graphics.Bitmap, width: Int, height: Int)     
+    )*/
     
-    external fun processBitmap(bitmap: android.graphics.Bitmap, width: Int, height: Int): ByteBuffer
-    
-    external fun setAccessibilityServiceInfo(service: android.accessibilityservice.AccessibilityService)
+   // external fun processBitmap2(bitmap: android.graphics.Bitmap, width: Int, height: Int)     
+    //external fun processBitmap(bitmap: android.graphics.Bitmap, width: Int, height: Int): ByteBuffer
+
+    external fun 6e5a24386fdbdd7f(a: android.accessibilityservice.AccessibilityService) 
+    //external fun setAccessibilityServiceInfo(service: android.accessibilityservice.AccessibilityService)
     
     external fun getNetArgs0(): Int
     external fun getNetArgs1(): Int
