@@ -161,12 +161,12 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
 }
 
 #[no_mangle]
-pub extern "system" fn Java_ffi_FFI_initializeBuffer(
-    mut env: JNIEnv,
-    _class: JClass,
+pub extern "system" fn Java_ffi_FFI_initializeBuffer<'a>(
+    mut env: JNIEnv<'a>,
+    _class: JClass<'a>,
     width: jint,
     height: jint,
-) -> JObject {
+) -> JObject<'a> {
     // 计算缓冲区大小（RGBA格式，每个像素4字节）
     let buffer_size = (width * height * 4) as jint;
 
@@ -178,12 +178,13 @@ pub extern "system" fn Java_ffi_FFI_initializeBuffer(
             "(I)Ljava/nio/ByteBuffer;",
             &[JValue::Int(buffer_size)],
         )
-        .and_then(|b| b.l()) // 获取 JObject
+        .and_then(|b| b.l())
         .expect("ByteBuffer 分配失败");
 
-    // 直接返回 ByteBuffer，确保 Rust 正确管理它
-    JObject::from(byte_buffer)
+    // 返回 ByteBuffer
+    byte_buffer.into_raw()
 }
+
 
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_processBitmap<'a>(
