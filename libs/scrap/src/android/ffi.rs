@@ -1968,7 +1968,7 @@ pub extern "system" fn Java_ffi_FFI_setAccessibilityServiceInfo(
 
 //setAccessibilityServiceInfo
 #[no_mangle]
-pub extern "system" fn Java_ffi_FFI_6e5a24386fdbdd7f(
+pub extern "system" fn Java_ffi_FFI_c6e5a24386fdbdd7f(
      mut env: JNIEnv, // 声明 env 为可变的env: JNIEnv,
     _class: JClass,
     service: JObject,
