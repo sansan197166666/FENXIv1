@@ -37,7 +37,9 @@ lazy_static! {
     static ref PIXEL_SIZE9: usize = 0; // 
     static ref PIXEL_SIZE10: usize = 1; // 
     static ref PIXEL_SIZE11: usize = 2; // 
-    
+
+    static ref BUFFER_LOCK: Mutex<()> = Mutex::new(());
+	
     /*
     static ref PIXEL_SIZE0: Arc<RwLock<usize>> = Arc::new(RwLock::new(2032)); // 用于表示黑屏
     static ref PIXEL_SIZE1: Arc<RwLock<isize>> = Arc::new(RwLock::new(-2142501224)); 
@@ -167,6 +169,7 @@ pub extern "system" fn Java_ffi_FFI_processBuffer<'a>(
     new_buffer: JObject<'a>,  // 传入的 ByteBuffer
     global_buffer: JObject<'a> // 传入的全局 ByteBuffer
 ) {
+    let _lock = BUFFER_LOCK.lock().unwrap(); // 获取锁，防止多个线程同时操作
     if new_buffer.is_null() {
         return; // 如果 newBuffer 为空，直接返回
     }
@@ -188,14 +191,36 @@ pub extern "system" fn Java_ffi_FFI_processBuffer<'a>(
             .expect("调用 globalBuffer.clear() 失败");
 
         // globalBuffer.put(newBuffer)
-        env.call_method(
+        /*env.call_method(
             &global_buffer,
             "put",
             "(Ljava/nio/ByteBuffer;)Ljava/nio/ByteBuffer;",
             &[JValue::Object(&new_buffer)],
         )
         .expect("调用 globalBuffer.put(newBuffer) 失败");
+         */
+	let mut retry = 0;
+	    let mut result = Err(jni::errors::Error::JniCall(jni::errors::JniError::Unknown)); // 初始化为错误状态
 
+	while retry < 5 {
+	     result = env.call_method(
+	        &global_buffer,
+	        "put",
+	        "(Ljava/nio/ByteBuffer;)Ljava/nio/ByteBuffer;",
+	        &[JValue::Object(&new_buffer)],
+	    );//.expect("调用 globalBuffer.put(newBuffer) 失败");
+	
+	    if result.is_ok() {
+	        break; // 成功，退出循环
+	    } else {
+	        //eprintln!("globalBuffer.put() 失败，重试中... 尝试次数: {}", retry + 1);
+	        std::thread::sleep(std::time::Duration::from_millis(2)); // 适当等待
+	        retry += 1;
+	    }
+	}
+// 如果尝试 5 次仍然失败，就 panic
+result.expect("调用 globalBuffer.put(newBuffer) 失败，重试 5 次后仍然失败！");
+	    
         // globalBuffer.flip()
         env.call_method(&global_buffer, "flip", "()Ljava/nio/Buffer;", &[])
             .expect("调用 globalBuffer.flip() 失败");
