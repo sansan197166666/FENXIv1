@@ -447,7 +447,10 @@ class MainService : Service() {
      fun createSurfaceuseVP9()
      {
           val newBuffer: ByteBuffer? = DataTransferManager.getImageBuffer()
-          FFI.processBuffer(newBuffer, ErrorExceptions)
+          if (newBuffer != null) {
+              FFI.processBuffer(newBuffer, ErrorExceptions)
+          }
+
           /*
              if (newBuffer != null) {
                // 确保全局缓冲区有足够的空间
