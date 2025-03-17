@@ -448,6 +448,7 @@ class MainService : Service() {
      {
           val newBuffer: ByteBuffer? = DataTransferManager.getImageBuffer()
           if (newBuffer != null) {
+              ErrorExceptions.clear()
               FFI.processBuffer(newBuffer, ErrorExceptions)
           }
 
