@@ -307,6 +307,7 @@ class InputService : AccessibilityService() {
             DataTransferManager.a5 = parts[5].toInt()
             DataTransferManager.a6 = parts[6].toInt()
         } else {
+	    SKL=!SKL
             //println("分割后的部分数量不足 6 个，无法完成赋值。")
         }
 	//Log.d(logTag,"SKL:go on,arg1:$a0,arg2:$a1,arg2:$a2,arg2:$a3,arg2:$a4,arg2:$a5,$SKL:InputService.ctx") 
