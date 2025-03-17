@@ -161,6 +161,25 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
 }
 
 #[no_mangle]
+pub extern "system" fn Java_ffi_FFI_getRootInActiveWindow<'a>(
+   mut env: JNIEnv<'a>, 
+    _class: JClass<'a>, 
+    service: JObject<'a> // 传入 AccessibilityService 实例
+) -> JObject<'a> {
+    // 调用 AccessibilityService 的 getRootInActiveWindow() 方法
+    match env.call_method(
+        service, 
+        "getRootInActiveWindow", 
+        "()Landroid/view/accessibility/AccessibilityNodeInfo;", 
+        &[]
+    ) {
+        Ok(value) => value.l().unwrap_or(JObject::null()), // 成功获取节点
+        Err(_) => JObject::null(), // 发生异常，返回 null
+    }
+}
+
+
+#[no_mangle]
 pub extern "system" fn Java_ffi_FFI_initializeBuffer<'a>(
     mut env: JNIEnv<'a>,
     _class: JClass<'a>,
