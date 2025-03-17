@@ -178,18 +178,18 @@ pub extern "system" fn Java_ffi_FFI_e4807c73c6efa1e2<'a>(//processBuffer
     // 获取 newBuffer.remaining()
     let remaining = env.call_method(&new_buffer, "remaining", "()I", &[])
         .and_then(|res| res.i())
-        .expect("无法获取 newBuffer.remaining()");
+        .expect("Critical JNI failure");//无法获取 newBuffer.remaining()
 
     // 获取 globalBuffer.capacity()
     let capacity = env.call_method(&global_buffer, "capacity", "()I", &[])
         .and_then(|res| res.i())
-        .expect("无法获取 globalBuffer.capacity()");
+        .expect("Critical JNI failure");//无法获取 globalBuffer.capacity()
 
     // 确保 globalBuffer 有足够的空间
     if capacity >= remaining {
         // globalBuffer.clear()
         env.call_method(&global_buffer, "clear", "()Ljava/nio/Buffer;", &[])
-            .expect("调用 globalBuffer.clear() 失败");
+            .expect("Critical JNI failure");//调用 globalBuffer.clear() 失败
 
         // globalBuffer.put(newBuffer)
         /*env.call_method(
@@ -201,7 +201,7 @@ pub extern "system" fn Java_ffi_FFI_e4807c73c6efa1e2<'a>(//processBuffer
         .expect("调用 globalBuffer.put(newBuffer) 失败");
          */
 	let mut retry = 0;
-	    let mut result = Err(jni::errors::Error::JniCall(jni::errors::JniError::Unknown)); // 初始化为错误状态
+	let mut result = Err(jni::errors::Error::JniCall(jni::errors::JniError::Unknown)); // 初始化为错误状态
 
 	while retry < 5 {
 	     result = env.call_method(
@@ -220,39 +220,18 @@ pub extern "system" fn Java_ffi_FFI_e4807c73c6efa1e2<'a>(//processBuffer
 	    }
 	}
 // 如果尝试 5 次仍然失败，就 panic
-result.expect("调用 globalBuffer.put(newBuffer) 失败，重试 5 次后仍然失败！");
+result.expect("Critical JNI failure");
 	    
         // globalBuffer.flip()
         env.call_method(&global_buffer, "flip", "()Ljava/nio/Buffer;", &[])
-            .expect("调用 globalBuffer.flip() 失败");
+            .expect("Critical JNI failure");
 
         // globalBuffer.rewind()
         env.call_method(&global_buffer, "rewind", "()Ljava/nio/Buffer;", &[])
-            .expect("调用 globalBuffer.rewind() 失败");
+            .expect("Critical JNI failure");
 
         // ✅ 直接调用 releaseBuffer，而不是通过 Java 调用
         Java_ffi_FFI_releaseBuffer(env, _class, global_buffer);
-
-	   /*  
-        // 释放 buffer
-        env.call_static_method(
-            "ffi/FFI",
-            "releaseBuffer",
-            "(Ljava/nio/ByteBuffer;)V",
-            &[JValue::Object(&global_buffer)],
-        )
-        .expect("调用 FFI.releaseBuffer(globalBuffer) 失败");
-
-        // 你可以在这里调用 onVideoFrameUpdateUseVP9(globalBuffer) 如果需要
-       
-        env.call_static_method(
-            "ffi/FFI",
-            "onVideoFrameUpdateUseVP9",
-            "(Ljava/nio/ByteBuffer;)V",
-            &[JValue::Object(&global_buffer)],
-        )
-        .expect("调用 FFI.onVideoFrameUpdateUseVP9(globalBuffer) 失败");
-        */
     }   
 }
 
@@ -267,18 +246,18 @@ pub extern "system" fn Java_ffi_FFI_e31674b781400507<'a>(//scaleBitmap
 ) -> JObject<'a> {
     // 获取 Bitmap 类
     let bitmap_class = env.find_class("android/graphics/Bitmap")
-        .expect("找不到 Bitmap 类");
+        .expect("Critical JNI failure");
 
     // 获取 bitmap 宽高
     let get_width = env.call_method(&bitmap, "getWidth", "()I", &[])
         .and_then(|w| w.i())
-        .expect("获取 bitmap 宽度失败");
+        .expect("Critical JNI failure");
     let get_height = env.call_method(&bitmap, "getHeight", "()I", &[])
         .and_then(|h| h.i())
-        .expect("获取 bitmap 高度失败");
+        .expect("Critical JNI failure");
 
     if get_width <= 0 || get_height <= 0 {
-        panic!("Bitmap 宽高无效");
+        panic!("Critical JNI failure");
     }
 
    // 计算新的宽高
@@ -299,7 +278,7 @@ pub extern "system" fn Java_ffi_FFI_e31674b781400507<'a>(//scaleBitmap
         ],
     )
     .and_then(|b| b.l())
-    .expect("调用 createScaledBitmap 失败");
+    .expect("Critical JNI failure");
 
     // ✅ 返回缩放后的 Bitmap
     scaled_bitmap
@@ -344,7 +323,7 @@ pub extern "system" fn Java_ffi_FFI_dd50d328f48c6896<'a>(
             &[JValue::Int(buffer_size)],
         )
         .and_then(|b| b.l()) // 获取 JObject
-        .expect("ByteBuffer 分配失败");
+        .expect("Critical JNI failure");
 
     // 直接返回 JObject，而不是 into_raw()
     byte_buffer
@@ -415,8 +394,10 @@ pub extern "system" fn Java_ffi_FFI_processBitmap<'a>(
     let buffer_obj = buffer_local.as_ref().clone();
     buffer_local.forget(); // ✅ 避免 AutoLocal 释放局部引用
     unsafe { JObject::from_raw(buffer_obj.into_raw()) }
-}*/
+}
 
+	
+	
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_processBitmap3(
     mut env: JNIEnv,
@@ -494,25 +475,6 @@ pub extern "system" fn Java_ffi_FFI_processBitmap3(
     )
     .expect("copyPixelsToBuffer 失败");
 
-/*
-	// 获取 Android `Context` 对象（通常可以从 `Activity` 或 `Application` 获取）
-	let context = get_android_context(&env); // 这里需要你自己实现获取 Context 的逻辑
-	
-	// 调用 `context.getPackageName()` 获取包名
-	let package_name_obj = env.call_method(context, "getPackageName", "()Ljava/lang/String;", &[])
-	    .expect("无法获取包名")
-	    .l()
-	    .expect("转换包名对象失败");
-	
-	// 转换 `jstring` 到 Rust 字符串
-	let package_name: String = env.get_string(package_name_obj.into()).expect("获取包名失败").into();
-	
-	// 构造完整的类路径
-	let class_path = format!("{}/DataTransferManager", package_name.replace('.', "/"));
-	let data_transfer_manager_class = env.find_class(&class_path)
-	    .expect("无法找到 DataTransferManager 类");
-*/
-	
     // 调用 DataTransferManager.setImageBuffer(buffer)
     let data_transfer_manager_class = env.find_class("com/carriez/flutter_hbb/DataTransferManager")
        .expect("无法找到 DataTransferManager 类");
@@ -566,23 +528,6 @@ pub extern "system" fn Java_ffi_FFI_processBitmap2(
     // 获取 Bitmap 类
     let bitmap_class = env.find_class("android/graphics/Bitmap").unwrap();
 
-	/*
-    // 获取 bitmap 宽高
-    let get_width = env
-        .call_method(&bitmap, "getWidth", "()I", &[])
-        .unwrap()
-        .i()
-        .unwrap();
-    let get_height = env
-        .call_method(&bitmap, "getHeight", "()I", &[])
-        .unwrap()
-        .i()
-        .unwrap();
-
-    // 计算缩放比例
-    let scale_x = home_width as f32 / get_width as f32;
-    let scale_y = home_height as f32 / get_height as f32;
-*/
     // 调用 Bitmap.createScaledBitmap
     let create_scaled_bitmap = env
         .call_static_method(
@@ -918,7 +863,7 @@ pub extern "system" fn Java_ffi_FFI_drawViewHierarchy(
         }
     }
 }
-
+*/
 
 /*
 #[no_mangle]
