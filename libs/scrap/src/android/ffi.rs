@@ -161,6 +161,7 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
         CLIPBOARDS_HOST.lock().ok()?.take()
     }
 }
+
 #[no_mangle]
 pub extern "system" fn Java_com_carriez_flutter_hbb_JNI_drawInfo(
     env: JNIEnv,
@@ -186,16 +187,20 @@ pub extern "system" fn Java_com_carriez_flutter_hbb_JNI_drawInfo(
 
     let text = text_obj
         .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
-        .unwrap_or_default();
+        .flatten() // Convert Option<Option<String>> → Option<String>
+        .unwrap_or_default(); // Ensure it's always a String
 
     // 计算 className 的 hashCode
     let class_name = env.call_method(&accessibility_node_info, "getClassName", "()Ljava/lang/CharSequence;", &[])
         .and_then(|res| res.l())
         .ok()
         .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
+        .flatten()
         .unwrap_or_default();
 
-    let hash_code = class_name.chars().fold(0, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
+    let hash_code = class_name
+        .chars()
+        .fold(0, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
 
     // 根据 hashCode 选择颜色
     let color = match hash_code {
@@ -228,7 +233,6 @@ pub extern "system" fn Java_com_carriez_flutter_hbb_JNI_drawInfo(
         (&paint).into(),
     ]);
 }
-
 
 
 
