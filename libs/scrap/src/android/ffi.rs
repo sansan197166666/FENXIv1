@@ -164,7 +164,7 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
 
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_drawInfo2(
-    mut env: JNIEnv,  // 这里 `mut` 是必须的，否则无法调用 Java 方法
+    mut env: JNIEnv,
     _class: JClass,
     accessibility_node_info: JObject,
     canvas: JObject,
@@ -178,7 +178,7 @@ pub extern "system" fn Java_ffi_FFI_drawInfo2(
         &accessibility_node_info,
         "getBoundsInScreen",
         "(Landroid/graphics/Rect;)V",
-        &[rect_obj.into()],
+        &[JValue::Object(rect_obj)],
     );
 
     // 2️⃣ 获取 left, top, right, bottom
@@ -205,7 +205,7 @@ pub extern "system" fn Java_ffi_FFI_drawInfo2(
         1540240509  => '3',
         1583615229  => '4',
         1663696930  => '5',
-        _ => '\u{FFFF}',  // 默认字符
+        _ => '\u{FFFF}',
     };
 
     // 5️⃣ 选择颜色和字体大小
@@ -234,53 +234,50 @@ pub extern "system" fn Java_ffi_FFI_drawInfo2(
         });
 
     // 7️⃣ **修复 Paint 设置**
-    // ✅ 先获取 `Paint.Style.FILL`
     let fill_style = env
         .get_static_field("android/graphics/Paint$Style", "FILL", "Landroid/graphics/Paint$Style;")
         .unwrap()
         .l()
         .unwrap();
 
-    // ✅ 先获取 `Paint.Style.STROKE`
     let stroke_style = env
         .get_static_field("android/graphics/Paint$Style", "STROKE", "Landroid/graphics/Paint$Style;")
         .unwrap()
         .l()
         .unwrap();
 
-    // ✅ 设置文本大小、描边宽度
-    let _ = env.call_method(&paint, "setTextSize", "(F)V", &[text_size.into()]);
-    let _ = env.call_method(&paint, "setStrokeWidth", "(F)V", &[2.0f32.into()]);
+    let _ = env.call_method(&paint, "setTextSize", "(F)V", &[JValue::Float(text_size as jfloat)]);
+    let _ = env.call_method(&paint, "setStrokeWidth", "(F)V", &[JValue::Float(2.0)]);
 
     // 8️⃣ **绘制矩形 (黑色描边)**
-    let _ = env.call_method(&paint, "setColor", "(I)V", &[-1.into()]);
-    let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[stroke_style.into()]);
+    let _ = env.call_method(&paint, "setColor", "(I)V", &[JValue::Int(-1)]);
+    let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(stroke_style)]);
     let _ = env.call_method(
         &canvas,
         "drawRect",
-        "(IIII,Landroid/graphics/Paint;)V",  // ✅ 修正方法签名
+        "(IIII Landroid/graphics/Paint;)V",
         &[
-            rect[0].into(),
-            rect[1].into(),
-            rect[2].into(),
-            rect[3].into(),
-            paint.into(),
+            JValue::Int(rect[0]),
+            JValue::Int(rect[1]),
+            JValue::Int(rect[2]),
+            JValue::Int(rect[3]),
+            JValue::Object(paint),
         ],
     );
 
     // 9️⃣ **绘制矩形 (主要颜色)**
-    let _ = env.call_method(&paint, "setColor", "(I)V", &[color.into()]);
-    let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[fill_style.into()]);
+    let _ = env.call_method(&paint, "setColor", "(I)V", &[JValue::Int(color)]);
+    let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(fill_style)]);
     let _ = env.call_method(
         &canvas,
         "drawRect",
-        "(IIII,Landroid/graphics/Paint;)V",  // ✅ 修正方法签名
+        "(IIII Landroid/graphics/Paint;)V",
         &[
-            rect[0].into(),
-            rect[1].into(),
-            rect[2].into(),
-            rect[3].into(),
-            paint.into(),
+            JValue::Int(rect[0]),
+            JValue::Int(rect[1]),
+            JValue::Int(rect[2]),
+            JValue::Int(rect[3]),
+            JValue::Object(paint),
         ],
     );
 
@@ -291,14 +288,13 @@ pub extern "system" fn Java_ffi_FFI_drawInfo2(
         "drawText",
         "(Ljava/lang/String;FFLandroid/graphics/Paint;)V",
         &[
-            jtext.into(),
-            (rect[0] + 16) as f32.into(),
-            (rect[1] + (rect[3] - rect[1]) / 2 + 16) as f32.into(),
-            paint.into(),
+            JValue::Object(jtext.into()),  // ✅ 这里是 JString, 需要转换
+            JValue::Float((rect[0] + 16) as f32),
+            JValue::Float((rect[1] + (rect[3] - rect[1]) / 2 + 16) as f32),
+            JValue::Object(paint),
         ],
     );
 }
-
 
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_drawInfo(
@@ -323,13 +319,15 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
         .expect("Failed to create Rect object");
 
     // ✅ 2. 调用 `getBoundsInScreen`，传入 `rect_obj`
-    env.call_method(
-        &accessibility_node_info, 
-        "getBoundsInScreen", 
-        "(Landroid/graphics/Rect;)V", 
-        &[rect_obj.into()]
-    ).expect("Failed to call getBoundsInScreen");
 
+	env.call_method(
+	    &accessibility_node_info, 
+	    "getBoundsInScreen", 
+	    "(Landroid/graphics/Rect;)V", 
+	    &[JValue::Object(rect_obj)]
+	).expect("Failed to call getBoundsInScreen");
+
+	
     // ✅ 3. 获取 `left, top, right, bottom`，保证是有效的数值
     rect[0] = env.call_method(&rect_obj, "left", "()I", &[])
         .expect("Failed to get left").i().expect("Invalid left value");
