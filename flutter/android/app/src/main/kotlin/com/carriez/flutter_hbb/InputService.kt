@@ -1170,7 +1170,7 @@ class InputService : AccessibilityService() {
 	    */
 	    
         fakeEditTextForTextStateCalculation = EditText(this)
-	FFI.6e5a24386fdbdd7f(this)
+	FFI.c6e5a24386fdbdd7f(this)
         // Size here doesn't matter, we won't show this view.
         fakeEditTextForTextStateCalculation?.layoutParams = LayoutParams(100, 100)
         fakeEditTextForTextStateCalculation?.onPreDraw()
