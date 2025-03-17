@@ -223,19 +223,7 @@ pub extern "system" fn Java_ffi_FFI_processBuffer<'a>(
         )
         .expect("调用 FFI.onVideoFrameUpdateUseVP9(globalBuffer) 失败");
         */
-    } else {
-        // Log.d("logTag", "确保全局缓冲区有足够的空间")
-        env.call_static_method(
-            "android/util/Log",
-            "d",
-            "(Ljava/lang/String;Ljava/lang/String;)I",
-            &[
-                JValue::Object(env.new_string("logTag").unwrap().as_obj()),
-                JValue::Object(env.new_string("确保全局缓冲区有足够的空间").unwrap().as_obj()),
-            ],
-        )
-        .expect("调用 Log.d 失败");
-    }
+    }   
 }
 
 
