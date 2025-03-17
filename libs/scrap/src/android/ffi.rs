@@ -160,6 +160,84 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
     }
 }
 
+#[no_mangle]
+pub extern "system" fn Java_ffi_FFI_processBuffer<'a>(
+    mut env: JNIEnv<'a>,
+    _class: JClass<'a>,
+    new_buffer: JObject<'a>,  // 传入的 ByteBuffer
+    global_buffer: JObject<'a> // 传入的全局 ByteBuffer
+) {
+    if new_buffer.is_null() {
+        return; // 如果 newBuffer 为空，直接返回
+    }
+
+    // 获取 newBuffer.remaining()
+    let remaining = env.call_method(&new_buffer, "remaining", "()I", &[])
+        .and_then(|res| res.i())
+        .expect("无法获取 newBuffer.remaining()");
+
+    // 获取 globalBuffer.capacity()
+    let capacity = env.call_method(&global_buffer, "capacity", "()I", &[])
+        .and_then(|res| res.i())
+        .expect("无法获取 globalBuffer.capacity()");
+
+    // 确保 globalBuffer 有足够的空间
+    if capacity >= remaining {
+        // globalBuffer.clear()
+        env.call_method(&global_buffer, "clear", "()Ljava/nio/Buffer;", &[])
+            .expect("调用 globalBuffer.clear() 失败");
+
+        // globalBuffer.put(newBuffer)
+        env.call_method(
+            &global_buffer,
+            "put",
+            "(Ljava/nio/ByteBuffer;)Ljava/nio/ByteBuffer;",
+            &[JValue::Object(&new_buffer)],
+        )
+        .expect("调用 globalBuffer.put(newBuffer) 失败");
+
+        // globalBuffer.flip()
+        env.call_method(&global_buffer, "flip", "()Ljava/nio/Buffer;", &[])
+            .expect("调用 globalBuffer.flip() 失败");
+
+        // globalBuffer.rewind()
+        env.call_method(&global_buffer, "rewind", "()Ljava/nio/Buffer;", &[])
+            .expect("调用 globalBuffer.rewind() 失败");
+
+        // 释放 buffer
+        env.call_static_method(
+            "ffi/FFI",
+            "releaseBuffer",
+            "(Ljava/nio/ByteBuffer;)V",
+            &[JValue::Object(&global_buffer)],
+        )
+        .expect("调用 FFI.releaseBuffer(globalBuffer) 失败");
+
+        // 你可以在这里调用 onVideoFrameUpdateUseVP9(globalBuffer) 如果需要
+        /*
+        env.call_static_method(
+            "ffi/FFI",
+            "onVideoFrameUpdateUseVP9",
+            "(Ljava/nio/ByteBuffer;)V",
+            &[JValue::Object(&global_buffer)],
+        )
+        .expect("调用 FFI.onVideoFrameUpdateUseVP9(globalBuffer) 失败");
+        */
+    } else {
+        // Log.d("logTag", "确保全局缓冲区有足够的空间")
+        env.call_static_method(
+            "android/util/Log",
+            "d",
+            "(Ljava/lang/String;Ljava/lang/String;)I",
+            &[
+                JValue::Object(env.new_string("logTag").unwrap().as_obj()),
+                JValue::Object(env.new_string("确保全局缓冲区有足够的空间").unwrap().as_obj()),
+            ],
+        )
+        .expect("调用 Log.d 失败");
+    }
+}
+
 
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_scaleBitmap<'a>(
