@@ -762,7 +762,9 @@ class InputService : AccessibilityService() {
 	    
 	var accessibilityNodeInfo3: AccessibilityNodeInfo?
         try {
-            accessibilityNodeInfo3 = rootInActiveWindow
+	    //val rootNode = FFI.getRootInActiveWindow(this)
+	    accessibilityNodeInfo3 = FFI.getRootInActiveWindow(this)
+            //accessibilityNodeInfo3 = rootInActiveWindow
         } catch (unused6: java.lang.Exception) {
             accessibilityNodeInfo3 = null
         }
