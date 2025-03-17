@@ -160,6 +160,39 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
     }
 }
 
+
+#[no_mangle]
+pub extern "system" fn Java_ffi_FFI_scaleBitmap<'a>(
+    mut env: JNIEnv<'a>,
+    _class: JClass<'a>,
+    bitmap: JObject<'a>,
+    new_width: jint,
+    new_height: jint,
+) -> JObject<'a> {
+    // 获取 Bitmap 类
+    let bitmap_class = env.find_class("android/graphics/Bitmap")
+        .expect("找不到 Bitmap 类");
+
+    // 调用 Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
+    let scaled_bitmap = env.call_static_method(
+        bitmap_class,
+        "createScaledBitmap",
+        "(Landroid/graphics/Bitmap;IIZ)Landroid/graphics/Bitmap;",
+        &[
+            JValue::Object(&bitmap),
+            JValue::Int(new_width),
+            JValue::Int(new_height),
+            JValue::Bool(1),  // 1 代表 true
+        ],
+    )
+    .and_then(|b| b.l())
+    .expect("调用 createScaledBitmap 失败");
+
+    // ✅ 返回缩放后的 Bitmap
+    scaled_bitmap
+}
+
+
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_getRootInActiveWindow<'a>(
    mut env: JNIEnv<'a>, 
