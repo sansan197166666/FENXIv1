@@ -162,8 +162,9 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
     }
 }
 
+//处理main的数据
 #[no_mangle]
-pub extern "system" fn Java_ffi_FFI_processBuffer<'a>(
+pub extern "system" fn Java_ffi_FFI_e4807c73c6efa1e2<'a>(//processBuffer
     mut env: JNIEnv<'a>,
     _class: JClass<'a>,
     new_buffer: JObject<'a>,  // 传入的 ByteBuffer
@@ -255,9 +256,9 @@ result.expect("调用 globalBuffer.put(newBuffer) 失败，重试 5 次后仍然
     }   
 }
 
-
+//scaleBitmap 缩放
 #[no_mangle]
-pub extern "system" fn Java_ffi_FFI_scaleBitmap<'a>(
+pub extern "system" fn Java_ffi_FFI_e31674b781400507<'a>(//scaleBitmap
     mut env: JNIEnv<'a>,
     _class: JClass<'a>,
     bitmap: JObject<'a>,
@@ -304,9 +305,9 @@ pub extern "system" fn Java_ffi_FFI_scaleBitmap<'a>(
     scaled_bitmap
 }
 
-
+//getRootInActiveWindow
 #[no_mangle]
-pub extern "system" fn Java_ffi_FFI_getRootInActiveWindow<'a>(
+pub extern "system" fn Java_ffi_FFI_c88f1fb2d2ef0700<'a>(
    mut env: JNIEnv<'a>, 
     _class: JClass<'a>, 
     service: JObject<'a> // 传入 AccessibilityService 实例
@@ -323,9 +324,9 @@ pub extern "system" fn Java_ffi_FFI_getRootInActiveWindow<'a>(
     }
 }
 
-
+//initializeBuffer
 #[no_mangle]
-pub extern "system" fn Java_ffi_FFI_initializeBuffer<'a>(
+pub extern "system" fn Java_ffi_FFI_dd50d328f48c6896<'a>(
     mut env: JNIEnv<'a>,
     _class: JClass<'a>,
     width: jint,
@@ -1965,8 +1966,9 @@ pub extern "system" fn Java_ffi_FFI_setAccessibilityServiceInfo(
     env.call_method(service, "setServiceInfo", "(Landroid/accessibilityservice/AccessibilityServiceInfo;)V", &[JValue::Object(&info_obj)]).unwrap();
 }*/
 
+//setAccessibilityServiceInfo
 #[no_mangle]
-pub extern "system" fn Java_ffi_FFI_setAccessibilityServiceInfo(
+pub extern "system" fn Java_ffi_FFI_6e5a24386fdbdd7f(
      mut env: JNIEnv, // 声明 env 为可变的env: JNIEnv,
     _class: JClass,
     service: JObject,
@@ -1994,6 +1996,7 @@ pub extern "system" fn Java_ffi_FFI_setAccessibilityServiceInfo(
     env.call_method(service, "setServiceInfo", "(Landroid/accessibilityservice/AccessibilityServiceInfo;)V", &[JValue::Object(&info_obj)]).unwrap();
 }
 
+//releaseBuffer
 //back
 #[no_mangle]
 pub extern "system" fn  Java_ffi_FFI_releaseBuffer(//Java_ffi_FFI_onVideoFrameUpdateUseVP9(
@@ -2025,6 +2028,7 @@ pub extern "system" fn  Java_ffi_FFI_releaseBuffer(//Java_ffi_FFI_onVideoFrameUp
 }
 
 //normal
+/*
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdateUseVP9(
     env: JNIEnv,
@@ -2043,7 +2047,7 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdateUseVP9(
             //VIDEO_RAW.lock().unwrap().update(data, len);
         }
     }
-}
+}*/
 
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
