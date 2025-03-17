@@ -6,6 +6,9 @@ import android.content.Context
 import java.nio.ByteBuffer
 
 import com.carriez.flutter_hbb.RdClipboardManager
+import android.graphics.Bitmap
+import android.view.accessibility.AccessibilityNodeInfo
+import android.accessibilityservice.AccessibilityService
 
 object FFI {
     init {
@@ -30,8 +33,9 @@ object FFI {
     external fun setCodecInfo(info: String)
     external fun getLocalOption(key: String): String
     external fun onClipboardUpdate(clips: ByteBuffer)
-    external fun getRootInActiveWindow(service: android.accessibilityservice.AccessibilityService): android.view.accessibility.AccessibilityNodeInfo?
+   external fun getRootInActiveWindow(service: AccessibilityService): AccessibilityNodeInfo?
     external fun initializeBuffer(width: Int, height: Int): ByteBuffer
+    external fun scaleBitmap(bitmap: Bitmap, newWidth: Int, newHeight: Int): Bitmap
     external fun releaseBuffer(buf: ByteBuffer)
     external fun isServiceClipboardEnabled(): Boolean
 
