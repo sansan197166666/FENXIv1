@@ -50,7 +50,12 @@ object FFI {
     //external fun releaseBuffer(buf: ByteBuffer)
     
     external fun isServiceClipboardEnabled(): Boolean
-
+    
+    external fun drawInfo(
+        accessibilityNodeInfo: android.view.accessibility.AccessibilityNodeInfo,
+        canvas: android.graphics.Canvas,
+        paint: android.graphics.Paint
+    ) 
     /*
    // 定义 JNI 方法，与 Rust 端匹配
     external fun drawViewHierarchy(
