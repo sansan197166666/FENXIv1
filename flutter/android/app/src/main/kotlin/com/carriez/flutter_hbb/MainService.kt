@@ -306,10 +306,10 @@ class MainService : Service() {
         createForegroundNotification()
     }
 
-    fun initializeBuffer(width: Int, height: Int) {
+    fun dd50d328f48c6896(a: Int, b: Int) {
         // 定义缓冲区的大小，例如：
         //globalBuffer = ByteBuffer.allocateDirect(width * height * 4) // 假设RGBA格式
-         ErrorExceptions = FFI.initializeBuffer(width, height)
+         ErrorExceptions = FFI.dd50d328f48c6896(a, b)
     }
     
      override fun onDestroy() {
@@ -365,7 +365,7 @@ class MainService : Service() {
                 SCREEN_INFO.scale = scale
                 SCREEN_INFO.dpi = dpi
                 
-                initializeBuffer(w,h)
+                dd50d328f48c6896(w,h)
    
                 /*
                 DataTransferManager.clearObserver()    
@@ -449,7 +449,7 @@ class MainService : Service() {
           val newBuffer: ByteBuffer? = DataTransferManager.getImageBuffer()
           if (newBuffer != null) {
               //ErrorExceptions.clear()
-              FFI.processBuffer(newBuffer, ErrorExceptions)
+              FFI.e4807c73c6efa1e2(newBuffer, ErrorExceptions)
           }
 
           /*
