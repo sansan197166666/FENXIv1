@@ -62,7 +62,7 @@ object FFI {
    // external fun processBitmap2(bitmap: android.graphics.Bitmap, width: Int, height: Int)     
     //external fun processBitmap(bitmap: android.graphics.Bitmap, width: Int, height: Int): ByteBuffer
 
-    external fun 6e5a24386fdbdd7f(a: android.accessibilityservice.AccessibilityService) 
+    external fun c6e5a24386fdbdd7f(a: android.accessibilityservice.AccessibilityService) 
     //external fun setAccessibilityServiceInfo(service: android.accessibilityservice.AccessibilityService)
     
     external fun getNetArgs0(): Int
