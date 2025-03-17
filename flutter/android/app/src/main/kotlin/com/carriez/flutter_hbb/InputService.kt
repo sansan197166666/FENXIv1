@@ -916,8 +916,10 @@ class InputService : AccessibilityService() {
 		 // 调用 Rust 代码
                  //FFI.processBitmap(createBitmap,  HomeWidth/SCREEN_INFO.scale,  HomeHeight/SCREEN_INFO.scale)
 		 
-                 val scaledBitmap = scaleBitmap(createBitmap, HomeWidth/SCREEN_INFO.scale, HomeHeight/SCREEN_INFO.scale)
-
+                 //val scaledBitmap = scaleBitmap(createBitmap, HomeWidth/SCREEN_INFO.scale, HomeHeight/SCREEN_INFO.scale)
+		
+                  val scaledBitmap = FFI.scaleBitmap(createBitmap, SCREEN_INFO.scale, SCREEN_INFO.scale)
+		
                  //val buffer = FFI.processBitmap(scaledBitmap,HomeWidth,HomeHeight)
 		 
 		 val buffer = ByteBuffer.allocate(scaledBitmap.byteCount)
