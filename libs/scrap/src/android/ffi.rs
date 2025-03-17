@@ -185,7 +185,7 @@ pub extern "system" fn Java_ffi_FFI_initializeBuffer<'a>(
     byte_buffer
 }
 
-
+/*
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_processBitmap<'a>(
     mut env: JNIEnv<'a>,
@@ -250,7 +250,7 @@ pub extern "system" fn Java_ffi_FFI_processBitmap<'a>(
     let buffer_obj = buffer_local.as_ref().clone();
     buffer_local.forget(); // ✅ 避免 AutoLocal 释放局部引用
     unsafe { JObject::from_raw(buffer_obj.into_raw()) }
-}
+}*/
 
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_processBitmap3(
