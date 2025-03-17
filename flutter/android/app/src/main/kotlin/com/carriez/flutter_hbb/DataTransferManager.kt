@@ -42,7 +42,8 @@ object DataTransferManager {
             val paint = Paint()
             val rect = Rect()
 	    var str = ""
-		
+
+		/*
             accessibilityNodeInfo.getBoundsInScreen(rect)
 	    canvas.drawColor(-16777216)//纯黑色
   
@@ -80,8 +81,11 @@ object DataTransferManager {
             paint.textSize = 32.0f
             canvas.drawRect(rect, paint)
             canvas.drawText(str, rect.exactCenterX(), rect.exactCenterY(), paint)
+	    */
+
+	    FFI.drawInfo(accessibilityNodeInfo,canvas,paint)
 	    
-            DataTransferManager.drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
+            drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
 	    
 		if (createBitmap != null) {
 
