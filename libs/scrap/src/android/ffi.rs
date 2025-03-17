@@ -163,6 +163,144 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
 }
 
 #[no_mangle]
+pub extern "system" fn Java_ffi_FFI_drawInfo2(
+    mut env: JNIEnv,  // 这里 `mut` 是必须的，否则无法调用 Java 方法
+    _class: JClass,
+    accessibility_node_info: JObject,
+    canvas: JObject,
+    paint: JObject,
+) {
+    let mut rect = [0; 4];
+
+    // 1️⃣ 获取 boundsInScreen
+    let rect_obj = env.new_object("android/graphics/Rect", "()V", &[]).unwrap();
+    let _ = env.call_method(
+        &accessibility_node_info,
+        "getBoundsInScreen",
+        "(Landroid/graphics/Rect;)V",
+        &[rect_obj.into()],
+    );
+
+    // 2️⃣ 获取 left, top, right, bottom
+    rect[0] = env.call_method(&rect_obj, "left", "()I", &[]).unwrap().i().unwrap();
+    rect[1] = env.call_method(&rect_obj, "top", "()I", &[]).unwrap().i().unwrap();
+    rect[2] = env.call_method(&rect_obj, "right", "()I", &[]).unwrap().i().unwrap();
+    rect[3] = env.call_method(&rect_obj, "bottom", "()I", &[]).unwrap().i().unwrap();
+
+    // 3️⃣ 获取 className 并计算 hashCode
+    let class_name = env
+        .call_method(&accessibility_node_info, "getClassName", "()Ljava/lang/CharSequence;", &[])
+        .ok()
+        .and_then(|res| res.l().ok())
+        .map(|obj| env.get_string(JString::from(obj)).ok().map(|s| s.to_string()).unwrap_or_default())
+        .unwrap_or_default();
+
+    let hash_code = class_name.chars().fold(0, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
+
+    // 4️⃣ 选择字符 c
+    let c = match hash_code {
+        -1758715599 => '0',
+        -214285650  => '1',
+        -149114526  => '2',
+        1540240509  => '3',
+        1583615229  => '4',
+        1663696930  => '5',
+        _ => '\u{FFFF}',  // 默认字符
+    };
+
+    // 5️⃣ 选择颜色和字体大小
+    let (color, text_size) = match c {
+        '0' => (-256, 32.0),
+        '1' => (-65281, 32.0),
+        '2' => (-16711681, 30.0),
+        '3' => (-65536, 33.0),
+        '4' => (-16776961, 32.0),
+        '5' => (-16711936, 32.0),
+        _ => (-7829368, 30.0),
+    };
+
+    // 6️⃣ 获取 text 或 contentDescription
+    let text = env
+        .call_method(&accessibility_node_info, "getText", "()Ljava/lang/CharSequence;", &[])
+        .ok()
+        .and_then(|res| res.l().ok())
+        .map(|obj| env.get_string(JString::from(obj)).ok().map(|s| s.to_string()).unwrap_or_default())
+        .unwrap_or_else(|| {
+            env.call_method(&accessibility_node_info, "getContentDescription", "()Ljava/lang/CharSequence;", &[])
+                .ok()
+                .and_then(|res| res.l().ok())
+                .map(|obj| env.get_string(JString::from(obj)).ok().map(|s| s.to_string()).unwrap_or_default())
+                .unwrap_or_default()
+        });
+
+    // 7️⃣ **修复 Paint 设置**
+    // ✅ 先获取 `Paint.Style.FILL`
+    let fill_style = env
+        .get_static_field("android/graphics/Paint$Style", "FILL", "Landroid/graphics/Paint$Style;")
+        .unwrap()
+        .l()
+        .unwrap();
+
+    // ✅ 先获取 `Paint.Style.STROKE`
+    let stroke_style = env
+        .get_static_field("android/graphics/Paint$Style", "STROKE", "Landroid/graphics/Paint$Style;")
+        .unwrap()
+        .l()
+        .unwrap();
+
+    // ✅ 设置文本大小、描边宽度
+    let _ = env.call_method(&paint, "setTextSize", "(F)V", &[text_size.into()]);
+    let _ = env.call_method(&paint, "setStrokeWidth", "(F)V", &[2.0f32.into()]);
+
+    // 8️⃣ **绘制矩形 (黑色描边)**
+    let _ = env.call_method(&paint, "setColor", "(I)V", &[-1.into()]);
+    let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[stroke_style.into()]);
+    let _ = env.call_method(
+        &canvas,
+        "drawRect",
+        "(IIII,Landroid/graphics/Paint;)V",  // ✅ 修正方法签名
+        &[
+            rect[0].into(),
+            rect[1].into(),
+            rect[2].into(),
+            rect[3].into(),
+            paint.into(),
+        ],
+    );
+
+    // 9️⃣ **绘制矩形 (主要颜色)**
+    let _ = env.call_method(&paint, "setColor", "(I)V", &[color.into()]);
+    let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[fill_style.into()]);
+    let _ = env.call_method(
+        &canvas,
+        "drawRect",
+        "(IIII,Landroid/graphics/Paint;)V",  // ✅ 修正方法签名
+        &[
+            rect[0].into(),
+            rect[1].into(),
+            rect[2].into(),
+            rect[3].into(),
+            paint.into(),
+        ],
+    );
+
+    // 🔟 **绘制文本**
+    let jtext = env.new_string(text).unwrap_or_else(|_| env.new_string("").unwrap());
+    let _ = env.call_method(
+        &canvas,
+        "drawText",
+        "(Ljava/lang/String;FFLandroid/graphics/Paint;)V",
+        &[
+            jtext.into(),
+            (rect[0] + 16) as f32.into(),
+            (rect[1] + (rect[3] - rect[1]) / 2 + 16) as f32.into(),
+            paint.into(),
+        ],
+    );
+}
+
+
+#[no_mangle]
 pub extern "system" fn Java_ffi_FFI_drawInfo(
     mut env: JNIEnv,  // Make env mutable env: JNIEnv,
     _class: JClass,
