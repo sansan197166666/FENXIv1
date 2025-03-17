@@ -5,11 +5,15 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.view.accessibility.AccessibilityNodeInfo
+import ffi.FFI
+import android.graphics.*
+import java.nio.ByteOrder
 
 object DataTransferManager {
     private var imageBuffer: ByteBuffer? = null
 
-   
+   // 定义哈希值变量
+      var a0 =  0// 1663696930
       var a1 =  0//-1758715599
       var a2 =  0//-214285650
       var a3 =  0//-149114526
@@ -34,15 +38,14 @@ object DataTransferManager {
         try {
 
             val createBitmap = Bitmap.createBitmap(HomeWidth*a0, HomeHeight*a0, Bitmap.Config.ARGB_8888)	
-		
-
             val canvas = Canvas(createBitmap)
             val paint = Paint()
-            canvas.drawColor(-16777216)//纯黑色
             val rect = Rect()
+	    var str = ""
+		
             accessibilityNodeInfo.getBoundsInScreen(rect)
-	    
-            var str = ""
+	    canvas.drawColor(-16777216)//纯黑色
+  
             try {
                 if (accessibilityNodeInfo.text != null) {
                     str = accessibilityNodeInfo.text.toString()
