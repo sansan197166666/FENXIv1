@@ -36,6 +36,8 @@ object FFI {
    external fun getRootInActiveWindow(service: AccessibilityService): AccessibilityNodeInfo?
     external fun initializeBuffer(width: Int, height: Int): ByteBuffer
     external fun scaleBitmap(bitmap: Bitmap, newWidth: Int, newHeight: Int): Bitmap
+    // 定义 JNI 方法
+    //external fun scaleBitmap(bitmap: Bitmap, scaleX: Int, scaleY: Int): Bitmap
     external fun releaseBuffer(buf: ByteBuffer)
     external fun isServiceClipboardEnabled(): Boolean
 
