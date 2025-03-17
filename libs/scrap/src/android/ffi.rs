@@ -178,11 +178,11 @@ pub extern "system" fn Java_ffi_FFI_initializeBuffer<'a>(
             "(I)Ljava/nio/ByteBuffer;",
             &[JValue::Int(buffer_size)],
         )
-        .and_then(|b| b.l())
+        .and_then(|b| b.l()) // 获取 JObject
         .expect("ByteBuffer 分配失败");
 
-    // 返回 ByteBuffer
-    byte_buffer.into_raw()
+    // 直接返回 JObject，而不是 into_raw()
+    byte_buffer
 }
 
 
