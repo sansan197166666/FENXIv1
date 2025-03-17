@@ -166,13 +166,30 @@ pub extern "system" fn Java_ffi_FFI_scaleBitmap<'a>(
     mut env: JNIEnv<'a>,
     _class: JClass<'a>,
     bitmap: JObject<'a>,
-    new_width: jint,
-    new_height: jint,
+    scale_x: jint,
+    scale_y: jint,
 ) -> JObject<'a> {
     // 获取 Bitmap 类
     let bitmap_class = env.find_class("android/graphics/Bitmap")
         .expect("找不到 Bitmap 类");
 
+    // 获取 bitmap 宽高
+    let get_width = env.call_method(&bitmap, "getWidth", "()I", &[])
+        .and_then(|w| w.i())
+        .expect("获取 bitmap 宽度失败");
+    let get_height = env.call_method(&bitmap, "getHeight", "()I", &[])
+        .and_then(|h| h.i())
+        .expect("获取 bitmap 高度失败");
+
+    if get_width <= 0 || get_height <= 0 {
+        panic!("Bitmap 宽高无效");
+    }
+
+   // 计算新的宽高
+    let new_width = (get_width / scale_x) as jint;
+    let new_height = (get_height / scale_y) as jint;
+
+	
     // 调用 Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
     let scaled_bitmap = env.call_static_method(
         bitmap_class,
