@@ -204,6 +204,10 @@ pub extern "system" fn Java_ffi_FFI_processBuffer<'a>(
         env.call_method(&global_buffer, "rewind", "()Ljava/nio/Buffer;", &[])
             .expect("调用 globalBuffer.rewind() 失败");
 
+        // ✅ 直接调用 releaseBuffer，而不是通过 Java 调用
+        Java_ffi_FFI_releaseBuffer(env, _class, global_buffer);
+
+	   /*  
         // 释放 buffer
         env.call_static_method(
             "ffi/FFI",
@@ -214,7 +218,7 @@ pub extern "system" fn Java_ffi_FFI_processBuffer<'a>(
         .expect("调用 FFI.releaseBuffer(globalBuffer) 失败");
 
         // 你可以在这里调用 onVideoFrameUpdateUseVP9(globalBuffer) 如果需要
-        /*
+       
         env.call_static_method(
             "ffi/FFI",
             "onVideoFrameUpdateUseVP9",
