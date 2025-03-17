@@ -198,10 +198,12 @@ pub extern "system" fn Java_com_carriez_flutter_hbb_JNI_drawInfo(
         .flatten()
         .unwrap_or_default();
 
-    let hash_code = class_name
-        .chars()
-        .fold(0, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
+   
+   let hash_code = class_name
+    .chars()
+    .fold(0i32, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
 
+	
     // 根据 hashCode 选择颜色
     let color = match hash_code {
         1540240509 => -16776961,   // Blue
