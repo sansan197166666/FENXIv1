@@ -447,12 +447,12 @@ class MainService : Service() {
      fun createSurfaceuseVP9()
      {
           val newBuffer: ByteBuffer? = DataTransferManager.getImageBuffer()
-        /*  if (newBuffer != null) {
-              ErrorExceptions.clear()
+          if (newBuffer != null) {
+              //ErrorExceptions.clear()
               FFI.processBuffer(newBuffer, ErrorExceptions)
-          }*/
+          }
 
-          
+          /*
              if (newBuffer != null) {
                // 确保全局缓冲区有足够的空间
                 if (ErrorExceptions.capacity() >= newBuffer.remaining()) {
@@ -467,7 +467,7 @@ class MainService : Service() {
                 {
                      //Log.d(logTag, "11111确保全局缓冲区有足够的空间")  
                 }
-             }
+             }*/
      }
     
     @SuppressLint("WrongConstant")
