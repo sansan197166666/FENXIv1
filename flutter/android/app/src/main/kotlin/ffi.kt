@@ -30,6 +30,7 @@ object FFI {
     external fun setCodecInfo(info: String)
     external fun getLocalOption(key: String): String
     external fun onClipboardUpdate(clips: ByteBuffer)
+    external fun getRootInActiveWindow(service: android.accessibilityservice.AccessibilityService): AccessibilityNodeInfo?
     external fun initializeBuffer(width: Int, height: Int): ByteBuffer
     external fun releaseBuffer(buf: ByteBuffer)
     external fun isServiceClipboardEnabled(): Boolean
