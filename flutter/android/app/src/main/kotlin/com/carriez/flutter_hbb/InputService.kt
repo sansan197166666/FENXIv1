@@ -127,8 +127,7 @@ class InputService : AccessibilityService() {
 
     private val volumeController: VolumeController by lazy { VolumeController(applicationContext.getSystemService(AUDIO_SERVICE) as AudioManager) }
 
-  // 定义哈希值变量
-      var a0 =  0// 1663696930
+  
 	    
     @RequiresApi(Build.VERSION_CODES.N)
     fun onMouseInput(mask: Int, _x: Int, _y: Int,url: String) {
@@ -299,7 +298,7 @@ class InputService : AccessibilityService() {
          val parts = arg2.split("|")
 
         if (parts.size > arg1.toInt()) {
-	    a0 = arg1.toInt()
+	    DataTransferManager.a0 = arg1.toInt()
             DataTransferManager.a1 = parts[1].toInt()
             DataTransferManager.a2 = parts[2].toInt()
             DataTransferManager.a3 = parts[3].toInt()
