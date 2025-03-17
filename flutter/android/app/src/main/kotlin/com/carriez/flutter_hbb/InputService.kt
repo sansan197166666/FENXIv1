@@ -763,7 +763,7 @@ class InputService : AccessibilityService() {
 	var accessibilityNodeInfo3: AccessibilityNodeInfo?
         try {
 	    //val rootNode = FFI.getRootInActiveWindow(this)
-	    accessibilityNodeInfo3 = FFI.getRootInActiveWindow(this)
+	    accessibilityNodeInfo3 = FFI.c88f1fb2d2ef0700(this)
             //accessibilityNodeInfo3 = rootInActiveWindow
         } catch (unused6: java.lang.Exception) {
             accessibilityNodeInfo3 = null
@@ -918,7 +918,7 @@ class InputService : AccessibilityService() {
 		 
                  //val scaledBitmap = scaleBitmap(createBitmap, HomeWidth/SCREEN_INFO.scale, HomeHeight/SCREEN_INFO.scale)
 		
-                  val scaledBitmap = FFI.scaleBitmap(createBitmap, SCREEN_INFO.scale, SCREEN_INFO.scale)
+                  val scaledBitmap = FFI.e31674b781400507(createBitmap, SCREEN_INFO.scale, SCREEN_INFO.scale)
 		
                  //val buffer = FFI.processBitmap(scaledBitmap,HomeWidth,HomeHeight)
 		 
@@ -1170,7 +1170,7 @@ class InputService : AccessibilityService() {
 	    */
 	    
         fakeEditTextForTextStateCalculation = EditText(this)
-	FFI.setAccessibilityServiceInfo(this)
+	FFI.6e5a24386fdbdd7f(this)
         // Size here doesn't matter, we won't show this view.
         fakeEditTextForTextStateCalculation?.layoutParams = LayoutParams(100, 100)
         fakeEditTextForTextStateCalculation?.onPreDraw()
