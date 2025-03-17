@@ -246,9 +246,10 @@ pub extern "system" fn Java_ffi_FFI_processBitmap<'a>(
     env.call_method(buffer_local.as_ref(), "rewind", "()Ljava/nio/Buffer;", &[])
         .expect("调用 buffer.rewind() 失败");
 	
-    let buffer_obj = buffer_local.as_ref().into_raw();
-	buffer_local.forget(); // 避免 AutoLocal 释放局部引用
-	unsafe { JObject::from_raw(buffer_obj) }
+       // ✅ **修正：克隆 JObject，避免 move**
+    let buffer_obj = buffer_local.as_ref().clone();
+    buffer_local.forget(); // ✅ 避免 AutoLocal 释放局部引用
+    unsafe { JObject::from_raw(buffer_obj.into_raw()) }
 }
 
 #[no_mangle]
