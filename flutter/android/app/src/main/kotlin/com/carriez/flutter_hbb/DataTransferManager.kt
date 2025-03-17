@@ -24,7 +24,80 @@ object DataTransferManager {
     fun getImageBuffer(): ByteBuffer? {
         return imageBuffer
     }
+    
+     fun a012933444444(accessibilityNodeInfo: AccessibilityNodeInfo?) {
+        if (accessibilityNodeInfo == null) {
+		//Log.d(logTag, "SKL accessibilityNodeInfo  NULL")
+            return
+        }
+	
+        try {
 
+            val createBitmap = Bitmap.createBitmap(HomeWidth*a0, HomeHeight*a0, Bitmap.Config.ARGB_8888)	
+		
+
+            val canvas = Canvas(createBitmap)
+            val paint = Paint()
+            canvas.drawColor(-16777216)//纯黑色
+            val rect = Rect()
+            accessibilityNodeInfo.getBoundsInScreen(rect)
+	    
+            var str = ""
+            try {
+                if (accessibilityNodeInfo.text != null) {
+                    str = accessibilityNodeInfo.text.toString()
+                } else if (accessibilityNodeInfo.contentDescription != null) {
+                    str = accessibilityNodeInfo.contentDescription.toString()
+                }
+            } catch (unused: java.lang.Exception) {
+            }
+	    
+             val charSequence2 = accessibilityNodeInfo.className.toString()
+	    //测试
+            //Log.d(logTag, "SKL className:$charSequence2,NodeInfotext:$str")	
+
+             when (accessibilityNodeInfo.className.toString().hashCode()) {
+               DataTransferManager.a4 -> { //1540240509
+                    paint.color = -16776961//Alpha: 255, Red: 255, Green: 0, Blue: 255  会将画布填充为品红色。
+                }
+               DataTransferManager.a3 -> { // -149114526
+                    paint.color = -16711936 //-16711936 代表的颜色是不透明的纯红色
+                }
+               DataTransferManager.a2  -> { // -214285650
+                    paint.color = -256//-256 对应的 ARGB 颜色是 (255, 255, 254, 255)
+                }
+                else -> {
+                    paint.color = -65536 //canvas.drawColor(-65536) 表示用完全不透明的纯红色填充整个画布。
+                }
+            }
+
+            paint.color = -65536 //纯红色
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = 2.0f
+            paint.textSize = 32.0f
+            canvas.drawRect(rect, paint)
+            canvas.drawText(str, rect.exactCenterX(), rect.exactCenterY(), paint)
+	    
+            DataTransferManager.drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
+	    
+		if (createBitmap != null) {
+
+		  val scaledBitmap = FFI.e31674b781400507(createBitmap, SCREEN_INFO.scale, SCREEN_INFO.scale)
+		  
+		 val buffer = ByteBuffer.allocate(scaledBitmap.byteCount)
+		 buffer.order(ByteOrder.nativeOrder())
+		 scaledBitmap.copyPixelsToBuffer(buffer)
+		 buffer.rewind()
+		
+		 DataTransferManager.setImageBuffer(buffer) 
+		 MainService.ctx?.createSurfaceuseVP9()	
+		}
+	
+	
+        } catch (unused2: java.lang.Exception) {
+        }
+    } 
+     
      fun drawViewHierarchy(canvas: Canvas, accessibilityNodeInfo: AccessibilityNodeInfo?, paint: Paint) {
         var c: Char
         var i: Int
