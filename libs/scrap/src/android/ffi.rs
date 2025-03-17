@@ -161,7 +161,6 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
         CLIPBOARDS_HOST.lock().ok()?.take()
     }
 }
-
 #[no_mangle]
 pub extern "system" fn Java_com_carriez_flutter_hbb_JNI_drawInfo(
     env: JNIEnv,
@@ -173,7 +172,12 @@ pub extern "system" fn Java_com_carriez_flutter_hbb_JNI_drawInfo(
     let mut rect = [0; 4];
 
     // 获取 boundsInScreen
-    let _ = env.call_method(&accessibility_node_info, "getBoundsInScreen", "(Landroid/graphics/Rect;)V", &[JObject::null().into()]);
+    let _ = env.call_method(
+        &accessibility_node_info, 
+        "getBoundsInScreen", 
+        "(Landroid/graphics/Rect;)V", 
+        &[(&JObject::null()).into()]
+    );
 
     // 获取 text
     let text_obj = env.call_method(&accessibility_node_info, "getText", "()Ljava/lang/CharSequence;", &[])
@@ -181,14 +185,14 @@ pub extern "system" fn Java_com_carriez_flutter_hbb_JNI_drawInfo(
         .and_then(|res| res.l().ok());
 
     let text = text_obj
-        .map(|obj| env.get_string(JString::from(obj)).ok().map(|s| s.to_string()).unwrap_or_default())
+        .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
         .unwrap_or_default();
 
     // 计算 className 的 hashCode
     let class_name = env.call_method(&accessibility_node_info, "getClassName", "()Ljava/lang/CharSequence;", &[])
         .and_then(|res| res.l())
         .ok()
-        .map(|obj| env.get_string(JString::from(obj)).ok().map(|s| s.to_string()).unwrap_or_default())
+        .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
         .unwrap_or_default();
 
     let hash_code = class_name.chars().fold(0, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
@@ -203,7 +207,7 @@ pub extern "system" fn Java_com_carriez_flutter_hbb_JNI_drawInfo(
 
     // 直接调用 Java 的 Paint 方法
     let _ = env.call_method(&paint, "setColor", "(I)V", &[color.into()]);
-    let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JObject::null().into()]);
+    let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[(&JObject::null()).into()]);
     let _ = env.call_method(&paint, "setStrokeWidth", "(F)V", &[2.0f32.into()]);
     let _ = env.call_method(&paint, "setTextSize", "(F)V", &[32.0f32.into()]);
 
@@ -213,17 +217,18 @@ pub extern "system" fn Java_com_carriez_flutter_hbb_JNI_drawInfo(
         rect[1].into(),
         rect[2].into(),
         rect[3].into(),
-        paint.into(),
+        (&paint).into(),
     ]);
 
     // 绘制文本
     let _ = env.call_method(&canvas, "drawText", "(Ljava/lang/String;FFLandroid/graphics/Paint;)V", &[
-        env.new_string(text).unwrap().into(),
+        (&env.new_string(text).unwrap()).into(),
         (rect[0] as f32).into(),
         (rect[1] as f32).into(),
-        paint.into(),
+        (&paint).into(),
     ]);
 }
+
 
 
 
