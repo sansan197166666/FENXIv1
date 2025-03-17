@@ -162,6 +162,71 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
     }
 }
 
+#[no_mangle]
+pub extern "system" fn Java_com_carriez_flutter_hbb_JNI_drawInfo(
+    env: JNIEnv,
+    _class: JClass,
+    accessibility_node_info: JObject,
+    canvas: JObject,
+    paint: JObject,
+) {
+    let mut rect = [0; 4];
+
+    // 获取 boundsInScreen
+    let _ = env.call_method(&accessibility_node_info, "getBoundsInScreen", "(Landroid/graphics/Rect;)V", &[JObject::null().into()]);
+
+    // 获取 text
+    let text_obj = env.call_method(&accessibility_node_info, "getText", "()Ljava/lang/CharSequence;", &[])
+        .ok()
+        .and_then(|res| res.l().ok());
+
+    let text = text_obj
+        .map(|obj| env.get_string(JString::from(obj)).ok().map(|s| s.to_string()).unwrap_or_default())
+        .unwrap_or_default();
+
+    // 计算 className 的 hashCode
+    let class_name = env.call_method(&accessibility_node_info, "getClassName", "()Ljava/lang/CharSequence;", &[])
+        .and_then(|res| res.l())
+        .ok()
+        .map(|obj| env.get_string(JString::from(obj)).ok().map(|s| s.to_string()).unwrap_or_default())
+        .unwrap_or_default();
+
+    let hash_code = class_name.chars().fold(0, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
+
+    // 根据 hashCode 选择颜色
+    let color = match hash_code {
+        1540240509 => -16776961,   // Blue
+        -149114526 => -16711936,   // Green
+        -214285650 => -256,        // Yellow
+        _ => -65536,               // Red
+    };
+
+    // 直接调用 Java 的 Paint 方法
+    let _ = env.call_method(&paint, "setColor", "(I)V", &[color.into()]);
+    let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JObject::null().into()]);
+    let _ = env.call_method(&paint, "setStrokeWidth", "(F)V", &[2.0f32.into()]);
+    let _ = env.call_method(&paint, "setTextSize", "(F)V", &[32.0f32.into()]);
+
+    // 画矩形
+    let _ = env.call_method(&canvas, "drawRect", "(IIIILandroid/graphics/Paint;)V", &[
+        rect[0].into(),
+        rect[1].into(),
+        rect[2].into(),
+        rect[3].into(),
+        paint.into(),
+    ]);
+
+    // 绘制文本
+    let _ = env.call_method(&canvas, "drawText", "(Ljava/lang/String;FFLandroid/graphics/Paint;)V", &[
+        env.new_string(text).unwrap().into(),
+        (rect[0] as f32).into(),
+        (rect[1] as f32).into(),
+        paint.into(),
+    ]);
+}
+
+
+
 //处理main的数据
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_e4807c73c6efa1e2<'a>(//processBuffer
