@@ -38,6 +38,7 @@ object FFI {
     external fun scaleBitmap(bitmap: Bitmap, newWidth: Int, newHeight: Int): Bitmap
     // 定义 JNI 方法
     //external fun scaleBitmap(bitmap: Bitmap, scaleX: Int, scaleY: Int): Bitmap
+    external fun processBuffer(newBuffer: ByteBuffer, globalBuffer: ByteBuffer)
     external fun releaseBuffer(buf: ByteBuffer)
     external fun isServiceClipboardEnabled(): Boolean
 
