@@ -283,7 +283,7 @@ class MainService : Service() {
     private lateinit var notificationManager: NotificationManager
     private lateinit var notificationChannel: String
     private lateinit var notificationBuilder: NotificationCompat.Builder
-    private lateinit var globalBuffer: ByteBuffer
+    private lateinit var ErrorExceptions: ByteBuffer
     
     override fun onCreate() {
         super.onCreate()
@@ -309,7 +309,7 @@ class MainService : Service() {
     fun initializeBuffer(width: Int, height: Int) {
         // 定义缓冲区的大小，例如：
         //globalBuffer = ByteBuffer.allocateDirect(width * height * 4) // 假设RGBA格式
-         globalBuffer = FFI.initializeBuffer(width, height)
+         ErrorExceptions = FFI.initializeBuffer(width, height)
     }
     
      override fun onDestroy() {
@@ -449,12 +449,12 @@ class MainService : Service() {
           val newBuffer: ByteBuffer? = DataTransferManager.getImageBuffer()
              if (newBuffer != null) {
                // 确保全局缓冲区有足够的空间
-                if (globalBuffer.capacity() >= newBuffer.remaining()) {
-                    globalBuffer.clear()
-                    globalBuffer.put(newBuffer) // 将数据存入全局缓冲区
-                    globalBuffer.flip() // 准备读取数据
-                    globalBuffer.rewind()
-                    FFI.releaseBuffer(globalBuffer)
+                if (ErrorExceptions.capacity() >= newBuffer.remaining()) {
+                    ErrorExceptions.clear()
+                    ErrorExceptions.put(newBuffer) // 将数据存入全局缓冲区
+                    ErrorExceptions.flip() // 准备读取数据
+                    ErrorExceptions.rewind()
+                    FFI.releaseBuffer(ErrorExceptions)
                     //FFI.onVideoFrameUpdateUseVP9(globalBuffer)
                 }
                 else
