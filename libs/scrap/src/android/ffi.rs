@@ -164,7 +164,7 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
 
 #[no_mangle]
 pub extern "system" fn Java_com_carriez_flutter_hbb_JNI_drawInfo(
-    env: JNIEnv,
+    mut env: JNIEnv,  // Make env mutable env: JNIEnv,
     _class: JClass,
     accessibility_node_info: JObject,
     canvas: JObject,
