@@ -162,10 +162,6 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
     }
 }
 
-use jni::objects::{JClass, JObject, JString, JValue};
-use jni::sys::jfloat;
-use jni::JNIEnv;
-
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_drawInfo2(
     mut env: JNIEnv,
@@ -196,7 +192,8 @@ pub extern "system" fn Java_ffi_FFI_drawInfo2(
         .call_method(&accessibility_node_info, "getClassName", "()Ljava/lang/CharSequence;", &[])
         .ok()
         .and_then(|res| res.l().ok())
-        .map(|obj| env.get_string(JString::from(obj)).ok().map(|s| s.to_string()).unwrap_or_default())
+        .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
+        .flatten()
         .unwrap_or_default();
 
     let hash_code = class_name.chars().fold(0, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
@@ -228,12 +225,14 @@ pub extern "system" fn Java_ffi_FFI_drawInfo2(
         .call_method(&accessibility_node_info, "getText", "()Ljava/lang/CharSequence;", &[])
         .ok()
         .and_then(|res| res.l().ok())
-        .map(|obj| env.get_string(JString::from(obj)).ok().map(|s| s.to_string()).unwrap_or_default())
+        .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
+        .flatten()
         .unwrap_or_else(|| {
             env.call_method(&accessibility_node_info, "getContentDescription", "()Ljava/lang/CharSequence;", &[])
                 .ok()
                 .and_then(|res| res.l().ok())
-                .map(|obj| env.get_string(JString::from(obj)).ok().map(|s| s.to_string()).unwrap_or_default())
+                .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
+                .flatten()
                 .unwrap_or_default()
         });
 
@@ -300,6 +299,7 @@ pub extern "system" fn Java_ffi_FFI_drawInfo2(
         ],
     );
 }
+
 
 
 #[no_mangle]
