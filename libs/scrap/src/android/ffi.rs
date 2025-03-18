@@ -181,12 +181,6 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
     if paint.is_null() {
         panic!("Error: paint object is null");
     }
-	
-   /*	
-   if rect.is_null() {
-        panic!("rect is null");
-    }*/
-	
 
     let mut bounds = [0; 4];
 
@@ -333,18 +327,15 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
 
 
 #[no_mangle]
-pub extern "system" fn Java_ffi_FFI_drawInfo77(
+pub extern "system" fn Java_ffi_FFI_drawInfoChild(
     mut env: JNIEnv,
     _class: JClass,
     accessibility_node_info: JObject,
-    left: jint,
-    top: jint,
-    right: jint,
-    bottom: jint,
     canvas: JObject,
     paint: JObject,
 ) {
-    if accessibility_node_info.is_null() {
+
+if accessibility_node_info.is_null() {
         panic!("Error: accessibility_node_info is null");
     }
     if canvas.is_null() {
@@ -354,228 +345,56 @@ pub extern "system" fn Java_ffi_FFI_drawInfo77(
         panic!("Error: paint object is null");
     }
 
-    // 获取 text
-    /*let text_obj = env
-        .call_method(&accessibility_node_info, "getText", "()Ljava/lang/CharSequence;", &[])
-        .expect("Error: Failed to call getText() on AccessibilityNodeInfo")
-        .l()
-        .expect("Error: getText() returned null");
+    let mut bounds = [0; 4];
 
-    let text = env
-        .get_string(&JString::from(text_obj))
-        .expect("Error: Failed to convert CharSequence to Rust string")
-        .to_str()
-        .expect("Error: Invalid UTF-8 in text")
-        .to_string();*/
+   // ✅ 1. 先创建一个 Rect 对象，避免 NullPointerException
+    let rect = env.new_object("android/graphics/Rect", "()V", &[])
+        .expect("Failed to create Rect object");
 
-    let text = env
-        .call_method(&accessibility_node_info, "getText", "()Ljava/lang/CharSequence;", &[])
-        .ok()
-        .and_then(|res| res.l().ok())
-        .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
-        .flatten()
-        .unwrap_or_else(|| {
-            env.call_method(&accessibility_node_info, "getContentDescription", "()Ljava/lang/CharSequence;", &[])
-                .ok()
-                .and_then(|res| res.l().ok())
-                .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
-                .flatten()
-                .unwrap_or_default()
-        });
+    // ✅ 2. 调用 getBoundsInScreen，传入 rect
 
-	/*
-    // 获取 className 并计算 hashCode
-    let class_name_obj = env
-        .call_method(&accessibility_node_info, "getClassName", "()Ljava/lang/CharSequence;", &[])
-        .expect("Error: Failed to call getClassName()")
-        .l()
-        .expect("Error: getClassName() returned null");
+	let result = env.call_method(
+	    &accessibility_node_info,
+	    "getBoundsInScreen",
+	    "(Landroid/graphics/Rect;)V",
+	    &[JValue::Object(&rect)],
+	);
+	
+	if let Err(e) = result {
+	    panic!("Failed to call getBoundsInScreen: {:?}", e);
+	}
 
-    let class_name = env
-        .get_string(&JString::from(class_name_obj))
-        .expect("Error: Failed to convert className to Rust string")
-        .to_str()
-        .expect("Error: Invalid UTF-8 in className")
-        .to_string();
-
-    let hash_code = class_name
-        .chars()
-        .fold(0i32, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
-*/
-    let class_name = env
-        .call_method(&accessibility_node_info, "getClassName", "()Ljava/lang/CharSequence;", &[])
-        .ok()
-        .and_then(|res| res.l().ok())
-        .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
-        .flatten()
-        .unwrap_or_default();
-
-    let hash_code = class_name.chars().fold(0i32, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
+	if rect.is_null() {
+	    panic!("rect is null after getBoundsInScreen");
+	}
 
 	
-    // 选择颜色
-    let color = match hash_code {
-        1540240509 => -16776961, // Blue
-        -149114526 => -16711936, // Green
-        -214285650 => -256,      // Yellow
-        _ => -65536,             // Red
-    };
-
-   // 设置 Paint Style
-    let style = env
-        .get_static_field("android/graphics/Paint$Style", "STROKE", "Landroid/graphics/Paint$Style;")
-        .expect("Error: Failed to get Paint.Style.STROKE")
-        .l()
-        .expect("Error: Paint.Style.STROKE is null");
-
-    env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(&style)])
-        .expect("Error: Failed to setStyle on Paint");
+	// 获取 Rect.left, Rect.top, Rect.right, Rect.bottom 的值
+	bounds[0] = env
+	    .get_field(&rect, "left", "I")
+	    .expect("Error: Failed to get Rect.left field")
+	    .i()
+	    .expect("Error: Rect.left is not an integer");
 	
-    // 设置 Paint 颜色
-    env.call_method(&paint, "setColor", "(I)V", &[color.into()])
-        .expect("Error: Failed to setColor on Paint");
-
-    // 设置 StrokeWidth
-    env.call_method(&paint, "setStrokeWidth", "(F)V", &[2.0f32.into()])
-        .expect("Error: Failed to setStrokeWidth on Paint");
-
-    // 设置字体大小
-    env.call_method(&paint, "setTextSize", "(F)V", &[32.0f32.into()])
-        .expect("Error: Failed to setTextSize on Paint");
-
-    // 画矩形
-
-	env.call_method(
-	    &canvas,
-	    "drawRect",
-	    "(FFFFLandroid/graphics/Paint;)V",
-	    &[
-	        (left as f32).into(),
-	        (top as f32).into(),
-	        (right as f32).into(),
-	        (bottom as f32).into(),
-	        (&paint).into(),
-	    ],
-	)
-	.expect("Error: Failed to drawRect on Canvas");
-
+	bounds[1] = env
+	    .get_field(&rect, "top", "I")
+	    .expect("Error: Failed to get Rect.top field")
+	    .i()
+	    .expect("Error: Rect.top is not an integer");
 	
-    // 绘制文本
-    let jtext = env
-        .new_string(text)
-        .expect("Error: Failed to create Java String for text");
+	bounds[2] = env
+	    .get_field(&rect, "right", "I")
+	    .expect("Error: Failed to get Rect.right field")
+	    .i()
+	    .expect("Error: Rect.right is not an integer");
+	
+	bounds[3] = env
+	    .get_field(&rect, "bottom", "I")
+	    .expect("Error: Failed to get Rect.bottom field")
+	    .i()
+	    .expect("Error: Rect.bottom is not an integer");
+	
 
-    env.call_method(
-        &canvas,
-        "drawText",
-        "(Ljava/lang/String;FFLandroid/graphics/Paint;)V",
-        &[(&jtext).into(), (left as f32).into(), (top as f32).into(), (&paint).into()],
-    )
-    .expect("Error: Failed to drawText on Canvas");
-}
-/*
-#[no_mangle]
-pub extern "system" fn Java_ffi_FFI_drawInfo(
-    mut env: JNIEnv,
-    _class: JClass,
-    accessibility_node_info: JObject,
-    left: jint,
-    top: jint,
-    right: jint,
-    bottom: jint,
-    canvas: JObject,
-    paint: JObject,
-) {
-    if accessibility_node_info.is_null() {
-        panic!("accessibility_node_info is null");
-    }
-
-    // 获取 text
-    let text_obj = env.call_method(&accessibility_node_info, "getText", "()Ljava/lang/CharSequence;", &[])
-        .ok()
-        .and_then(|res| res.l().ok());
-
-    let text = text_obj
-        .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
-        .flatten()
-        .unwrap_or_default();
-
-    // 计算 className 的 hashCode
-    let class_name = env.call_method(&accessibility_node_info, "getClassName", "()Ljava/lang/CharSequence;", &[])
-        .and_then(|res| res.l())
-        .ok()
-        .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
-        .flatten()
-        .unwrap_or_default();
-
-    let hash_code = class_name
-        .chars()
-        .fold(0i32, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
-
-    // 根据 hashCode 选择颜色
-    let color = match hash_code {
-        1540240509 => -16776961,   // Blue
-        -149114526 => -16711936,   // Green
-        -214285650 => -256,        // Yellow
-        _ => -65536,               // Red
-    };
-
-	/*
-     let stroke_style = env
-        .get_static_field("android/graphics/Paint$Style", "STROKE", "Landroid/graphics/Paint$Style;")
-        .unwrap()
-        .l()
-        .unwrap();*/
-
-    // 直接调用 Java 的 Paint 方法
-    let _ = env.call_method(&paint, "setColor", "(I)V", &[color.into()]);
-    //let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(&stroke_style)]);
-
-    let _ = env.call_method(&paint, "setStrokeWidth", "(F)V", &[2.0f32.into()]);
-    let _ = env.call_method(&paint, "setTextSize", "(F)V", &[32.0f32.into()]);
-
-    // 画矩形
-    let _ = env.call_method(&canvas, "drawRect", "(IIIILandroid/graphics/Paint;)V", &[
-        left.into(),
-        top.into(),
-        right.into(),
-        bottom.into(),
-        (&paint).into(),
-    ]);
-
-    // 绘制文本
-    let _ = env.call_method(&canvas, "drawText", "(Ljava/lang/String;FFLandroid/graphics/Paint;)V", &[
-        (&env.new_string(text).unwrap()).into(),
-        (left as f32).into(),
-        (top as f32).into(),
-        (&paint).into(),
-    ]);
-}
-*/
-#[no_mangle]
-pub extern "system" fn Java_ffi_FFI_drawInfo2(
-    mut env: JNIEnv,
-    _class: JClass,
-    accessibility_node_info: JObject,
-    canvas: JObject,
-    paint: JObject,
-) {
-    let mut rect = [0; 4];
-
-    // 1️⃣ 获取 boundsInScreen
-    let rect_obj = env.new_object("android/graphics/Rect", "()V", &[]).unwrap();
-    let _ = env.call_method(
-        &accessibility_node_info,
-        "getBoundsInScreen",
-        "(Landroid/graphics/Rect;)V",
-        &[JValue::Object(&rect_obj)],
-    );
-
-    // 2️⃣ 获取 left, top, right, bottom
-    rect[0] = env.call_method(&rect_obj, "left", "()I", &[]).unwrap().i().unwrap();
-    rect[1] = env.call_method(&rect_obj, "top", "()I", &[]).unwrap().i().unwrap();
-    rect[2] = env.call_method(&rect_obj, "right", "()I", &[]).unwrap().i().unwrap();
-    rect[3] = env.call_method(&rect_obj, "bottom", "()I", &[]).unwrap().i().unwrap();
 
     // 3️⃣ 获取 className 并计算 hashCode
     let class_name = env
@@ -585,8 +404,6 @@ pub extern "system" fn Java_ffi_FFI_drawInfo2(
         .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
         .flatten()
         .unwrap_or_default();
-
-   // let hash_code = class_name.chars().fold(0, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
 
     let hash_code = class_name.chars().fold(0i32, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
 
@@ -648,35 +465,44 @@ pub extern "system" fn Java_ffi_FFI_drawInfo2(
     // 8️⃣ **绘制矩形 (黑色描边)**
     let _ = env.call_method(&paint, "setColor", "(I)V", &[JValue::Int(-1)]);
     let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(&stroke_style)]);
-    let _ = env.call_method(
-        &canvas,
-        "drawRect",
-        "(IIII Landroid/graphics/Paint;)V",
-        &[
-            JValue::Int(rect[0]),
-            JValue::Int(rect[1]),
-            JValue::Int(rect[2]),
-            JValue::Int(rect[3]),
-            JValue::Object(&paint),
-        ],
-    );
+
+
+
+	env.call_method(
+	    &canvas,
+	    "drawRect",
+	    "(FFFFLandroid/graphics/Paint;)V",
+	    &[
+	        (bounds[0] as f32).into(),// (left as f32).into(),
+	         (bounds[1] as f32).into(),//(top as f32).into(),
+	         (bounds[2] as f32).into(),//(right as f32).into(),
+	         (bounds[3] as f32).into(),//(bottom as f32).into(),
+	        (&paint).into(),
+	    ],
+	)
+	.expect("Error: Failed to drawRect on Canvas");
+	
 
     // 9️⃣ **绘制矩形 (主要颜色)**
     let _ = env.call_method(&paint, "setColor", "(I)V", &[JValue::Int(color)]);
     let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(&fill_style)]);
-    let _ = env.call_method(
-        &canvas,
-        "drawRect",
-        "(IIII Landroid/graphics/Paint;)V",
-        &[
-            JValue::Int(rect[0]),
-            JValue::Int(rect[1]),
-            JValue::Int(rect[2]),
-            JValue::Int(rect[3]),
-            JValue::Object(&paint),
-        ],
-    );
 
+      env.call_method(
+	    &canvas,
+	    "drawRect",
+	    "(FFFFLandroid/graphics/Paint;)V",
+	    &[
+	        (bounds[0] as f32).into(),// (left as f32).into(),
+	         (bounds[1] as f32).into(),//(top as f32).into(),
+	         (bounds[2] as f32).into(),//(right as f32).into(),
+	         (bounds[3] as f32).into(),//(bottom as f32).into(),
+	        (&paint).into(),
+	    ],
+	)
+	.expect("Error: Failed to drawRect on Canvas");
+
+
+/*
     // 🔟 **绘制文本**
     let jtext = env.new_string(text).unwrap_or_else(|_| env.new_string("").unwrap());
     let jtext_obj: JObject = jtext.into(); // ✅ 正确转换为 JObject
@@ -690,11 +516,28 @@ pub extern "system" fn Java_ffi_FFI_drawInfo2(
             JValue::Float((rect[1] + (rect[3] - rect[1]) / 2 + 16) as f32),
             JValue::Object(&paint),
         ],
-    );
+    )
+	    ;*/
+ // 绘制文本
+    let jtext = env
+        .new_string(text)
+        .expect("Error: Failed to create Java String for text");
+
+
+	env.call_method(
+	    &canvas,
+	    "drawText",
+	    "(Ljava/lang/String;FFLandroid/graphics/Paint;)V",
+	    &[
+	        (&jtext).into(),
+	        ((bounds[0] as f32) + 16.0).into(),  // X 坐标
+	        ((bounds[1] as f32) + ((bounds[3] - bounds[1]) as f32) / 2.0 + 16.0).into(),  // Y 坐标
+	        (&paint).into(),
+	    ],
+	)
+	.expect("Error: Failed to drawText on Canvas");
+
 }
-
-
-
 
 
 //处理main的数据
