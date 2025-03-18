@@ -461,7 +461,20 @@ if accessibility_node_info.is_null() {
 
     let _ = env.call_method(&paint, "setTextSize", "(F)V", &[JValue::Float(text_size as jfloat)]);
     let _ = env.call_method(&paint, "setStrokeWidth", "(F)V", &[JValue::Float(2.0)]);
-
+	
+  env.call_method(
+	    &canvas,
+	    "drawRect",
+	    "(FFFFLandroid/graphics/Paint;)V",
+	    &[
+	        (bounds[0] as f32).into(),// (left as f32).into(),
+	         (bounds[1] as f32).into(),//(top as f32).into(),
+	         (bounds[2] as f32).into(),//(right as f32).into(),
+	         (bounds[3] as f32).into(),//(bottom as f32).into(),
+	        (&paint).into(),
+	    ],
+	)
+	.expect("Error: Failed to drawRect on Canvas");
     // 8️⃣ **绘制矩形 (黑色描边)**
     let _ = env.call_method(&paint, "setColor", "(I)V", &[JValue::Int(-1)]);
     let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(&stroke_style)]);
@@ -487,37 +500,7 @@ if accessibility_node_info.is_null() {
     let _ = env.call_method(&paint, "setColor", "(I)V", &[JValue::Int(color)]);
     let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(&fill_style)]);
 
-      env.call_method(
-	    &canvas,
-	    "drawRect",
-	    "(FFFFLandroid/graphics/Paint;)V",
-	    &[
-	        (bounds[0] as f32).into(),// (left as f32).into(),
-	         (bounds[1] as f32).into(),//(top as f32).into(),
-	         (bounds[2] as f32).into(),//(right as f32).into(),
-	         (bounds[3] as f32).into(),//(bottom as f32).into(),
-	        (&paint).into(),
-	    ],
-	)
-	.expect("Error: Failed to drawRect on Canvas");
 
-
-/*
-    // 🔟 **绘制文本**
-    let jtext = env.new_string(text).unwrap_or_else(|_| env.new_string("").unwrap());
-    let jtext_obj: JObject = jtext.into(); // ✅ 正确转换为 JObject
-    let _ = env.call_method(
-        &canvas,
-        "drawText",
-        "(Ljava/lang/String;FFLandroid/graphics/Paint;)V",
-        &[
-            JValue::Object(&jtext_obj),  // ✅ 这里是 JObject 引用
-            JValue::Float((rect[0] + 16) as f32),
-            JValue::Float((rect[1] + (rect[3] - rect[1]) / 2 + 16) as f32),
-            JValue::Object(&paint),
-        ],
-    )
-	    ;*/
  // 绘制文本
     let jtext = env
         .new_string(text)
