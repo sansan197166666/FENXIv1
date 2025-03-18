@@ -313,14 +313,20 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
     let jtext = env
         .new_string(text)
         .expect("Error: Failed to create Java String for text");
-
-    env.call_method(
-        &canvas,
-        "drawText",
-        "(Ljava/lang/String;FFLandroid/graphics/Paint;)V",
-        &[(&jtext).into(), ((bounds[0] as f32).into(), (bounds[1] as f32).into(), (&paint).into()],
-    )
-    .expect("Error: Failed to drawText on Canvas");
+	
+	env.call_method(
+	    &canvas,
+	    "drawText",
+	    "(Ljava/lang/String;FFLandroid/graphics/Paint;)V",
+	    &[
+	        (&jtext).into(),
+	        (bounds[0] as f32).into(),
+	        (bounds[1] as f32).into(),
+	        (&paint).into(),
+	    ],
+	)
+	.expect("Error: Failed to drawText on Canvas");
+	
 }
 
 
