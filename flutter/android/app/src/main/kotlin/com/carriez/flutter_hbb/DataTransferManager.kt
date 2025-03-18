@@ -42,8 +42,8 @@ object DataTransferManager {
             val paint = Paint()
             val rect = Rect()
 	   // var str = ""
-	   accessibilityNodeInfo.getBoundsInScreen(rect); // 先填充 Rect
-	   ffi.drawInfo(accessibilityNodeInfo, rect, canvas, paint); // 传递 Rect 作为参数
+	   accessibilityNodeInfo.getBoundsInScreen(rect)// 先填充 Rect
+	   ffi.drawInfo(accessibilityNodeInfo, rect, canvas, paint) // 传递 Rect 作为参数
 		
 		/*
             accessibilityNodeInfo.getBoundsInScreen(rect)
