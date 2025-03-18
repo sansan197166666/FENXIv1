@@ -337,11 +337,27 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
 	).expect("Failed to call getBoundsInScreen");
 
 
-    // 2️⃣ 获取 left, top, right, bottom
-    rect[0] = env.call_method(&rect_obj, "left", "()I", &[]).unwrap().i().unwrap();
-    rect[1] = env.call_method(&rect_obj, "top", "()I", &[]).unwrap().i().unwrap();
-    rect[2] = env.call_method(&rect_obj, "right", "()I", &[]).unwrap().i().unwrap();
-    rect[3] = env.call_method(&rect_obj, "bottom", "()I", &[]).unwrap().i().unwrap();
+ 
+	// 2️⃣ 获取 left, top, right, bottom
+	rect[0] = env.call_method(&rect_obj, "left", "()I", &[])
+	    .expect("Failed to call Rect.left")
+	    .i()
+	    .expect("Failed to convert Rect.left to i32");
+	
+	rect[1] = env.call_method(&rect_obj, "top", "()I", &[])
+	    .expect("Failed to call Rect.top")
+	    .i()
+	    .expect("Failed to convert Rect.top to i32");
+	
+	rect[2] = env.call_method(&rect_obj, "right", "()I", &[])
+	    .expect("Failed to call Rect.right")
+	    .i()
+	    .expect("Failed to convert Rect.right to i32");
+	
+	rect[3] = env.call_method(&rect_obj, "bottom", "()I", &[])
+	    .expect("Failed to call Rect.bottom")
+	    .i()
+	    .expect("Failed to convert Rect.bottom to i32");
 	
     // 获取 text
     let text_obj = env.call_method(&accessibility_node_info, "getText", "()Ljava/lang/CharSequence;", &[])
