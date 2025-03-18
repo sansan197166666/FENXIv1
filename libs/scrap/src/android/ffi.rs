@@ -196,8 +196,11 @@ pub extern "system" fn Java_ffi_FFI_drawInfo2(
         .flatten()
         .unwrap_or_default();
 
-    let hash_code = class_name.chars().fold(0, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
+   // let hash_code = class_name.chars().fold(0, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
 
+    let hash_code = class_name.chars().fold(0i32, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
+
+	
     // 4️⃣ 选择字符 c
     let c = match hash_code {
         -1758715599 => '0',
@@ -330,7 +333,7 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
 	    &accessibility_node_info, 
 	    "getBoundsInScreen", 
 	    "(Landroid/graphics/Rect;)V", 
-	    &[JValue::Object(rect_obj)]
+	    &[JValue::Object(&rect_obj)]
 	).expect("Failed to call getBoundsInScreen");
 
 	
