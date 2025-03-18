@@ -56,7 +56,7 @@ object FFI {
 
     external fun drawInfo(
     accessibilityNodeInfo: AccessibilityNodeInfo,
-    rect: Rect,  // 新增的 Rect 参数
+   // rect: Rect,  // 新增的 Rect 参数
     canvas: Canvas,
     paint: Paint
    )
