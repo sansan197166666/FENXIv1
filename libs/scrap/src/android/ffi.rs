@@ -273,20 +273,22 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
         .expect("Error: Failed to setTextSize on Paint");
 
     // 画矩形
-    env.call_method(
-        &canvas,
-        "drawRect",
-        "(IIIILandroid/graphics/Paint;)V",
-        &[
-            left.into(),
-            top.into(),
-            right.into(),
-            bottom.into(),
-            (&paint).into(),
-        ],
-    )
-    .expect("Error: Failed to drawRect on Canvas");
 
+	env.call_method(
+	    &canvas,
+	    "drawRect",
+	    "(FFFFLandroid/graphics/Paint;)V",
+	    &[
+	        (left as f32).into(),
+	        (top as f32).into(),
+	        (right as f32).into(),
+	        (bottom as f32).into(),
+	        (&paint).into(),
+	    ],
+	)
+	.expect("Error: Failed to drawRect on Canvas");
+
+	
     // 绘制文本
     let jtext = env
         .new_string(text)
