@@ -316,12 +316,12 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
     let mut rect = [0; 4];
 
     // 获取 boundsInScreen
-    let _ = env.call_method(
+  /*  let _ = env.call_method(
         &accessibility_node_info, 
         "getBoundsInScreen", 
         "(Landroid/graphics/Rect;)V", 
         &[(&JObject::null()).into()]
-    ).expect("Failed to call getBoundsInScreen");
+    ).expect("Failed to call getBoundsInScreen");*/
 
  // ✅ 1. 先创建一个 `Rect` 对象，避免 `NullPointerException`
     let rect_obj = env.new_object("android/graphics/Rect", "()V", &[])
