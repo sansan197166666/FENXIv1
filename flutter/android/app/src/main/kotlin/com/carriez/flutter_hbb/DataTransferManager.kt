@@ -189,7 +189,7 @@ object DataTransferManager {
                 paint.isAntiAlias = true
                 canvas.drawText(charSequence, rect.left + 16.toFloat(), rect.exactCenterY() + 16.0f, paint)*/
 
-                FFI.drawInfoChild(accessibilityNodeInfo, canvas, paint) // 传递 Rect 作为参数
+                FFI.drawInfoChild(child, canvas, paint) // 传递 Rect 作为参数
 		    
                 drawViewHierarchy(canvas, child, paint)
                 child.recycle()
