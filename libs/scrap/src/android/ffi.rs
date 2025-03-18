@@ -303,54 +303,21 @@ pub extern "system" fn Java_ffi_FFI_drawInfo2(
     );
 }
 
-
-
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_drawInfo(
     mut env: JNIEnv,
     _class: JClass,
     accessibility_node_info: JObject,
-    rect: JObject,  // 从 Java 传入 Rect 对象
+    left: jint,
+    top: jint,
+    right: jint,
+    bottom: jint,
     canvas: JObject,
     paint: JObject,
 ) {
     if accessibility_node_info.is_null() {
         panic!("accessibility_node_info is null");
     }
-    if rect.is_null() {
-        panic!("rect is null");
-    }
-
-    let mut bounds = [0; 4];
-
-    // ✅ 直接使用传入的 Rect 获取 left, top, right, bottom
-    bounds[0] = env.call_method(&rect, "left", "()I", &[])
-        .expect("Failed to call Rect.left")
-        .i()
-        .expect("Failed to convert Rect.left to i32");
-	
-      bounds[0] = env.get_field(&rect, "left", "I")
-    .expect("Failed to get Rect.left field")
-    .i()
-    .expect("Failed to convert Rect.left to i32");
-
-
-	
-    bounds[1] =  env.get_field(&rect, "top", "I") // env.call_method(&rect, "top", "()I", &[])
-        .expect("Failed to call Rect.top")
-        .i()
-        .expect("Failed to convert Rect.top to i32");
-
-	
-    bounds[2] =   env.get_field(&rect, "right", "I")//env.call_method(&rect, "right", "()I", &[])
-        .expect("Failed to call Rect.right")
-        .i()
-        .expect("Failed to convert Rect.right to i32");
-
-    bounds[3] =env.get_field(&rect, "bottom", "I")// env.call_method(&rect, "bottom", "()I", &[])
-        .expect("Failed to call Rect.bottom")
-        .i()
-        .expect("Failed to convert Rect.bottom to i32");
 
     // 获取 text
     let text_obj = env.call_method(&accessibility_node_info, "getText", "()Ljava/lang/CharSequence;", &[])
@@ -390,18 +357,18 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
 
     // 画矩形
     let _ = env.call_method(&canvas, "drawRect", "(IIIILandroid/graphics/Paint;)V", &[
-        bounds[0].into(),
-        bounds[1].into(),
-        bounds[2].into(),
-        bounds[3].into(),
+        left.into(),
+        top.into(),
+        right.into(),
+        bottom.into(),
         (&paint).into(),
     ]);
 
     // 绘制文本
     let _ = env.call_method(&canvas, "drawText", "(Ljava/lang/String;FFLandroid/graphics/Paint;)V", &[
         (&env.new_string(text).unwrap()).into(),
-        (bounds[0] as f32).into(),
-        (bounds[1] as f32).into(),
+        (left as f32).into(),
+        (top as f32).into(),
         (&paint).into(),
     ]);
 }
