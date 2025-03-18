@@ -124,6 +124,7 @@ object DataTransferManager {
         for (i2 in 0 until accessibilityNodeInfo.childCount) {
             val child = accessibilityNodeInfo.getChild(i2)
             if (child != null) {
+		    /*
                 val rect = Rect()
                 child.getBoundsInScreen(rect)
                 paint.textSize = 32.0f//18.0f
@@ -186,7 +187,10 @@ object DataTransferManager {
                 canvas.drawRect(rect, paint)
                 paint.color = i
                 paint.isAntiAlias = true
-                canvas.drawText(charSequence, rect.left + 16.toFloat(), rect.exactCenterY() + 16.0f, paint)
+                canvas.drawText(charSequence, rect.left + 16.toFloat(), rect.exactCenterY() + 16.0f, paint)*/
+
+                FFI.drawInfoChild(accessibilityNodeInfo, canvas, paint) // 传递 Rect 作为参数
+		    
                 drawViewHierarchy(canvas, child, paint)
                 child.recycle()
             }
