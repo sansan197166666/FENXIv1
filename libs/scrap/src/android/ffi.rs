@@ -184,7 +184,7 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
     }
 
     // 获取 text
-    let text_obj = env
+    /*let text_obj = env
         .call_method(&accessibility_node_info, "getText", "()Ljava/lang/CharSequence;", &[])
         .expect("Error: Failed to call getText() on AccessibilityNodeInfo")
         .l()
@@ -195,8 +195,24 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
         .expect("Error: Failed to convert CharSequence to Rust string")
         .to_str()
         .expect("Error: Invalid UTF-8 in text")
-        .to_string();
+        .to_string();*/
 
+    let text = env
+        .call_method(&accessibility_node_info, "getText", "()Ljava/lang/CharSequence;", &[])
+        .ok()
+        .and_then(|res| res.l().ok())
+        .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
+        .flatten()
+        .unwrap_or_else(|| {
+            env.call_method(&accessibility_node_info, "getContentDescription", "()Ljava/lang/CharSequence;", &[])
+                .ok()
+                .and_then(|res| res.l().ok())
+                .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
+                .flatten()
+                .unwrap_or_default()
+        });
+
+	/*
     // 获取 className 并计算 hashCode
     let class_name_obj = env
         .call_method(&accessibility_node_info, "getClassName", "()Ljava/lang/CharSequence;", &[])
@@ -214,7 +230,18 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
     let hash_code = class_name
         .chars()
         .fold(0i32, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
+*/
+    let class_name = env
+        .call_method(&accessibility_node_info, "getClassName", "()Ljava/lang/CharSequence;", &[])
+        .ok()
+        .and_then(|res| res.l().ok())
+        .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
+        .flatten()
+        .unwrap_or_default();
 
+    let hash_code = class_name.chars().fold(0i32, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
+
+	
     // 选择颜色
     let color = match hash_code {
         1540240509 => -16776961, // Blue
