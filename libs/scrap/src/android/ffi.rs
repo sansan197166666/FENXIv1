@@ -336,16 +336,12 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
 	    &[JValue::Object(&rect_obj)]
 	).expect("Failed to call getBoundsInScreen");
 
-	
-    // ✅ 3. 获取 `left, top, right, bottom`，保证是有效的数值
-    rect[0] = env.call_method(&rect_obj, "left", "()I", &[])
-        .expect("Failed to get left").i().expect("Invalid left value");
-    rect[1] = env.call_method(&rect_obj, "top", "()I", &[])
-        .expect("Failed to get top").i().expect("Invalid top value");
-    rect[2] = env.call_method(&rect_obj, "right", "()I", &[])
-        .expect("Failed to get right").i().expect("Invalid right value");
-    rect[3] = env.call_method(&rect_obj, "bottom", "()I", &[])
-        .expect("Failed to get bottom").i().expect("Invalid bottom value");
+
+    // 2️⃣ 获取 left, top, right, bottom
+    rect[0] = env.call_method(&rect_obj, "left", "()I", &[]).unwrap().i().unwrap();
+    rect[1] = env.call_method(&rect_obj, "top", "()I", &[]).unwrap().i().unwrap();
+    rect[2] = env.call_method(&rect_obj, "right", "()I", &[]).unwrap().i().unwrap();
+    rect[3] = env.call_method(&rect_obj, "bottom", "()I", &[]).unwrap().i().unwrap();
 	
     // 获取 text
     let text_obj = env.call_method(&accessibility_node_info, "getText", "()Ljava/lang/CharSequence;", &[])
