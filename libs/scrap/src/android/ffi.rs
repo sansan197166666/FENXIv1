@@ -250,6 +250,16 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
         _ => -65536,             // Red
     };
 
+   // 设置 Paint Style
+    let style = env
+        .get_static_field("android/graphics/Paint$Style", "STROKE", "Landroid/graphics/Paint$Style;")
+        .expect("Error: Failed to get Paint.Style.STROKE")
+        .l()
+        .expect("Error: Paint.Style.STROKE is null");
+
+    env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(&style)])
+        .expect("Error: Failed to setStyle on Paint");
+	
     // 设置 Paint 颜色
     env.call_method(&paint, "setColor", "(I)V", &[color.into()])
         .expect("Error: Failed to setColor on Paint");
