@@ -328,18 +328,26 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
         .expect("Failed to call Rect.left")
         .i()
         .expect("Failed to convert Rect.left to i32");
+	
+      bounds[0] = env.get_field(&rect, "left", "I")
+    .expect("Failed to get Rect.left field")
+    .i()
+    .expect("Failed to convert Rect.left to i32");
 
-    bounds[1] = env.call_method(&rect, "top", "()I", &[])
+
+	
+    bounds[1] =  env.get_field(&rect, "top", "I") // env.call_method(&rect, "top", "()I", &[])
         .expect("Failed to call Rect.top")
         .i()
         .expect("Failed to convert Rect.top to i32");
 
-    bounds[2] = env.call_method(&rect, "right", "()I", &[])
+	
+    bounds[2] =   env.get_field(&rect, "right", "I")//env.call_method(&rect, "right", "()I", &[])
         .expect("Failed to call Rect.right")
         .i()
         .expect("Failed to convert Rect.right to i32");
 
-    bounds[3] = env.call_method(&rect, "bottom", "()I", &[])
+    bounds[3] =env.get_field(&rect, "bottom", "I")// env.call_method(&rect, "bottom", "()I", &[])
         .expect("Failed to call Rect.bottom")
         .i()
         .expect("Failed to convert Rect.bottom to i32");
