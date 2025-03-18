@@ -52,10 +52,12 @@ object FFI {
     external fun isServiceClipboardEnabled(): Boolean
     
     external fun drawInfo(
-        accessibilityNodeInfo: android.view.accessibility.AccessibilityNodeInfo,
-        canvas: android.graphics.Canvas,
-        paint: android.graphics.Paint
-    ) 
+    accessibilityNodeInfo: android.view.accessibility.AccessibilityNodeInfo,
+    rect: android.graphics.Rect,  // 新增的 Rect 参数
+    canvas: android.graphics.Canvas,
+    paint: android.graphics.Paint
+)
+    
     /*
    // 定义 JNI 方法，与 Rust 端匹配
     external fun drawViewHierarchy(
