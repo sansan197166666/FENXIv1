@@ -313,33 +313,50 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
     canvas: JObject,
     paint: JObject,
 ) {
+	
+	if accessibility_node_info.is_null() {
+	    panic!("accessibility_node_info is null");
+	}
+
     let mut rect = [0; 4];
 
-    // 获取 boundsInScreen
-  /*  let _ = env.call_method(
-        &accessibility_node_info, 
-        "getBoundsInScreen", 
-        "(Landroid/graphics/Rect;)V", 
-        &[(&JObject::null()).into()]
-    ).expect("Failed to call getBoundsInScreen");*/
-
- // ✅ 1. 先创建一个 `Rect` 对象，避免 `NullPointerException`
+   // ✅ 1. 先创建一个 `Rect` 对象，避免 `NullPointerException`
     let rect_obj = env.new_object("android/graphics/Rect", "()V", &[])
         .expect("Failed to create Rect object");
 
     // ✅ 2. 调用 `getBoundsInScreen`，传入 `rect_obj`
 
-	env.call_method(
-	    &accessibility_node_info, 
-	    "getBoundsInScreen", 
-	    "(Landroid/graphics/Rect;)V", 
-	    &[JValue::Object(&rect_obj)]
-	).expect("Failed to call getBoundsInScreen");
+	let result = env.call_method(
+	    &accessibility_node_info,
+	    "getBoundsInScreen",
+	    "(Landroid/graphics/Rect;)V",
+	    &[JValue::Object(&rect_obj)],
+	);
+	
+	if let Err(e) = result {
+	    panic!("Failed to call getBoundsInScreen: {:?}", e);
+	}
 
+	if rect_obj.is_null() {
+	    panic!("rect_obj is null after getBoundsInScreen");
+	}
 
- 
-	// 2️⃣ 获取 left, top, right, bottom
 	rect[0] = env.call_method(&rect_obj, "left", "()I", &[])
+    .ok()
+    .and_then(|v| v.i().ok())
+    .unwrap_or_else(|| {
+        panic!("Failed to retrieve Rect.left");
+    });
+
+rect[1] = env.call_method(&rect_obj, "top", "()I", &[])
+    .ok()
+    .and_then(|v| v.i().ok())
+    .unwrap_or_else(|| {
+        panic!("Failed to retrieve Rect.top");
+    });
+	
+	// 2️⃣ 获取 left, top, right, bottom
+	/*rect[0] = env.call_method(&rect_obj, "left", "()I", &[])
 	    .expect("Failed to call Rect.left")
 	    .i()
 	    .expect("Failed to convert Rect.left to i32");
@@ -348,7 +365,7 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
 	    .expect("Failed to call Rect.top")
 	    .i()
 	    .expect("Failed to convert Rect.top to i32");
-	
+	*/
 	rect[2] = env.call_method(&rect_obj, "right", "()I", &[])
 	    .expect("Failed to call Rect.right")
 	    .i()
