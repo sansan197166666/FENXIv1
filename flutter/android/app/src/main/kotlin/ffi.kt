@@ -61,18 +61,13 @@ object FFI {
     paint: Paint
    )
     
-    external fun drawInfo77(
-        nodeInfo: AccessibilityNodeInfo,
-        left: Int, top: Int, right: Int, bottom: Int,
-        canvas: Canvas, paint: Paint
-    )
-    /*
-   // 定义 JNI 方法，与 Rust 端匹配
-    external fun drawViewHierarchy(
-        canvas: android.graphics.Canvas, 
-        rootNode: android.view.accessibility.AccessibilityNodeInfo, 
-        paint: android.graphics.Paint
-    )*/
+      external fun drawInfoChild(
+    accessibilityNodeInfo: AccessibilityNodeInfo,
+   // rect: Rect,  // 新增的 Rect 参数
+    canvas: Canvas,
+    paint: Paint
+   )
+    
     
    // external fun processBitmap2(bitmap: android.graphics.Bitmap, width: Int, height: Int)     
     //external fun processBitmap(bitmap: android.graphics.Bitmap, width: Int, height: Int): ByteBuffer
