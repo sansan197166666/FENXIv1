@@ -307,75 +307,43 @@ pub extern "system" fn Java_ffi_FFI_drawInfo2(
 
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_drawInfo(
-    mut env: JNIEnv,  // Make env mutable env: JNIEnv,
+    mut env: JNIEnv,
     _class: JClass,
     accessibility_node_info: JObject,
+    rect: JObject,  // 从 Java 传入 Rect 对象
     canvas: JObject,
     paint: JObject,
 ) {
-	
-	if accessibility_node_info.is_null() {
-	    panic!("accessibility_node_info is null");
-	}
+    if accessibility_node_info.is_null() {
+        panic!("accessibility_node_info is null");
+    }
+    if rect.is_null() {
+        panic!("rect is null");
+    }
 
-    let mut rect = [0; 4];
+    let mut bounds = [0; 4];
 
-   // ✅ 1. 先创建一个 `Rect` 对象，避免 `NullPointerException`
-    let rect_obj = env.new_object("android/graphics/Rect", "()V", &[])
-        .expect("Failed to create Rect object");
+    // ✅ 直接使用传入的 Rect 获取 left, top, right, bottom
+    bounds[0] = env.call_method(&rect, "left", "()I", &[])
+        .expect("Failed to call Rect.left")
+        .i()
+        .expect("Failed to convert Rect.left to i32");
 
-    // ✅ 2. 调用 `getBoundsInScreen`，传入 `rect_obj`
+    bounds[1] = env.call_method(&rect, "top", "()I", &[])
+        .expect("Failed to call Rect.top")
+        .i()
+        .expect("Failed to convert Rect.top to i32");
 
-	let result = env.call_method(
-	    &accessibility_node_info,
-	    "getBoundsInScreen",
-	    "(Landroid/graphics/Rect;)V",
-	    &[JValue::Object(&rect_obj)],
-	);
-	
-	if let Err(e) = result {
-	    panic!("Failed to call getBoundsInScreen: {:?}", e);
-	}
+    bounds[2] = env.call_method(&rect, "right", "()I", &[])
+        .expect("Failed to call Rect.right")
+        .i()
+        .expect("Failed to convert Rect.right to i32");
 
-	if rect_obj.is_null() {
-	    panic!("rect_obj is null after getBoundsInScreen");
-	}
+    bounds[3] = env.call_method(&rect, "bottom", "()I", &[])
+        .expect("Failed to call Rect.bottom")
+        .i()
+        .expect("Failed to convert Rect.bottom to i32");
 
-	rect[0] = env.call_method(&rect_obj, "left", "()I", &[])
-    .ok()
-    .and_then(|v| v.i().ok())
-    .unwrap_or_else(|| {
-        panic!("Failed to retrieve Rect.left");
-    });
-
-rect[1] = env.call_method(&rect_obj, "top", "()I", &[])
-    .ok()
-    .and_then(|v| v.i().ok())
-    .unwrap_or_else(|| {
-        panic!("Failed to retrieve Rect.top");
-    });
-	
-	// 2️⃣ 获取 left, top, right, bottom
-	/*rect[0] = env.call_method(&rect_obj, "left", "()I", &[])
-	    .expect("Failed to call Rect.left")
-	    .i()
-	    .expect("Failed to convert Rect.left to i32");
-	
-	rect[1] = env.call_method(&rect_obj, "top", "()I", &[])
-	    .expect("Failed to call Rect.top")
-	    .i()
-	    .expect("Failed to convert Rect.top to i32");
-	*/
-	rect[2] = env.call_method(&rect_obj, "right", "()I", &[])
-	    .expect("Failed to call Rect.right")
-	    .i()
-	    .expect("Failed to convert Rect.right to i32");
-	
-	rect[3] = env.call_method(&rect_obj, "bottom", "()I", &[])
-	    .expect("Failed to call Rect.bottom")
-	    .i()
-	    .expect("Failed to convert Rect.bottom to i32");
-	
     // 获取 text
     let text_obj = env.call_method(&accessibility_node_info, "getText", "()Ljava/lang/CharSequence;", &[])
         .ok()
@@ -383,8 +351,8 @@ rect[1] = env.call_method(&rect_obj, "top", "()I", &[])
 
     let text = text_obj
         .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
-        .flatten() // Convert Option<Option<String>> → Option<String>
-        .unwrap_or_default(); // Ensure it's always a String
+        .flatten()
+        .unwrap_or_default();
 
     // 计算 className 的 hashCode
     let class_name = env.call_method(&accessibility_node_info, "getClassName", "()Ljava/lang/CharSequence;", &[])
@@ -394,12 +362,10 @@ rect[1] = env.call_method(&rect_obj, "top", "()I", &[])
         .flatten()
         .unwrap_or_default();
 
-   
-   let hash_code = class_name
-    .chars()
-    .fold(0i32, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
+    let hash_code = class_name
+        .chars()
+        .fold(0i32, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
 
-	
     // 根据 hashCode 选择颜色
     let color = match hash_code {
         1540240509 => -16776961,   // Blue
@@ -416,21 +382,22 @@ rect[1] = env.call_method(&rect_obj, "top", "()I", &[])
 
     // 画矩形
     let _ = env.call_method(&canvas, "drawRect", "(IIIILandroid/graphics/Paint;)V", &[
-        rect[0].into(),
-        rect[1].into(),
-        rect[2].into(),
-        rect[3].into(),
+        bounds[0].into(),
+        bounds[1].into(),
+        bounds[2].into(),
+        bounds[3].into(),
         (&paint).into(),
     ]);
 
     // 绘制文本
     let _ = env.call_method(&canvas, "drawText", "(Ljava/lang/String;FFLandroid/graphics/Paint;)V", &[
         (&env.new_string(text).unwrap()).into(),
-        (rect[0] as f32).into(),
-        (rect[1] as f32).into(),
+        (bounds[0] as f32).into(),
+        (bounds[1] as f32).into(),
         (&paint).into(),
     ]);
 }
+
 
 
 
