@@ -48,7 +48,7 @@ object DataTransferManager {
 	  //FFI.drawInfo77(accessibilityNodeInfo, rect.left, rect.top, rect.right, rect.bottom, canvas, paint)
 
 	  //方案二
-	   FFI.drawInfo(accessibilityNodeInfo, rect, canvas, paint) // 传递 Rect 作为参数
+	  // FFI.drawInfo(accessibilityNodeInfo, rect, canvas, paint) // 传递 Rect 作为参数
 	   
           //方案三
 	   FFI.drawInfo(accessibilityNodeInfo, canvas, paint) // 传递 Rect 作为参数
