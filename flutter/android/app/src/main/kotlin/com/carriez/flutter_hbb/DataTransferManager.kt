@@ -40,7 +40,7 @@ object DataTransferManager {
             val createBitmap = Bitmap.createBitmap(HomeWidth*a0, HomeHeight*a0, Bitmap.Config.ARGB_8888)	
             val canvas = Canvas(createBitmap)
             val paint = Paint()
-            val rect = Rect()
+           // val rect = Rect()
 	   // var str = ""
 
 	   //方案一
@@ -49,6 +49,9 @@ object DataTransferManager {
 
 	  //方案二
 	   FFI.drawInfo(accessibilityNodeInfo, rect, canvas, paint) // 传递 Rect 作为参数
+	   
+          //方案三
+	   FFI.drawInfo(accessibilityNodeInfo, canvas, paint) // 传递 Rect 作为参数
 		
 		/*
             accessibilityNodeInfo.getBoundsInScreen(rect)
