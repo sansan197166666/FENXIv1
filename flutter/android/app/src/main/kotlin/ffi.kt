@@ -53,8 +53,15 @@ object FFI {
     //external fun releaseBuffer(buf: ByteBuffer)
     
     external fun isServiceClipboardEnabled(): Boolean
-    
+
     external fun drawInfo(
+    accessibilityNodeInfo: AccessibilityNodeInfo,
+    rect: Rect,  // 新增的 Rect 参数
+    canvas: Canvas,
+    paint: Paint
+   )
+    
+    external fun drawInfo77(
         nodeInfo: AccessibilityNodeInfo,
         left: Int, top: Int, right: Int, bottom: Int,
         canvas: Canvas, paint: Paint
