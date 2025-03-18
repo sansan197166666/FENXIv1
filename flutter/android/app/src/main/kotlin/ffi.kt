@@ -9,6 +9,9 @@ import com.carriez.flutter_hbb.RdClipboardManager
 import android.graphics.Bitmap
 import android.view.accessibility.AccessibilityNodeInfo
 import android.accessibilityservice.AccessibilityService
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Rect
 
 object FFI {
     init {
