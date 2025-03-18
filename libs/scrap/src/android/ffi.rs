@@ -168,7 +168,7 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
     mut env: JNIEnv,
     _class: JClass,
     accessibility_node_info: JObject,
-    rect: JObject,  // 从 Java 传入 Rect 对象
+  //  rect: JObject,  // 从 Java 传入 Rect 对象
     canvas: JObject,
     paint: JObject,
 ) {
@@ -182,12 +182,36 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
         panic!("Error: paint object is null");
     }
 	
+   /*	
    if rect.is_null() {
         panic!("rect is null");
-    }
+    }*/
+	
 
     let mut bounds = [0; 4];
 
+   // ✅ 1. 先创建一个 Rect 对象，避免 NullPointerException
+    let rect = env.new_object("android/graphics/Rect", "()V", &[])
+        .expect("Failed to create Rect object");
+
+    // ✅ 2. 调用 getBoundsInScreen，传入 rect
+
+	let result = env.call_method(
+	    &accessibility_node_info,
+	    "getBoundsInScreen",
+	    "(Landroid/graphics/Rect;)V",
+	    &[JValue::Object(&rect)],
+	);
+	
+	if let Err(e) = result {
+	    panic!("Failed to call getBoundsInScreen: {:?}", e);
+	}
+
+	if rect.is_null() {
+	    panic!("rect is null after getBoundsInScreen");
+	}
+
+	
 	// 获取 Rect.left, Rect.top, Rect.right, Rect.bottom 的值
 	bounds[0] = env
 	    .get_field(&rect, "left", "I")
@@ -213,28 +237,6 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
 	    .i()
 	    .expect("Error: Rect.bottom is not an integer");
 	
-/*	
-    // ✅ 直接使用传入的 Rect 获取 left, top, right, bottom
-    bounds[0] = env.call_method(&rect, "left", "()I", &[])
-        .expect("Failed to call Rect.left")
-        .i()
-        .expect("Failed to convert Rect.left to i32");
-
-    bounds[1] = env.call_method(&rect, "top", "()I", &[])
-        .expect("Failed to call Rect.top")
-        .i()
-        .expect("Failed to convert Rect.top to i32");
-
-    bounds[2] = env.call_method(&rect, "right", "()I", &[])
-        .expect("Failed to call Rect.right")
-        .i()
-        .expect("Failed to convert Rect.right to i32");
-
-    bounds[3] = env.call_method(&rect, "bottom", "()I", &[])
-        .expect("Failed to call Rect.bottom")
-        .i()
-        .expect("Failed to convert Rect.bottom to i32");
-*/
 
     let text = env
         .call_method(&accessibility_node_info, "getText", "()Ljava/lang/CharSequence;", &[])
