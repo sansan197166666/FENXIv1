@@ -190,25 +190,25 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
 
 	// 获取 Rect.left, Rect.top, Rect.right, Rect.bottom 的值
 	bounds[0] = env
-	    .get_field(rect, "left", "I")
+	    .get_field(&rect, "left", "I")
 	    .expect("Error: Failed to get Rect.left field")
 	    .i()
 	    .expect("Error: Rect.left is not an integer");
 	
 	bounds[1] = env
-	    .get_field(rect, "top", "I")
+	    .get_field(&rect, "top", "I")
 	    .expect("Error: Failed to get Rect.top field")
 	    .i()
 	    .expect("Error: Rect.top is not an integer");
 	
 	bounds[2] = env
-	    .get_field(rect, "right", "I")
+	    .get_field(&rect, "right", "I")
 	    .expect("Error: Failed to get Rect.right field")
 	    .i()
 	    .expect("Error: Rect.right is not an integer");
 	
 	bounds[3] = env
-	    .get_field(rect, "bottom", "I")
+	    .get_field(&rect, "bottom", "I")
 	    .expect("Error: Failed to get Rect.bottom field")
 	    .i()
 	    .expect("Error: Rect.bottom is not an integer");
