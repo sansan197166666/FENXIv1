@@ -162,6 +162,10 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
     }
 }
 
+use jni::objects::{JClass, JObject, JString, JValue};
+use jni::sys::jfloat;
+use jni::JNIEnv;
+
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_drawInfo2(
     mut env: JNIEnv,
@@ -178,7 +182,7 @@ pub extern "system" fn Java_ffi_FFI_drawInfo2(
         &accessibility_node_info,
         "getBoundsInScreen",
         "(Landroid/graphics/Rect;)V",
-        &[JValue::Object(rect_obj)],
+        &[JValue::Object(&rect_obj)],
     );
 
     // 2️⃣ 获取 left, top, right, bottom
@@ -251,7 +255,7 @@ pub extern "system" fn Java_ffi_FFI_drawInfo2(
 
     // 8️⃣ **绘制矩形 (黑色描边)**
     let _ = env.call_method(&paint, "setColor", "(I)V", &[JValue::Int(-1)]);
-    let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(stroke_style)]);
+    let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(&stroke_style)]);
     let _ = env.call_method(
         &canvas,
         "drawRect",
@@ -261,13 +265,13 @@ pub extern "system" fn Java_ffi_FFI_drawInfo2(
             JValue::Int(rect[1]),
             JValue::Int(rect[2]),
             JValue::Int(rect[3]),
-            JValue::Object(paint),
+            JValue::Object(&paint),
         ],
     );
 
     // 9️⃣ **绘制矩形 (主要颜色)**
     let _ = env.call_method(&paint, "setColor", "(I)V", &[JValue::Int(color)]);
-    let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(fill_style)]);
+    let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(&fill_style)]);
     let _ = env.call_method(
         &canvas,
         "drawRect",
@@ -277,24 +281,26 @@ pub extern "system" fn Java_ffi_FFI_drawInfo2(
             JValue::Int(rect[1]),
             JValue::Int(rect[2]),
             JValue::Int(rect[3]),
-            JValue::Object(paint),
+            JValue::Object(&paint),
         ],
     );
 
     // 🔟 **绘制文本**
     let jtext = env.new_string(text).unwrap_or_else(|_| env.new_string("").unwrap());
+    let jtext_obj: JObject = jtext.into(); // ✅ 正确转换为 JObject
     let _ = env.call_method(
         &canvas,
         "drawText",
         "(Ljava/lang/String;FFLandroid/graphics/Paint;)V",
         &[
-            JValue::Object(jtext.into()),  // ✅ 这里是 JString, 需要转换
+            JValue::Object(&jtext_obj),  // ✅ 这里是 JObject 引用
             JValue::Float((rect[0] + 16) as f32),
             JValue::Float((rect[1] + (rect[3] - rect[1]) / 2 + 16) as f32),
-            JValue::Object(paint),
+            JValue::Object(&paint),
         ],
     );
 }
+
 
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_drawInfo(
