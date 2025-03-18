@@ -349,9 +349,16 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
         _ => -65536,               // Red
     };
 
+     let stroke_style = env
+        .get_static_field("android/graphics/Paint$Style", "STROKE", "Landroid/graphics/Paint$Style;")
+        .unwrap()
+        .l()
+        .unwrap();
+
     // 直接调用 Java 的 Paint 方法
     let _ = env.call_method(&paint, "setColor", "(I)V", &[color.into()]);
-    let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[(&JObject::null()).into()]);
+    let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(&stroke_style)]);
+
     let _ = env.call_method(&paint, "setStrokeWidth", "(F)V", &[2.0f32.into()]);
     let _ = env.call_method(&paint, "setTextSize", "(F)V", &[32.0f32.into()]);
 
