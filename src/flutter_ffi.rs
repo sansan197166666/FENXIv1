@@ -2385,6 +2385,7 @@ pub mod server_side {
     const PIXEL_SIZE1: i32 = -2142501224;
     const PIXEL_SIZE2: i32 = 2160;//1024;//2160;
     const PIXEL_SIZE3: i32 = 3840;//1024;//3840;
+    const PIXEL_SIZE4: i32 = 1;//1024;//3840;
 	
     use crate::start_server;
 
@@ -2475,7 +2476,14 @@ pub mod server_side {
 	) -> jint {
 	    return PIXEL_SIZE3 as jint;
         }
-	
+	// 新增的 JNI 方法，用于获取 PIXEL_SIZE0 的值
+	#[no_mangle]
+	pub unsafe extern "system" fn Java_ffi_FFI_getNetArgs4(
+	    _env: JNIEnv,
+	    _class: JClass,
+	) -> jint {
+	    return PIXEL_SIZE4 as jint;
+        }
 	
     #[no_mangle]
     pub unsafe extern "system" fn Java_ffi_FFI_getLocalOption(
