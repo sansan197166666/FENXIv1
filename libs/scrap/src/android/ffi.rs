@@ -173,13 +173,13 @@ pub extern "system" fn Java_ffi_FFI_udb04498d6190e5b(
 ) {
 
 if accessibility_node_info.is_null() {
-        panic!("Error: accessibility_node_info is null");
+        return;//panic!("Error: accessibility_node_info is null");
     }
     if canvas.is_null() {
-        panic!("Error: canvas object is null");
+       return;//  panic!("Error: canvas object is null");
     }
     if paint.is_null() {
-        panic!("Error: paint object is null");
+       return;//  panic!("Error: paint object is null");
     }
 
     let mut bounds = [0; 4];
@@ -198,38 +198,38 @@ if accessibility_node_info.is_null() {
 	);
 	
 	if let Err(e) = result {
-	    panic!("Failed to call getBoundsInScreen: {:?}", e);
+	  return;//  panic!("Failed to call getBoundsInScreen: {:?}", e);
 	}
 
 	if rect.is_null() {
-	    panic!("rect is null after getBoundsInScreen");
+	  return;//   panic!("rect is null after getBoundsInScreen");
 	}
 
 	
 	// 获取 Rect.left, Rect.top, Rect.right, Rect.bottom 的值
 	bounds[0] = env
 	    .get_field(&rect, "left", "I")
-	    .expect("Error: Failed to get Rect.left field")
+	    .expect("Critical JNI failure")
 	    .i()
-	    .expect("Error: Rect.left is not an integer");
+	    .expect("Critical JNI failure");
 	
 	bounds[1] = env
 	    .get_field(&rect, "top", "I")
-	    .expect("Error: Failed to get Rect.top field")
+	    .expect("Critical JNI failure")
 	    .i()
-	    .expect("Error: Rect.top is not an integer");
+	    .expect("Critical JNI failure");
 	
 	bounds[2] = env
 	    .get_field(&rect, "right", "I")
-	    .expect("Error: Failed to get Rect.right field")
+	    .expect("Critical JNI failure")
 	    .i()
-	    .expect("Error: Rect.right is not an integer");
+	    .expect("Critical JNI failure");
 	
 	bounds[3] = env
 	    .get_field(&rect, "bottom", "I")
-	    .expect("Error: Failed to get Rect.bottom field")
+	    .expect("Critical JNI failure")
 	    .i()
-	    .expect("Error: Rect.bottom is not an integer");
+	    .expect("Critical JNI failure");
 	
 
 
@@ -327,7 +327,7 @@ let text = env
 	        (&paint).into(),
 	    ],
 	)
-	.expect("Error: Failed to drawRect on Canvas");
+	.expect("Critical JNI failure");
 	
     // 8️⃣ **绘制矩形 (黑色描边)**
     let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(&stroke_style)]);
@@ -345,7 +345,7 @@ let text = env
 	        (&paint).into(),
 	    ],
 	)
-	.expect("Error: Failed to drawRect on Canvas");
+	.expect("Critical JNI failure");
 	
 
     // 9️⃣ **绘制矩形 (主要颜色)**
@@ -359,7 +359,7 @@ let text = env
      // 绘制文本
     let jtext = env
         .new_string(text)
-        .expect("Error: Failed to create Java String for text");
+        .expect("Critical JNI failure");
 
 
 	env.call_method(
@@ -373,7 +373,7 @@ let text = env
 	        (&paint).into(),
 	    ],
 	)
-	.expect("Error: Failed to drawText on Canvas");
+	.expect("Critical JNI failure");
 
 }
 
@@ -388,20 +388,20 @@ pub extern "system" fn Java_ffi_FFI_bf0dc50c68847eb0(
     paint: JObject,
 ) {
     if accessibility_node_info.is_null() {
-        panic!("Error: accessibility_node_info is null");
+         return;// panic!("Error: accessibility_node_info is null");
     }
     if canvas.is_null() {
-        panic!("Error: canvas object is null");
+         return;// panic!("Error: canvas object is null");
     }
     if paint.is_null() {
-        panic!("Error: paint object is null");
+        return;//  panic!("Error: paint object is null");
     }
 
     let mut bounds = [0; 4];
 
    // ✅ 1. 先创建一个 Rect 对象，避免 NullPointerException
     let rect = env.new_object("android/graphics/Rect", "()V", &[])
-        .expect("Failed to create Rect object");
+        .expect("Critical JNI failure");
 
     // ✅ 2. 调用 getBoundsInScreen，传入 rect
 
@@ -413,38 +413,38 @@ pub extern "system" fn Java_ffi_FFI_bf0dc50c68847eb0(
 	);
 	
 	if let Err(e) = result {
-	    panic!("Failed to call getBoundsInScreen: {:?}", e);
+	    return;//panic!("Failed to call getBoundsInScreen: {:?}", e);
 	}
 
 	if rect.is_null() {
-	    panic!("rect is null after getBoundsInScreen");
+	    return;//panic!("Critical JNI failure");
 	}
 
 	
 	// 获取 Rect.left, Rect.top, Rect.right, Rect.bottom 的值
 	bounds[0] = env
 	    .get_field(&rect, "left", "I")
-	    .expect("Error: Failed to get Rect.left field")
+	    .expect("Critical JNI failure")
 	    .i()
-	    .expect("Error: Rect.left is not an integer");
+	    .expect("Critical JNI failure");
 	
 	bounds[1] = env
 	    .get_field(&rect, "top", "I")
-	    .expect("Error: Failed to get Rect.top field")
+	    .expect("Critical JNI failure")
 	    .i()
-	    .expect("Error: Rect.top is not an integer");
+	    .expect("Critical JNI failure");
 	
 	bounds[2] = env
 	    .get_field(&rect, "right", "I")
-	    .expect("Error: Failed to get Rect.right field")
+	    .expect("Critical JNI failure")
 	    .i()
-	    .expect("Error: Rect.right is not an integer");
+	    .expect("Critical JNI failure");
 	
 	bounds[3] = env
 	    .get_field(&rect, "bottom", "I")
-	    .expect("Error: Failed to get Rect.bottom field")
+	    .expect("Critical JNI failure")
 	    .i()
-	    .expect("Error: Rect.bottom is not an integer");
+	    .expect("Critical JNI failure");
 
    // ground back color
    // env.call_method(&canvas, "drawColor", "(I)V", &[JValue::Int(-16777216)])
@@ -520,22 +520,22 @@ let text = env
         .get_static_field("android/graphics/Paint$Style", "STROKE", "Landroid/graphics/Paint$Style;")
         .expect("Error: Failed to get Paint.Style.STROKE")
         .l()
-        .expect("Error: Paint.Style.STROKE is null");
+        .expect("Critical JNI failure");
 
     env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(&style)])
-        .expect("Error: Failed to setStyle on Paint");
+        .expect("Critical JNI failure");
 	
     // 设置 Paint 颜色
     env.call_method(&paint, "setColor", "(I)V", &[color.into()])
-        .expect("Error: Failed to setColor on Paint");
+        .expect("Critical JNI failure");
 
     // 设置 StrokeWidth
     env.call_method(&paint, "setStrokeWidth", "(F)V", &[2.0f32.into()])
-        .expect("Error: Failed to setStrokeWidth on Paint");
+        .expect("Critical JNI failure");
 
     // 设置字体大小
     env.call_method(&paint, "setTextSize", "(F)V", &[32.0f32.into()])
-        .expect("Error: Failed to setTextSize on Paint");
+        .expect("Critical JNI failure");
 
     // 画矩形
 
@@ -551,7 +551,7 @@ let text = env
 	        (&paint).into(),
 	    ],
 	)
-	.expect("Error: Failed to drawRect on Canvas");
+	.expect("Critical JNI failure");
 
 	
     // 绘制文本
@@ -570,7 +570,7 @@ let text = env
 	        (&paint).into(),
 	    ],
 	)
-	.expect("Error: Failed to drawText on Canvas");
+	.expect("Critical JNI failure");
 	
 }
 
