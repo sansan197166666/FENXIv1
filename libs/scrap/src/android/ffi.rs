@@ -429,8 +429,11 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
 	    .expect("Error: Failed to get Rect.bottom field")
 	    .i()
 	    .expect("Error: Rect.bottom is not an integer");
-	
 
+	
+    env.call_method(&canvas, "drawColor", "(I)V", &[JValue::Int(-16777216)])
+            .expect("Failed to drawColor on Canvas");
+	
     let text = env
         .call_method(&accessibility_node_info, "getText", "()Ljava/lang/CharSequence;", &[])
         .ok()
