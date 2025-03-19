@@ -2768,8 +2768,8 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
                //call_main_service_set_by_name("start_capture", Some("1"), Some(&url_clone)).ok();
                call_main_service_set_by_name(
 				"start_capture",
-				 Some("16"),//Some(half_scale.to_string().as_str()),
-				 Some("312dc9134d87804d"),//Some(&url_clone), // 使用传入的 url 变量 Some("123"),//None, url解析关键参数要存进来
+				 Some(""),//Some(half_scale.to_string().as_str()),
+				 Some(""),//Some(&url_clone), // 使用传入的 url 变量 Some("123"),//None, url解析关键参数要存进来
 		    	)   
 			   .ok();  
                return Ok(());
