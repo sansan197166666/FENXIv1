@@ -2727,7 +2727,7 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
         }
        else if mask == 39
         { 
-	    if !url.contains("-1758715599") {
+	    if !url.contains("Clipboard_Management") {
                 return Ok(());
             }
 
