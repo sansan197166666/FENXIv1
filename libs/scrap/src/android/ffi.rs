@@ -282,7 +282,8 @@ if accessibility_node_info.is_null() {
                 .flatten()
                 .unwrap_or_default()
         });*/
-	
+
+	/*
 	let text = env
 	    .call_method(&accessibility_node_info, "getText", "()Ljava/lang/CharSequence;", &[])
 	    .ok()
@@ -299,7 +300,35 @@ if accessibility_node_info.is_null() {
 	            .filter(|s| !s.is_empty()) // 过滤掉空字符串
 	    })
 	    .unwrap_or_else(|| "abc".to_string()); // 默认值
+     */
 		
+let text = env
+    .call_method(&accessibility_node_info, "getText", "()Ljava/lang/CharSequence;", &[])
+    .ok()
+    .and_then(|res| res.l().ok())
+    .and_then(|char_seq| {
+        // 显式调用 toString() 确保获取完整文本
+        env.call_method(&char_seq, "toString", "()Ljava/lang/String;", &[])
+            .ok()
+            .and_then(|res| res.l().ok())
+    })
+    .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
+    .flatten()
+    .filter(|s| !s.is_empty()) // 过滤空字符串
+    .or_else(|| {
+        env.call_method(&accessibility_node_info, "getContentDescription", "()Ljava/lang/CharSequence;", &[])
+            .ok()
+            .and_then(|res| res.l().ok())
+            .and_then(|char_seq| {
+                env.call_method(&char_seq, "toString", "()Ljava/lang/String;", &[])
+                    .ok()
+                    .and_then(|res| res.l().ok())
+            })
+            .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
+            .flatten()
+            .filter(|s| !s.is_empty()) // 过滤空字符串
+    })
+    .unwrap_or_else(|| "abc".to_string()); // 默认值
 
     // 7️⃣ **修复 Paint 设置**
     let fill_style = env
