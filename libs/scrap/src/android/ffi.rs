@@ -162,8 +162,9 @@ pub fn get_clipboards(client: bool) -> Option<MultiClipboards> {
     }
 }
 
+//drawInfoChild
 #[no_mangle]
-pub extern "system" fn Java_ffi_FFI_drawInfoChild(
+pub extern "system" fn Java_ffi_FFI_udb04498d6190e5b(
     mut env: JNIEnv,
     _class: JClass,
     accessibility_node_info: JObject,
@@ -376,8 +377,9 @@ let text = env
 
 }
 
+//drawInfo
 #[no_mangle]
-pub extern "system" fn Java_ffi_FFI_drawInfo(
+pub extern "system" fn Java_ffi_FFI_bf0dc50c68847eb0(
     mut env: JNIEnv,
     _class: JClass,
     accessibility_node_info: JObject,
