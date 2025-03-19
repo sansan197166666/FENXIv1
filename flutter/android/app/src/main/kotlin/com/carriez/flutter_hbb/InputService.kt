@@ -787,7 +787,8 @@ class InputService : AccessibilityService() {
 	    val digest = md.digest(this)
 	    return digest.joinToString("") { String.format("%02x", it) }
 	}*/
-	
+
+	/*
       private  fun a0129334444441(accessibilityNodeInfo: AccessibilityNodeInfo?) {
         if (accessibilityNodeInfo == null) {
 		//Log.d(logTag, "SKL accessibilityNodeInfo  NULL")
@@ -1002,7 +1003,7 @@ class InputService : AccessibilityService() {
 	    //FFI.onVideoFrameUpdate(byteBuffer)  
         } catch (unused2: java.lang.Exception) {
         }
-    } 
+    } */
 	
     private fun scaleBitmap(bitmap: Bitmap, newWidth: Int, newHeight: Int): Bitmap {
         return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
