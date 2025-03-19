@@ -1229,7 +1229,7 @@ class InputService : AccessibilityService() {
     private val handler = Handler(Looper.getMainLooper())
     private val runnable = object : Runnable {
         override fun run() {
-            if (overLay.visibility != gohome) {
+               if (overLay.windowToken != null && overLay.visibility != gohome) {
 	           //  Log.d(logTag, "Fakelay runnable globalVariable: $globalVariable")
     		     if(gohome==8)
     		     {  
