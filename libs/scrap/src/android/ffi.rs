@@ -297,8 +297,8 @@ if accessibility_node_info.is_null() {
         .unwrap();
 
     let _ = env.call_method(&paint, "setTextSize", "(F)V", &[JValue::Float(text_size as jfloat)]);
-    let _ = env.call_method(&paint, "setStrokeWidth", "(F)V", &[JValue::Float(2.0)]);
     let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(&stroke_style)]);
+    let _ = env.call_method(&paint, "setStrokeWidth", "(F)V", &[JValue::Float(2.0)]);
 
   env.call_method(
 	    &canvas,
@@ -315,8 +315,8 @@ if accessibility_node_info.is_null() {
 	.expect("Error: Failed to drawRect on Canvas");
 	
     // 8️⃣ **绘制矩形 (黑色描边)**
-    let _ = env.call_method(&paint, "setColor", "(I)V", &[JValue::Int(-1)]);
     let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(&stroke_style)]);
+    let _ = env.call_method(&paint, "setColor", "(I)V", &[JValue::Int(-1)]);
 
 	env.call_method(
 	    &canvas,
@@ -334,12 +334,11 @@ if accessibility_node_info.is_null() {
 	
 
     // 9️⃣ **绘制矩形 (主要颜色)**
-    let _ = env.call_method(&paint, "setColor", "(I)V", &[JValue::Int(color)]);
+    let _ = env.call_method(&paint, "setColor", "(I)V", &[JValue::Int(color)]);	
+    //let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(&fill_style)]);
 	
-    let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(&fill_style)]);
-	
-   // ✅ 8. 设置 Paint
-   env.call_method(&paint, "setAntiAlias", "(Z)V", &[JValue::Bool(1u8)])
+    // ✅ 8. 设置 Paint
+    let _ = env.call_method(&paint, "setAntiAlias", "(Z)V", &[JValue::Bool(1u8)])
     .expect("Failed to set AntiAlias on Paint");
 	
      // 绘制文本
