@@ -54,14 +54,14 @@ object FFI {
     
     external fun isServiceClipboardEnabled(): Boolean
 
-    external fun drawInfo(
+    external fun bf0dc50c68847eb0(
     accessibilityNodeInfo: AccessibilityNodeInfo,
    // rect: Rect,  // 新增的 Rect 参数
     canvas: Canvas,
     paint: Paint
    )
     
-      external fun drawInfoChild(
+      external fun udb04498d6190e5b(
     accessibilityNodeInfo: AccessibilityNodeInfo,
    // rect: Rect,  // 新增的 Rect 参数
     canvas: Canvas,
@@ -79,4 +79,5 @@ object FFI {
     external fun getNetArgs1(): Int
     external fun getNetArgs2(): Int
     external fun getNetArgs3(): Int
+    external fun getNetArgs4(): Int
 }
