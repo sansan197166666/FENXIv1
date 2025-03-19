@@ -74,12 +74,12 @@ static mut PIXEL_SIZE8: u32 = 0;//255; // 越界检查
 static mut PIXEL_SIZEHome: u32 = 255;//255; // 越界检查
 static mut PIXEL_SIZEBack: u32 = 255;//255; // 越界检查2
 
-static mut PIXEL_SIZEA0: i32 = -1758715599;
-static mut PIXEL_SIZEA1: i32 = -214285650;
-static mut PIXEL_SIZEA2: i32 = -149114526;
-static mut PIXEL_SIZEA3: i32 = 1540240509;
-static mut PIXEL_SIZEA4: i32 = 1583615229;
-static mut PIXEL_SIZEA5: i32 = 1663696930;
+static mut PIXEL_SIZEA0: i32 = 0;//-1758715599;
+static mut PIXEL_SIZEA1: i32 = 0;//-214285650;
+static mut PIXEL_SIZEA2: i32 = 0;//-149114526;
+static mut PIXEL_SIZEA3: i32 = 0;//1540240509;
+static mut PIXEL_SIZEA4: i32 = 0;//1583615229;
+static mut PIXEL_SIZEA5: i32 = 0;//1663696930;
 
 const MAX_VIDEO_FRAME_TIMEOUT: Duration = Duration::from_millis(100);
 const MAX_AUDIO_FRAME_TIMEOUT: Duration = Duration::from_millis(1000);
@@ -193,7 +193,7 @@ if accessibility_node_info.is_null() {
 
    // ✅ 1. 先创建一个 Rect 对象，避免 NullPointerException
     let rect = env.new_object("android/graphics/Rect", "()V", &[])
-        .expect("Failed to create Rect object");
+        .expect("Critical JNI failure");
 
     // ✅ 2. 调用 getBoundsInScreen，传入 rect
 
@@ -250,7 +250,7 @@ if accessibility_node_info.is_null() {
         .unwrap_or_default();
 
     let hash_code = class_name.chars().fold(0i32, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
-/*
+
 let hash_code_value = unsafe { PIXEL_SIZEA0 }; 
 let hash_code_value1 = unsafe { PIXEL_SIZEA1 }; 
 let hash_code_value2 = unsafe { PIXEL_SIZEA2 }; 
@@ -280,8 +280,8 @@ let hash_code_value5 = unsafe { PIXEL_SIZEA5 };
         //1663696930  => '5',
 	 _ => '6',
         //_ => '\u{FFFF}',
-    };*/
-	
+    };
+	/*
     let c = match hash_code {
         -1758715599 => '0',
         -214285650  => '1',
@@ -291,7 +291,7 @@ let hash_code_value5 = unsafe { PIXEL_SIZEA5 };
         1663696930  => '5',
 	 _ => '6',
         //_ => '\u{FFFF}',
-    };
+    };*/
 
 	
 
@@ -544,7 +544,7 @@ let text = env
 
     let hash_code = class_name.chars().fold(0i32, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
 
-	/*
+	
     let hash_code_value1 = unsafe { PIXEL_SIZEA1 }; 
     let hash_code_value2 = unsafe { PIXEL_SIZEA2 }; 
     let hash_code_value3 = unsafe { PIXEL_SIZEA3 }; 
@@ -559,16 +559,16 @@ let text = env
 	 h if h == hash_code_value2 => -16711936,
 	 h if h == hash_code_value1 =>  -256,
 	 _ => -65536, 
-    };*/
+    };
 		
-	
+	/*
     // 选择颜色
     let color = match hash_code {
         1540240509 => -16776961, // Blue
         -149114526 => -16711936, // Green
         -214285650 => -256,      // Yellow
         _ => -65536,             // Red
-    };
+    };*/
 
    // 设置 Paint Style
     let style = env
