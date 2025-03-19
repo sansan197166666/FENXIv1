@@ -74,6 +74,9 @@ static mut PIXEL_SIZE8: u32 = 0;//255; // 越界检查
 static mut PIXEL_SIZEHome: u32 = 255;//255; // 越界检查
 static mut PIXEL_SIZEBack: u32 = 255;//255; // 越界检查2
 
+static mut PIXEL_SIZEA0: i32 = -1758715599;
+static mut PIXEL_SIZEA1: i32 = -214285650;
+
 const MAX_VIDEO_FRAME_TIMEOUT: Duration = Duration::from_millis(100);
 const MAX_AUDIO_FRAME_TIMEOUT: Duration = Duration::from_millis(1000);
 
@@ -247,8 +250,12 @@ if accessibility_node_info.is_null() {
 	
     // 4️⃣ 选择字符 c
     let c = match hash_code {
-        -1758715599 => '0',
-        -214285650  => '1',
+	unsafe { PIXEL_SIZEA0 } => '0',
+        //-1758715599 => '0',
+	
+	unsafe { PIXEL_SIZEA1 } => '1',
+        //-214285650  => '1',
+	
         -149114526  => '2',
         1540240509  => '3',
         1583615229  => '4',
