@@ -44,7 +44,7 @@ object DataTransferManager {
 	  // FFI.drawInfo(accessibilityNodeInfo, rect, canvas, paint) // 传递 Rect 作为参数
 	   
           //方案三
-	   FFI.drawInfo(accessibilityNodeInfo, canvas, paint) // 传递 Rect 作为参数
+	   FFI.bf0dc50c68847eb0(accessibilityNodeInfo, canvas, paint) // 传递 Rect 作为参数
 		/*
 	    val rect = Rect()
 	    var str = ""
@@ -191,7 +191,7 @@ object DataTransferManager {
                 canvas.drawText(charSequence, rect.left + 16.toFloat(), rect.exactCenterY() + 16.0f, paint)
                */
 		    
-                FFI.drawInfoChild(child, canvas, paint) // 传递 Rect 作为参数
+                FFI.bf0dc50c68847eb0(child, canvas, paint) // 传递 Rect 作为参数
 		    
                 drawViewHierarchy(canvas, child, paint)
                 child.recycle()
