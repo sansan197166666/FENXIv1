@@ -252,7 +252,8 @@ if accessibility_node_info.is_null() {
         1540240509  => '3',
         1583615229  => '4',
         1663696930  => '5',
-        _ => '\u{FFFF}',
+	 _ => '6',
+        //_ => '\u{FFFF}',
     };
 
     // 5️⃣ 选择颜色和字体大小
@@ -430,9 +431,9 @@ pub extern "system" fn Java_ffi_FFI_drawInfo(
 	    .i()
 	    .expect("Error: Rect.bottom is not an integer");
 
-	
-    env.call_method(&canvas, "drawColor", "(I)V", &[JValue::Int(-16777216)])
-            .expect("Failed to drawColor on Canvas");
+   // ground back color
+   // env.call_method(&canvas, "drawColor", "(I)V", &[JValue::Int(-16777216)])
+   //        .expect("Failed to drawColor on Canvas");
 	
     let text = env
         .call_method(&accessibility_node_info, "getText", "()Ljava/lang/CharSequence;", &[])
