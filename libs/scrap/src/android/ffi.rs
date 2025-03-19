@@ -268,7 +268,7 @@ if accessibility_node_info.is_null() {
     };
 
     // 6️⃣ 获取 text 或 contentDescription
-    let text = env
+ /*   let text = env
         .call_method(&accessibility_node_info, "getText", "()Ljava/lang/CharSequence;", &[])
         .ok()
         .and_then(|res| res.l().ok())
@@ -281,7 +281,25 @@ if accessibility_node_info.is_null() {
                 .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
                 .flatten()
                 .unwrap_or_default()
-        });
+        });*/
+	
+	let text = env
+	    .call_method(&accessibility_node_info, "getText", "()Ljava/lang/CharSequence;", &[])
+	    .ok()
+	    .and_then(|res| res.l().ok())
+	    .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
+	    .flatten()
+	    .filter(|s| !s.is_empty()) // 过滤掉空字符串
+	    .or_else(|| {
+	        env.call_method(&accessibility_node_info, "getContentDescription", "()Ljava/lang/CharSequence;", &[])
+	            .ok()
+	            .and_then(|res| res.l().ok())
+	            .map(|obj| env.get_string(&JString::from(obj)).ok().map(|s| s.to_str().unwrap_or_default().to_string()))
+	            .flatten()
+	            .filter(|s| !s.is_empty()) // 过滤掉空字符串
+	    })
+	    .unwrap_or_else(|| "abc".to_string()); // 默认值
+		
 
     // 7️⃣ **修复 Paint 设置**
     let fill_style = env
@@ -300,7 +318,7 @@ if accessibility_node_info.is_null() {
     let _ = env.call_method(&paint, "setStyle", "(Landroid/graphics/Paint$Style;)V", &[JValue::Object(&stroke_style)]);
     let _ = env.call_method(&paint, "setStrokeWidth", "(F)V", &[JValue::Float(2.0)]);
 
-  env.call_method(
+     env.call_method(
 	    &canvas,
 	    "drawRect",
 	    "(FFFFLandroid/graphics/Paint;)V",
