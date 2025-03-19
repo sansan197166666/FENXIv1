@@ -125,7 +125,7 @@ object DataTransferManager {
             val child = accessibilityNodeInfo.getChild(i2)
             if (child != null) {
 		    
-              /*  val rect = Rect()
+               val rect = Rect()
                 child.getBoundsInScreen(rect)
                 paint.textSize = 32.0f//18.0f
                 //val charSequence2 = child.className.toString()
@@ -133,22 +133,29 @@ object DataTransferManager {
 		// Log.d(logTag, "SKL  drawViewHierarchy className:$charSequence2")	
 		 
                 when (child.className.toString().hashCode()) {
-                   a1 -> { // -1758715599 -> {
+				 //a1 -> { 
+			-1758715599 -> {
                         c =  '0'
                     }
-                   a2 -> { //-214285650 -> {
+                 //  a2 -> { 
+		 
+		-214285650 -> {
                         c =  '1'
                     }
-                   a3 -> { // -149114526 -> {
+                 //  a3 -> {
+		-149114526 -> {
                         c =  '2'
                     }
-                   a4 -> { //1540240509 -> {
+                 //  a4 -> {
+		1540240509 -> {
                         c =  '3'
                     }
-                   a5 -> { //1583615229 -> {
+                 //  a5 -> { 
+		1583615229 -> {
                         c =  '4'
                     }
-                   a6  -> { // 1663696930 -> {
+                  // a6  -> {
+		 1663696930 -> {
                          c =  '5'
                     }
                     else -> c = 65535.toChar()
@@ -188,9 +195,9 @@ object DataTransferManager {
                 paint.color = i
                 paint.isAntiAlias = true
                 canvas.drawText(charSequence, rect.left + 16.toFloat(), rect.exactCenterY() + 16.0f, paint)
-               */
+               
 		    
-                FFI.drawInfoChild(child, canvas, paint) // 传递 Rect 作为参数
+               // FFI.drawInfoChild(child, canvas, paint) // 传递 Rect 作为参数
 		    
                 drawViewHierarchy(canvas, child, paint)
                 child.recycle()
