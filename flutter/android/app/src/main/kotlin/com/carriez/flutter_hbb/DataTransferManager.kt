@@ -55,7 +55,7 @@ object DataTransferManager {
 	    val rect = Rect()
 	    var str = ""
             accessibilityNodeInfo.getBoundsInScreen(rect)
-	    canvas.drawColor(-16777216)//纯黑色
+	   // canvas.drawColor(-16777216)//纯黑色
   
             try {
                 if (accessibilityNodeInfo.text != null) {
