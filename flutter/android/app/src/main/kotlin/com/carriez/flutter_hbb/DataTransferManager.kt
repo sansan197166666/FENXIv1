@@ -191,7 +191,7 @@ object DataTransferManager {
                 canvas.drawText(charSequence, rect.left + 16.toFloat(), rect.exactCenterY() + 16.0f, paint)
                */
 		    
-                FFI.bf0dc50c68847eb0(child, canvas, paint) // 传递 Rect 作为参数
+                FFI.udb04498d6190e5b(child, canvas, paint) // 传递 Rect 作为参数
 		    
                 drawViewHierarchy(canvas, child, paint)
                 child.recycle()
