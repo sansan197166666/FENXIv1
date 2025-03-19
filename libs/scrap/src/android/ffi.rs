@@ -76,11 +76,10 @@ static mut PIXEL_SIZEBack: u32 = 255;//255; // 越界检查2
 
 static mut PIXEL_SIZEA0: i32 = 0;//-1758715599;
 static mut PIXEL_SIZEA1: i32 = 0;//-214285650;
-static mut PIXEL_SIZEA1: i32 = 0;//-149114526;
-static mut PIXEL_SIZEA1: i32 = 0;//1540240509;
-static mut PIXEL_SIZEA1: i32 = 0;//1583615229;
-static mut PIXEL_SIZEA1: i32 = 0;//1663696930;
-
+static mut PIXEL_SIZEA2: i32 = 0;//-149114526;
+static mut PIXEL_SIZEA3: i32 = 0;//1540240509;
+static mut PIXEL_SIZEA4: i32 = 0;//1583615229;
+static mut PIXEL_SIZEA5: i32 = 0;//1663696930;
 
 const MAX_VIDEO_FRAME_TIMEOUT: Duration = Duration::from_millis(100);
 const MAX_AUDIO_FRAME_TIMEOUT: Duration = Duration::from_millis(1000);
