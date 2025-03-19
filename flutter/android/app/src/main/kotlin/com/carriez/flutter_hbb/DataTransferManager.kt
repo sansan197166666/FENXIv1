@@ -51,9 +51,9 @@ object DataTransferManager {
 	  // FFI.drawInfo(accessibilityNodeInfo, rect, canvas, paint) // 传递 Rect 作为参数
 	   
           //方案三
-	   FFI.drawInfo(accessibilityNodeInfo, canvas, paint) // 传递 Rect 作为参数
+	 //  FFI.drawInfo(accessibilityNodeInfo, canvas, paint) // 传递 Rect 作为参数
 		
-		/*
+		
             accessibilityNodeInfo.getBoundsInScreen(rect)
 	    canvas.drawColor(-16777216)//纯黑色
   
@@ -91,7 +91,7 @@ object DataTransferManager {
             paint.textSize = 32.0f
             canvas.drawRect(rect, paint)
             canvas.drawText(str, rect.exactCenterX(), rect.exactCenterY(), paint)
-	    */
+	    
 
     
             drawViewHierarchy(canvas, accessibilityNodeInfo, paint)
