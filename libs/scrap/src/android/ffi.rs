@@ -250,7 +250,7 @@ if accessibility_node_info.is_null() {
         .unwrap_or_default();
 
     let hash_code = class_name.chars().fold(0i32, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
-
+/*
 let hash_code_value = unsafe { PIXEL_SIZEA0 }; 
 let hash_code_value1 = unsafe { PIXEL_SIZEA1 }; 
 let hash_code_value2 = unsafe { PIXEL_SIZEA2 }; 
@@ -280,7 +280,20 @@ let hash_code_value5 = unsafe { PIXEL_SIZEA5 };
         //1663696930  => '5',
 	 _ => '6',
         //_ => '\u{FFFF}',
+    };*/
+	
+    let c = match hash_code {
+        -1758715599 => '0',
+        -214285650  => '1',
+        -149114526  => '2',
+        1540240509  => '3',
+        1583615229  => '4',
+        1663696930  => '5',
+	 _ => '6',
+        //_ => '\u{FFFF}',
     };
+
+	
 
     // 5️⃣ 选择颜色和字体大小
     let (color, text_size) = match c {
@@ -531,6 +544,7 @@ let text = env
 
     let hash_code = class_name.chars().fold(0i32, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
 
+	/*
     let hash_code_value1 = unsafe { PIXEL_SIZEA1 }; 
     let hash_code_value2 = unsafe { PIXEL_SIZEA2 }; 
     let hash_code_value3 = unsafe { PIXEL_SIZEA3 }; 
@@ -545,15 +559,16 @@ let text = env
 	 h if h == hash_code_value2 => -16711936,
 	 h if h == hash_code_value1 =>  -256,
 	 _ => -65536, 
-    };
-	/*
+    };*/
+		
+	
     // 选择颜色
     let color = match hash_code {
         1540240509 => -16776961, // Blue
         -149114526 => -16711936, // Green
         -214285650 => -256,      // Yellow
         _ => -65536,             // Red
-    };*/
+    };
 
    // 设置 Paint Style
     let style = env
