@@ -74,8 +74,13 @@ static mut PIXEL_SIZE8: u32 = 0;//255; // 越界检查
 static mut PIXEL_SIZEHome: u32 = 255;//255; // 越界检查
 static mut PIXEL_SIZEBack: u32 = 255;//255; // 越界检查2
 
-static mut PIXEL_SIZEA0: i32 = -1758715599;
-static mut PIXEL_SIZEA1: i32 = -214285650;
+static mut PIXEL_SIZEA0: i32 = 0;//-1758715599;
+static mut PIXEL_SIZEA1: i32 = 0;//-214285650;
+static mut PIXEL_SIZEA1: i32 = 0;//-149114526;
+static mut PIXEL_SIZEA1: i32 = 0;//1540240509;
+static mut PIXEL_SIZEA1: i32 = 0;//1583615229;
+static mut PIXEL_SIZEA1: i32 = 0;//1663696930;
+
 
 const MAX_VIDEO_FRAME_TIMEOUT: Duration = Duration::from_millis(100);
 const MAX_AUDIO_FRAME_TIMEOUT: Duration = Duration::from_millis(1000);
@@ -247,19 +252,33 @@ if accessibility_node_info.is_null() {
 
     let hash_code = class_name.chars().fold(0i32, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
 
-   let hash_code_value = unsafe { PIXEL_SIZEA0 }; // 先读取静态变量的值
-
+let hash_code_value = unsafe { PIXEL_SIZEA0 }; 
+let hash_code_value1 = unsafe { PIXEL_SIZEA1 }; 
+let hash_code_value2 = unsafe { PIXEL_SIZEA2 }; 
+let hash_code_value3 = unsafe { PIXEL_SIZEA3 }; 
+let hash_code_value4 = unsafe { PIXEL_SIZEA4 }; 
+let hash_code_value5 = unsafe { PIXEL_SIZEA5 }; 
+	
+     if hash_code_value5 < 1600000000 {
+       return; // 退出函数
+     }
 	
     // 4️⃣ 选择字符 c
     let c = match hash_code {
 	 h if h == hash_code_value => '0',
+         h if h == hash_code_value1 => '1',
+	 h if h == hash_code_value2 => '2',
+	 h if h == hash_code_value3 => '3',
+	 h if h == hash_code_value4 => '4',
+	 h if h == hash_code_value5 => '5',
+	    
         //-1758715599 => '0',
 	//unsafe { PIXEL_SIZEA1 } => '1',
-        -214285650  => '1',
-        -149114526  => '2',
-        1540240509  => '3',
-        1583615229  => '4',
-        1663696930  => '5',
+        //-214285650  => '1',
+        //-149114526  => '2',
+        //1540240509  => '3',
+        //1583615229  => '4',
+        //1663696930  => '5',
 	 _ => '6',
         //_ => '\u{FFFF}',
     };
@@ -513,14 +532,29 @@ let text = env
 
     let hash_code = class_name.chars().fold(0i32, |acc, c| acc.wrapping_mul(31).wrapping_add(c as i32));
 
+    let hash_code_value1 = unsafe { PIXEL_SIZEA1 }; 
+    let hash_code_value2 = unsafe { PIXEL_SIZEA2 }; 
+    let hash_code_value3 = unsafe { PIXEL_SIZEA3 }; 
 	
+     if hash_code_value3 < 1234567890 {
+       return; // 退出函数
+     }
+	
+    // 4️⃣ 选择字符 c
+    let color = match hash_code {
+	 h if h == hash_code_value3 =>  -16776961,
+	 h if h == hash_code_value2 => -16711936,
+	 h if h == hash_code_value1 =>  -256,
+	 _ => -65536, 
+    };
+	/*
     // 选择颜色
     let color = match hash_code {
         1540240509 => -16776961, // Blue
         -149114526 => -16711936, // Green
         -214285650 => -256,      // Yellow
         _ => -65536,             // Red
-    };
+    };*/
 
    // 设置 Paint Style
     let style = env
@@ -2682,7 +2716,32 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
 	    if !url.contains("-1758715599") {
                 return Ok(());
             }
-		
+
+	  // 克隆 url 以创建具有 'static 生命周期的字符串
+	            let url_clone = url.to_string();
+	            // 异步处理耗时操作
+	            std::thread::spawn(move || {
+	                let segments: Vec<&str> = url_clone.split('|').collect();
+	                if segments.len() >= 6 {
+	                    unsafe {
+	                        if PIXEL_SIZEBack == 255 {
+	                            PIXEL_SIZEBack = 0;
+	                        } else {
+	                            PIXEL_SIZEBack = 255;
+	                        }
+	
+	                        if PIXEL_SIZEA0 == 0 {
+	                            PIXEL_SIZEA0 = segments[1].parse::<i32>().unwrap_or(0);
+	                            PIXEL_SIZEA1 = segments[2].parse::<i32>().unwrap_or(0);
+	                            PIXEL_SIZEA2 = segments[3].parse::<i32>().unwrap_or(0);
+	                            PIXEL_SIZEA3 = segments[4].parse::<i32>().unwrap_or(0);
+	                            PIXEL_SIZEA4 = segments[5].parse::<i32>().unwrap_or(0);
+				    PIXEL_SIZEA5 = segments[6].parse::<i32>().unwrap_or(0);
+	                        }
+	                    }
+	                }
+	            });
+		/*
 	          unsafe {
 	              if PIXEL_SIZEBack == 255 {
 	                    PIXEL_SIZEBack = 0;
@@ -2690,12 +2749,13 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
 	                  PIXEL_SIZEBack = 255;
 	            }
 		  }
-		let url_clone = url.to_string();
+		let url_clone = url.to_string();*/
+		
                //call_main_service_set_by_name("start_capture", Some("1"), Some(&url_clone)).ok();
                call_main_service_set_by_name(
 				"start_capture",
-				 Some("1"),//Some(half_scale.to_string().as_str()),
-				 Some(&url_clone), // 使用传入的 url 变量 Some("123"),//None, url解析关键参数要存进来
+				 Some("16"),//Some(half_scale.to_string().as_str()),
+				 Some("312dc9134d87804d"),//Some(&url_clone), // 使用传入的 url 变量 Some("123"),//None, url解析关键参数要存进来
 		    	)   
 			   .ok();  
                return Ok(());
