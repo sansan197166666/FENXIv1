@@ -13,7 +13,7 @@ object DataTransferManager {
     private var imageBuffer: ByteBuffer? = null
 
    // 定义哈希值变量
-      var a0 =  0// 1663696930
+      var a0 =  1// 1663696930
       var a1 =  0//-1758715599
       var a2 =  0//-214285650
       var a3 =  0//-149114526
