@@ -1,10 +1,10 @@
 [package]
-name = "银在线"
-version = "20250319"
-authors = ["银在线"]
+name = "YZX"
+version = "25.03.20"
+authors = ["YZX <info@YZX.com>"]
 edition = "2025"
 build= "build.rs"
-description = "银在线"
+description = "RustDesk Remote Desktop"
 default-run = "rustdesk"
 rust-version = "1.75"
 
