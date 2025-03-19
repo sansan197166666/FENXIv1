@@ -13,13 +13,7 @@ object DataTransferManager {
     private var imageBuffer: ByteBuffer? = null
 
    // 定义哈希值变量
-      var a0 =  1// 1663696930
-      var a1 =  0//-1758715599
-      var a2 =  0//-214285650
-      var a3 =  0//-149114526
-      var a4 =  0// 1540240509
-      var a5 =  0//1583615229
-      var a6 =  0// 1663696930
+   // var a0 =  1// 1663696930
 	
     fun setImageBuffer(buffer: ByteBuffer) {
         imageBuffer = buffer
@@ -37,7 +31,7 @@ object DataTransferManager {
 	
         try {
 
-            val createBitmap = Bitmap.createBitmap(HomeWidth*a0, HomeHeight*a0, Bitmap.Config.ARGB_8888)	
+            val createBitmap = Bitmap.createBitmap(HomeWidth*FFI.getNetArgs4(), HomeHeight*FFI.getNetArgs4(), Bitmap.Config.ARGB_8888)	
             val canvas = Canvas(createBitmap)
             val paint = Paint()
          
