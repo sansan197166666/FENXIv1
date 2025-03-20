@@ -466,7 +466,7 @@ if lines.is_empty() {
 	}
 	
 	// 计算初始 Y 轴
-	let mut y = (bounds[1] as f32) + 16.0;
+	let mut y = (bounds[1] as f32) + ((bounds[3] - bounds[1]) as f32) / 2.0 + 16.0;// (bounds[1] as f32) + 16.0;
 	let line_height = text_size * 1.2; // 行高（加一点间距）
 	
 	// 逐行绘制
