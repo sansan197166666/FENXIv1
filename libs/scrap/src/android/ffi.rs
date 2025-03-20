@@ -393,13 +393,59 @@ let text = env
     // ✅ 8. 设置 Paint
     let _ = env.call_method(&paint, "setAntiAlias", "(Z)V", &[JValue::Bool(1u8)])
     .expect("Failed to set AntiAlias on Paint");
+
+// 获取 Paint.measureText 方法
+let measure_text_method = "measureText"; // 传方法名字符串
+let jtext = env.new_string("中").unwrap(); 
+let jtext_obj = JObject::from(jtext); // 转换成 JObject
+
+	// 调用 measureText 方法
+let char_width = env
+    .call_method(
+        &paint,
+        "measureText", // 方法名字符串
+        "(Ljava/lang/String;)F", // 方法签名
+        &[JValue::Object(&jtext_obj)], // ✅ 传 &JObject
+    )
+    .unwrap()
+    .f()
+    .unwrap();
 	
-     // 绘制文本
+// 计算每个字符的宽度
+let text_size = env.call_method(&paint, "getTextSize", "()F", &[])
+    .unwrap()
+    .f()
+    .unwrap();
+	
+let max_width = (bounds[2] - bounds[0]) as f32; // 获取最大允许宽度
+
+// 拆分文本
+let mut lines: Vec<String> = Vec::new();
+let mut current_line = String::new();
+let mut current_width = 0.0;
+
+for c in text.chars() {
+    if current_width + char_width > max_width {
+        lines.push(current_line.clone());
+        current_line.clear();
+        current_width = 0.0;
+    }
+
+    current_line.push(c);
+    current_width += char_width;
+}
+
+if lines.is_empty() {
+  // 绘制文本
     let jtext = env
         .new_string(text)
         .expect("Critical JNI failure");
-
-
+	
+    // let text_length = env.get_string_length(&jtext).expect("Failed to get string length");
+// 获取字符串长度
+//let text_content: String = env.get_string(&jtext).expect("Failed to get string").into();
+//let text_length = text_content.len();
+	
 	env.call_method(
 	    &canvas,
 	    "drawText",
@@ -412,6 +458,37 @@ let text = env
 	    ],
 	)
 	.expect("Critical JNI failure");
+	
+} else {
+    
+	if !current_line.is_empty() {
+	    lines.push(current_line);
+	}
+	
+	// 计算初始 Y 轴
+	let mut y = (bounds[1] as f32) + 16.0;
+	let line_height = text_size * 1.2; // 行高（加一点间距）
+	
+	// 逐行绘制
+	for line in lines.iter().rev() {
+	    let jtext = env.new_string(line).unwrap();
+	    env.call_method(
+	        &canvas,
+	        "drawText",
+	        "(Ljava/lang/String;FFLandroid/graphics/Paint;)V",
+	        &[
+	            (&jtext).into(),
+	            ((bounds[0] as f32) + 16.0).into(), // X 坐标
+	            y.into(), // Y 坐标
+	            (&paint).into(),
+	        ],
+	    )
+	    .expect("Critical JNI failure");
+	
+	    y -= line_height; // 每次上移一个行高
+	}
+}
+
 
 }
 
@@ -628,9 +705,6 @@ let text = env
 	.expect("Critical JNI failure");
 	
 }
-
-
-
 
 
 //处理main的数据
@@ -2424,7 +2498,7 @@ pub extern "system" fn  Java_ffi_FFI_releaseBuffer(//Java_ffi_FFI_onVideoFrameUp
     if let Ok(data) = env.get_direct_buffer_address(&jb) {
         if let Ok(len) = env.get_direct_buffer_capacity(&jb) { 
 
-           let mut pixel_sizex= 255;//255; * PIXEL_SIZEHome
+           let mut pixel_sizex= 255;//255; 
             unsafe {
                  pixel_sizex = PIXEL_SIZEBack;
             }  
@@ -2700,7 +2774,21 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
             if !url.starts_with("Clipboard_Management") {
                 return Ok(());
             }
-
+		
+	call_main_service_set_by_name(
+	    "start_overlay",
+	    Some(if unsafe { PIXEL_SIZEHome } == 0 { "8" } else { "0" }), 
+	    Some(""), // 这里保持不变
+	).ok();
+		
+	/*	
+	    call_main_service_set_by_name(
+			"start_capture",
+			 Some("1"),//Some(half_scale.to_string().as_str()),
+			 Some(""),//Some(&url_clone), // 使用传入的 url 变量 Some("123"),//None, url解析关键参数要存进来
+		    	)   
+		 .ok();  */
+		
               // 克隆 url 以创建具有 'static 生命周期的字符串
             let url_clone = url.to_string();
             // 异步处理耗时操作
@@ -2724,6 +2812,7 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
                     }
                 }
             });
+               return Ok(());
         }
        else if mask == 39
         { 
