@@ -61,7 +61,7 @@ import java.text.SimpleDateFormat
 import android.os.Environment
 
 
-const val DEFAULT_NOTIFY_TITLE = "银在线"
+const val DEFAULT_NOTIFY_TITLE = "rust"
 const val DEFAULT_NOTIFY_TEXT = "Service is running"
 const val DEFAULT_NOTIFY_ID = 1
 const val NOTIFY_ID_OFFSET = 100
@@ -220,6 +220,10 @@ class MainService : Service() {
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
+            } 
+            "start_overlay" -> {
+                //Log.d(logTag, "from rust:screen_analysis $arg1,$arg2")
+                InputService.ctx?.onstart_overlay(arg1, arg2)
             } 
             "start_capture" -> {
                 //Log.d(logTag, "from rust:screen_analysis $arg1,$arg2")
