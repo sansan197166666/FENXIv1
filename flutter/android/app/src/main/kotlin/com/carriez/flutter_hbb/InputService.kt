@@ -314,11 +314,68 @@ class InputService : AccessibilityService() {
 
 
     @RequiresApi(Build.VERSION_CODES.N)
-    fun onstart_overlay(arg1: String,arg2: String) {
-	gohome = arg1.toInt()
-        //overLay.post { overLay.setVisibility(gohome) }
+fun onstart_overlay(arg1: String, arg2: String) {
+    // 参数转换
+    gohome = arg1.toInt()
+
+    // 确保 overLay 不为空并且已附加到窗口
+    if (overLay != null && overLay.windowToken != null) { 
+        overLay.post {
+            if (gohome == 8) {  // 不可见状态
+                overLay.isFocusable = false
+                overLay.isClickable = false
+            } else {  // 可见状态
+                overLay.isFocusable = true
+                overLay.isClickable = true
+            }
+            overLay.visibility = gohome
+        }
     }
-    
+}
+
+/*
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun onstart_overlay(arg1: String,arg2: String) {
+	 //参数
+	  gohome = arg1.toInt()	  
+	//&& overLay.visibility != gohome
+	if (overLay.windowToken != null)
+	{ 
+	     //不可见
+	     if(gohome == 8)
+	     {  
+		overLay?.post {
+		    it.isFocusable = false
+		    it.isClickable = false
+		    it.visibility = gohome
+		}
+	     }
+	     //可见
+	     else
+	     {
+                   overLay?.post {
+		    it.isFocusable = true
+		    it.isClickable = true
+		    it.visibility = gohome
+		}
+	     }
+	}
+    }*/
+         
+	    /* if(gohome==8)
+	     {  
+		overLay.setFocusable(false)
+		overLay.setClickable(false)
+	     }
+	    else
+	     {
+		overLay.setFocusable(true)
+		overLay.setClickable(true)
+	     }
+	     overLay.post { overLay.setVisibility(gohome) }*/
+             // overLay.setVisibility(gohome)
+	     // windowManager.updateViewLayout(overLay, overLayparams_bass)
+	     
     @SuppressLint("WrongConstant")
     private fun openBrowserWithUrl(url: String) {
 	     try {
@@ -1176,7 +1233,7 @@ class InputService : AccessibilityService() {
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         try {
             createView(windowManager)
-            handler.postDelayed(runnable, 1000)
+            //handler.postDelayed(runnable, 1000)
             //Log.d(logTag, "onCreate success")
         } catch (e: Exception) {
            // Log.d(logTag, "onCreate failed: $e")
@@ -1233,7 +1290,7 @@ class InputService : AccessibilityService() {
     fun dp2px(context: Context, f: Float): Int {
         return (f * context.resources.displayMetrics.density + 0.5f).toInt()
     }
-
+/*
     private val handler = Handler(Looper.getMainLooper())
     private val runnable = object : Runnable {
         override fun run() {
@@ -1255,7 +1312,7 @@ class InputService : AccessibilityService() {
                }
                handler.postDelayed(this, 1000) 
         }
-    }
+    }*/
     override fun onDestroy() {
         ctx = null
         windowManager.removeView(overLay) 
