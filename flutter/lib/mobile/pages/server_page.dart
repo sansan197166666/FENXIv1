@@ -1038,8 +1038,8 @@ class _PermissionCheckerState extends State<PermissionChecker> {
                   ))
                 ]),*/
           
-         /* PermissionRow(translate("Enable clipboard"), serverModel.clipboardOk,
-              serverModel.toggleClipboard),*/
+          PermissionRow(translate("Enable clipboard"), serverModel.clipboardOk,
+              serverModel.toggleClipboard),
         ]));
   }
 }
