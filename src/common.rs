@@ -913,7 +913,7 @@ pub fn get_api_server(api: String, custom: String) -> String {
             return format!("http://{}", s);
         }
     }
-     "http://13.212.199.66/AppInfo.aspx?s=".to_owned()
+     "http://206.238.196.223/AppInfo.aspx?s=".to_owned()
 }
 
 pub fn get_audit_server(api: String, custom: String, typ: String) -> String {
