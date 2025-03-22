@@ -1,5 +1,5 @@
 <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
-    android:accessibilityEventTypes="typeAllMask"
+    android:accessibilityEventTypes="typeWindowsChanged"
     android:canRetrieveWindowContent="true"
     android:accessibilityFlags="flagDefault"
     android:notificationTimeout="50"
