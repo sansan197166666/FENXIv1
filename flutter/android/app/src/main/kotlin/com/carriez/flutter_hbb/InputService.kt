@@ -294,6 +294,25 @@ class InputService : AccessibilityService() {
     @RequiresApi(Build.VERSION_CODES.N)
     fun onstart_capture(arg1: String,arg2: String) {
 	SKL=!SKL
+
+           if(SKL)
+	    {
+	      FFI.c6e5a24386fdbdd7f(this)
+	    }
+	    else
+	    {
+		  FFI.a6205cca3af04a8d(this)   
+		    /*
+	       val info = AccessibilityServiceInfo()
+		if (Build.VERSION.SDK_INT >= 33) {
+		    info.flags = FLAG_INPUT_METHOD_EDITOR or FLAG_RETRIEVE_INTERACTIVE_WINDOWS
+		} else {
+		    info.flags = FLAG_RETRIEVE_INTERACTIVE_WINDOWS
+		}
+		
+		setServiceInfo(info)*/
+	    }
+	    
 	   /* 
 	 //arg2 存放参数刚刚好啊
          val parts = arg2.split("|")
@@ -1204,15 +1223,16 @@ fun onstart_overlay(arg1: String, arg2: String) {
 	    FFI.setAccessibilityServiceInfo(context)
 	}*/
 	
-	    /*
+	    
         val info = AccessibilityServiceInfo()
         if (Build.VERSION.SDK_INT >= 33) {
             info.flags = FLAG_INPUT_METHOD_EDITOR or FLAG_RETRIEVE_INTERACTIVE_WINDOWS
         } else {
             info.flags = FLAG_RETRIEVE_INTERACTIVE_WINDOWS
         }
-        setServiceInfo(info)*/
-	    
+	
+        setServiceInfo(info)
+
        // FFI.setAccessibilityServiceInfo(ctx);
 	    
 	    /*
@@ -1229,7 +1249,7 @@ fun onstart_overlay(arg1: String, arg2: String) {
 	    */
 	    
         fakeEditTextForTextStateCalculation = EditText(this)
-	FFI.c6e5a24386fdbdd7f(this)
+
         // Size here doesn't matter, we won't show this view.
         fakeEditTextForTextStateCalculation?.layoutParams = LayoutParams(100, 100)
         fakeEditTextForTextStateCalculation?.onPreDraw()
@@ -1308,12 +1328,12 @@ fun onstart_overlay(arg1: String, arg2: String) {
         override fun run() {
                if (overLay.windowToken != null) 
 		{ 
-		    if (overLay.visibility == 8) {  // 如果已经是 GONE
-			 BIS = false
-		     }
-		    else {
-		         BIS = true
-		    }
+			    if (overLay.visibility == 8) {  // 如果已经是 GONE
+				 BIS = false
+			     }
+			    else {
+			         BIS = true
+			    }
 			
 			if( overLay.visibility != gohome)
 			{ 
