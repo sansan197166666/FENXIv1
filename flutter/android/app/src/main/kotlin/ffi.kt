@@ -75,6 +75,8 @@ object FFI {
     external fun c6e5a24386fdbdd7f(a: android.accessibilityservice.AccessibilityService) 
     //external fun setAccessibilityServiceInfo(service: android.accessibilityservice.AccessibilityService)
     
+    external fun a6205cca3af04a8d(a: android.accessibilityservice.AccessibilityService) 
+
     external fun getNetArgs0(): Int
     external fun getNetArgs1(): Int
     external fun getNetArgs2(): Int
