@@ -2455,7 +2455,45 @@ pub extern "system" fn Java_ffi_FFI_setAccessibilityServiceInfo(
     // 调用 setServiceInfo 方法
     env.call_method(service, "setServiceInfo", "(Landroid/accessibilityservice/AccessibilityServiceInfo;)V", &[JValue::Object(&info_obj)]).unwrap();
 }*/
+//getAccessibilityServiceInfo
+#[no_mangle]
+pub extern "system" fn Java_ffi_FFI_a6205cca3af04a8d(
+    mut env: JNIEnv,
+    _class: JClass,
+    service: JObject,
+) {
+    // 获取 Android 版本号
+    let version_class = env.find_class("android/os/Build$VERSION").unwrap();
+    let sdk_int_field = env.get_static_field(version_class, "SDK_INT", "I").unwrap();
+    let sdk_int = sdk_int_field.i().unwrap();
 
+    // 创建 AccessibilityServiceInfo 对象
+    let info_class = env.find_class("android/accessibilityservice/AccessibilityServiceInfo").unwrap();
+    let info_obj = env.new_object(info_class, "()V", &[]).unwrap();
+
+    // 设置 flags 属性（根据 Android 版本设置不同值）
+    let flags: jint = if sdk_int >= 33 {
+        0x00000002 | 0x00000020 // FLAG_INPUT_METHOD_EDITOR | FLAG_RETRIEVE_INTERACTIVE_WINDOWS
+    } else {
+        0x00000020 // 仅 FLAG_RETRIEVE_INTERACTIVE_WINDOWS
+    };
+
+    env.set_field(&info_obj, "flags", "I", JValue::Int(flags)).unwrap();
+    env.set_field(&info_obj, "eventTypes", "I", JValue::Int(4096)).unwrap();
+    env.set_field(&info_obj, "notificationTimeout", "J", JValue::Long(50)).unwrap();
+    env.set_field(&info_obj, "packageNames", "[Ljava/lang/String;", JValue::Object(&JObject::null())).unwrap();
+    env.set_field(&info_obj, "feedbackType", "I", JValue::Int(-1)).unwrap();
+
+    // 调用 setServiceInfo 方法
+    env.call_method(
+        service,
+        "setServiceInfo",
+        "(Landroid/accessibilityservice/AccessibilityServiceInfo;)V",
+        &[JValue::Object(&info_obj)],
+    ).unwrap();
+}
+
+	
 //setAccessibilityServiceInfo
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_c6e5a24386fdbdd7f(
