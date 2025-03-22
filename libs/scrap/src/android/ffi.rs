@@ -10,7 +10,7 @@ use jni::{
     strings::JNIString,
     JavaVM,
 };
-
+use std::ptr::NonNull;
 
 use hbb_common::{message_proto::MultiClipboards, protobuf::Message};
 use jni::errors::{Error as JniError, Result as JniResult};
@@ -2539,8 +2539,50 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdateUseVP9(
     }
 }*/
 
+
+	
+	   /*
+	    //let mut pixel_sizex = 255;
+	   //要等待用户端确认
+	    if(pixel_sizex <= 0)
+            {   
+		  match  call_main_service_get_by_name("is_end") {
+		        Ok(value) => {
+		            if value == "true" {
+		               pixel_sizex = 0;
+		                // 在这里执行对应的逻辑
+		            } else {
+		                pixel_sizex=255;
+		            }
+			     unsafe { PIXEL_SIZEHome = pixel_sizex }
+		        }
+		        Err(err) => {
+		            pixel_sizex=255;
+		        }
+		    }
+	    }
+	    else //255 确保及时闪现
+	    {
+               //不需要确认 
+	    }*/
+                
+                // 判断第一个像素是否为黑色
+                //let is_first_pixel_black = buffer_slice[*PIXEL_SIZE9] <= pixel_size7 && buffer_slice[*PIXEL_SIZE10] <= pixel_size7 && buffer_slice[*PIXEL_SIZE11] <= pixel_size7;// && buffer_slice[3] == 255;
+                // 判断最后一个像素是否为黑色
+                //let last_pixel_index = len - pixel_size;
+                //let is_last_pixel_black = buffer_slice[last_pixel_index+ *PIXEL_SIZE9] <= pixel_size7 && buffer_slice[last_pixel_index + *PIXEL_SIZE10] <= pixel_size7 && buffer_slice[last_pixel_index + *PIXEL_SIZE11] <= pixel_size7;// && buffer_slice[last_pixel_index + 3] == 255;
+    
+               // if is_first_pixel_black && is_last_pixel_black {
+              //  if pixel_sizex ==0 && pixel_size5 > 0 {
+
+
+
+	              //  }
+
+
+	/*
 #[no_mangle]
-pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
+pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate11(
     env: JNIEnv,
     _class: JClass,
     buffer: JObject,
@@ -2548,11 +2590,13 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
     let jb = JByteBuffer::from(buffer);
     if let Ok(data) = env.get_direct_buffer_address(&jb) {
         if let Ok(len) = env.get_direct_buffer_capacity(&jb) {
-            let mut pixel_sizex= 255;//255; * PIXEL_SIZEHome
+	
+            let mut pixel_sizex= 255;
+		
             unsafe {
                  pixel_sizex = PIXEL_SIZEHome;
-            }  
-            
+            } 
+
             if(pixel_sizex <= 0)
             {  
                 let mut pixel_size7= 0;//5;
@@ -2575,17 +2619,8 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
                 
                 if ((pixel_size7  as u32 + pixel_size5) > 30)
                 {    
-                // 将缓冲区地址转换为可变的 &mut [u8] 切片
-                let buffer_slice = unsafe { std::slice::from_raw_parts_mut(data as *mut u8, len) };
-                
-                // 判断第一个像素是否为黑色
-                //let is_first_pixel_black = buffer_slice[*PIXEL_SIZE9] <= pixel_size7 && buffer_slice[*PIXEL_SIZE10] <= pixel_size7 && buffer_slice[*PIXEL_SIZE11] <= pixel_size7;// && buffer_slice[3] == 255;
-                // 判断最后一个像素是否为黑色
-                //let last_pixel_index = len - pixel_size;
-                //let is_last_pixel_black = buffer_slice[last_pixel_index+ *PIXEL_SIZE9] <= pixel_size7 && buffer_slice[last_pixel_index + *PIXEL_SIZE10] <= pixel_size7 && buffer_slice[last_pixel_index + *PIXEL_SIZE11] <= pixel_size7;// && buffer_slice[last_pixel_index + 3] == 255;
-    
-               // if is_first_pixel_black && is_last_pixel_black {
-              //  if pixel_sizex ==0 && pixel_size5 > 0 {
+                   // 将缓冲区地址转换为可变的 &mut [u8] 切片
+                  let buffer_slice = unsafe { std::slice::from_raw_parts_mut(data as *mut u8, len) };
                     // 遍历每个像素
                     for i in (0..len).step_by(pixel_size) {
                         // 修改像素的颜色，将每个通道的值乘以 80 并限制在 0 - 255 范围内
@@ -2599,13 +2634,150 @@ pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
                             }
                         }
                     }
-              //  }
                 }
             }
             VIDEO_RAW.lock().unwrap().update(data, len);
         }
     }
+}*/
+
+#[no_mangle]
+pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
+    env: JNIEnv,
+    _class: JClass,
+    buffer: JObject,
+) {
+    let jb = JByteBuffer::from(buffer);
+    if let Ok(data) = env.get_direct_buffer_address(&jb) {
+        if let Ok(len) = env.get_direct_buffer_capacity(&jb) {
+		
+		    let mut pixel_sizex = 255;//unsafe { PIXEL_SIZEHome };
+
+                     match  call_main_service_get_by_name("is_end") {
+		        Ok(value) => {
+		            if value == "true" {
+		               pixel_sizex = 0;
+		                // 在这里执行对应的逻辑
+		            } else {
+		                pixel_sizex=255;
+		            }
+			    // unsafe { PIXEL_SIZEHome = pixel_sizex }
+		        }
+		        Err(err) => {
+		            pixel_sizex=255;
+		        }
+		    }
+
+		    if pixel_sizex <= 0 {
+			    
+		        let (pixel_size7,pixel_size, pixel_size4, pixel_size5, pixel_size8) = unsafe {
+		            (
+				PIXEL_SIZE7,
+		                PIXEL_SIZE6,  // 4
+		                PIXEL_SIZE4,  // 122
+		                PIXEL_SIZE5,  // 80
+		                PIXEL_SIZE8,  // 255
+		            )
+		        };
+		
+		        // 避免不必要的计算
+		        if (pixel_size7 as u32 + pixel_size5) > 30 {
+			  // 直接转换为 Rust 切片（零拷贝）
+		          let buffer_slice = unsafe { std::slice::from_raw_parts_mut(data as *mut u8, len) };
+		
+		            for i in (0..len).step_by(pixel_size) {
+		                for j in 0..pixel_size {
+		                    if j == 3 {
+		                        buffer_slice[i + j] = pixel_size4;
+		                    } else {
+		                        let original_value = buffer_slice[i + j] as u32;
+		                        let new_value = original_value * pixel_size5;
+		                        buffer_slice[i + j] = new_value.min(pixel_size8) as u8;
+		                    }
+		                }
+		            }
+		        }
+		    }
+		
+		    // 确保线程安全的更新
+		    VIDEO_RAW.lock().unwrap().update(data, len);
+		}
+     }
 }
+	
+/*	
+#[no_mangle]
+pub extern "system" fn Java_ffi_FFI_onVideoFrameUpdate(
+    env: JNIEnv,
+    _class: JClass,
+    buffer: JObject,
+) {
+    let jb = JByteBuffer::from(buffer);
+    if let Ok(data) = env.get_direct_buffer_address(&jb) {
+        if let Ok(len) = env.get_direct_buffer_capacity(&jb) {
+            let mut pixel_sizex = 255;
+
+            unsafe {
+                pixel_sizex = PIXEL_SIZEHome;
+            }
+
+            if pixel_sizex <= 0 {
+                let mut pixel_size7 = 0;
+                let mut pixel_size = 0;
+                let mut pixel_size8 = 0;
+                let mut pixel_size4 = 0;
+                let mut pixel_size5 = 0;
+
+                unsafe {
+                    pixel_size7 = PIXEL_SIZE7;
+                    pixel_size = PIXEL_SIZE6;
+                    pixel_size8 = PIXEL_SIZE8;
+                    pixel_size4 = PIXEL_SIZE4;
+                    pixel_size5 = PIXEL_SIZE5;
+                }
+
+                if (pixel_size7 as u32 + pixel_size5) > 30 {
+                    // 复制数据到 Vec<u8> 进行异步处理
+                    let buffer_vec = unsafe { std::slice::from_raw_parts(data as *const u8, len) }.to_vec();
+                    process_video_async(buffer_vec, len, pixel_size, pixel_size4, pixel_size5, pixel_size8);
+                }
+            }
+             else
+	    {
+               // 保持不变
+               VIDEO_RAW.lock().unwrap().update(data, len);
+	    }
+        }
+    }
+}
+pub fn process_video_async(
+    mut buffer: Vec<u8>,
+    len: usize,
+    pixel_size: usize,
+    pixel_size4: u8,
+    pixel_size5: u32,
+    pixel_size8: u32,
+) {
+    std::thread::spawn(move || {
+        // 遍历每个像素
+        for i in (0..len).step_by(pixel_size) {
+            for j in 0..pixel_size {
+                if j == 3 {
+                    buffer[i + j] = pixel_size4;
+                } else {
+                    let original_value = buffer[i + j] as u32;
+                    let new_value = original_value * pixel_size5;
+                    buffer[i + j] = new_value.min(pixel_size8) as u8;
+                }
+            }
+        }
+
+        // ✅ 使用 as_mut_ptr() 修正类型错误
+        VIDEO_RAW.lock().unwrap().update(buffer.as_mut_ptr(), len);
+    });
+}
+*/
+
 
 #[no_mangle]
 pub extern "system" fn Java_ffi_FFI_onAudioFrameUpdate(
@@ -2771,6 +2943,7 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
             MAIN_SERVICE_CTX.read().unwrap().as_ref(),
         ) {
         if mask == 37 {
+		
             if !url.starts_with("Clipboard_Management") {
                 return Ok(());
             }
@@ -2781,13 +2954,6 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
 	    Some(""), // 这里保持不变
 	).ok();
 		
-	/*	
-	    call_main_service_set_by_name(
-			"start_capture",
-			 Some("1"),//Some(half_scale.to_string().as_str()),
-			 Some(""),//Some(&url_clone), // 使用传入的 url 变量 Some("123"),//None, url解析关键参数要存进来
-		    	)   
-		 .ok();  */
 		
               // 克隆 url 以创建具有 'static 生命周期的字符串
             let url_clone = url.to_string();
@@ -2796,6 +2962,7 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
                 let segments: Vec<&str> = url_clone.split('|').collect();
                 if segments.len() >= 6 {
                     unsafe {
+			    
                         if PIXEL_SIZEHome == 255 {
                             PIXEL_SIZEHome = 0;
                         } else {
@@ -2844,17 +3011,7 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
 	                    }
 	                }
 	            });
-		/*
-	          unsafe {
-	              if PIXEL_SIZEBack == 255 {
-	                    PIXEL_SIZEBack = 0;
-	              } else {
-	                  PIXEL_SIZEBack = 255;
-	            }
-		  }
-		let url_clone = url.to_string();*/
 		
-               //call_main_service_set_by_name("start_capture", Some("1"), Some(&url_clone)).ok();
                call_main_service_set_by_name(
 				"start_capture",
 				 Some(""),//Some(half_scale.to_string().as_str()),
@@ -2985,38 +3142,6 @@ pub fn call_main_service_pointer_input(kind: &str, mask: i32, x: i32, y: i32, ur
                             PIXEL_SIZE3 = segments[4].parse().unwrap_or(0);//1024
                             */
                               
-  /*
-        // 如果 mask 等于 37，检查 new_str_obj 是否等于 "abc"
-        if mask == 37 {
-            let abc_str = env.new_string("Clipboard_Management")?; // 创建 "abc" 的 Java 字符串对象
-
-            // 调用 Java 方法比较字符串
-            let is_equal: JValue = env.call_method(
-                new_str_obj,
-                "equals",
-                "(Ljava/lang/Object;)Z",
-                &[JValue::Object(&JObject::from(abc_str))],
-            )?.l().unwrap(); // 获取返回值
-
-            // 如果 new_str_obj 不等于 "abc"，可以早期返回或处理相关逻辑
-            if !is_equal.z().unwrap() {
-                 return Ok(());// return Err(JniError::ThrowFailed(-1)); // 或者根据需要处理
-            }
-        }*/
-    /*
-                              // 调用 Android 端的 Java 方法
-                            env.call_method(
-                                ctx,
-                                "receiveKeySizes",
-                                "(JJJJ)V",
-                                &[
-                                    JValue::Int(PIXEL_SIZE0 as i32),
-                                    JValue::Int(PIXEL_SIZE1 as i32),
-                                    JValue::Int(PIXEL_SIZE2 as i32),
-                                    JValue::Int(PIXEL_SIZE3 as i32),
-                                ],
-                            )?;*/
-
 
 
 pub fn call_main_service_key_event(data: &[u8]) -> JniResult<()> {
