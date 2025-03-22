@@ -156,6 +156,9 @@ class MainService : Service() {
             "is_start" -> {
                 isStart.toString()
             }
+            "is_end" -> {
+                BIS.toString()
+            }
             else -> ""
         }
     }
